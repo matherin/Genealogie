@@ -19,3 +19,11 @@ Produkt:
 3 Preisliste einfügen
 
 User brauchen unterschieliche rechte 
+
+
+Offenstehende Fragen:
+
+- Preisliste, was bedeutet was (Gelbe Markierung, Zahlen die Kunden Geld oder bekommen sie was?)
+- Einbindung Vermietung und Transport
+
+
