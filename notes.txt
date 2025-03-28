@@ -1,0 +1,21 @@
+KUNDE:
+- Rechnungsadresse 
+- Lieferadresse 
+- Postleitzahl und Straße seperat
+- notizen
+
+Produkt:
+- abfallschlüsselnummer
+- Sammelgruppe und Kategorie
+
+1 Abfälle:
+- Input/output
+- Input fokus
+
+2 Abfälle nachtragen 
+
+4 Zettel beim Input
+
+3 Preisliste einfügen
+
+User brauchen unterschieliche rechte 
