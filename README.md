@@ -1,7 +1,3 @@
-
-
-
-
 # Projektanforderungen
 
 ## Übersicht
