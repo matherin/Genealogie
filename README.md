@@ -45,7 +45,7 @@ Dieses Projekt ist eine Anwendung zur Verwaltung von Waren, die von Kunden in ei
 
 - Rollenbasiertes Login mit Admin- und Benutzerrechten
 
-#Offenstehende Fragen:
+# Offenstehende Fragen:
 
 - Preisliste, was bedeutet was (Gelbe Markierung, Zahlen die Kunden Geld oder bekommen sie was?)
 - Einbindung Vermietung und Transport
