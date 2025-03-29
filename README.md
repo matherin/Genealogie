@@ -49,6 +49,7 @@ Dieses Projekt ist eine Anwendung zur Verwaltung von Waren, die von Kunden in ei
 
 - Preisliste, was bedeutet was (Gelbe Markierung, Zahlen die Kunden Geld oder bekommen sie was?)
 - Einbindung Vermietung und Transport
+- Rechte user vs admin
 
 
 # Arbeitszeit:
