@@ -56,7 +56,7 @@ CREATE TABLE "Vertrag_Waren" (
   "VID" INT NOT NULL,
   "WID" INT NOT NULL,
   "Menge" INT NOT NULL,
-  "primary" key(VID,WID)
+  PRIMARY KEY("VID","WID")
 );
 
 ALTER TABLE "Kunden" ADD FOREIGN KEY ("Lieferadresse_ID") REFERENCES "Adressen" ("AdresseID");

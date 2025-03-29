@@ -1,7 +1,31 @@
-version: "3.8"
-# Run with docker compose -f docker-compose.yml up --build
+version: "3.9"
+# Run with docker compose -f docker-compose.yaml up --build
 
 services:
+
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+    ports:
+      - "5432:5432"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - app-network
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
   frontend:
     build: ./Frontend
     container_name: frontend
@@ -21,28 +45,6 @@ services:
     expose:
       - "5000"  # Expose backend internally to NGINX
 
-  database:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      
-    expose:
-      - "5432:5432"
-
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-    networks:
-      - app-network
-
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
 
   nginx:
     image: nginx:latest
@@ -60,3 +62,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres-data:
