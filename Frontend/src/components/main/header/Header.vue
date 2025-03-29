@@ -25,14 +25,14 @@
             </Menu>
           </div>
           <div class="header-container-bar">
-            <!--<router-link
-              :class="{ routeractive: isActive('/verwaltung') }"
+            <router-link
+              :class="{ routeractive: isActive('/nutzerverwaltung') }"
               v-if="permissionLevel === 'admin'"
               class="header-container-bar-item"
-              to="/verwaltung/nutzer"
+              to="/nutzerverwaltung/übersicht"
             >
               Verwaltung</router-link
-            >-->
+            >
           </div>
         </div>
         <div class="header-container-logo">
@@ -58,7 +58,7 @@
     },
     data() {
       return {
-        permissionLevel: "user",
+        permissionLevel: "admin", //temp hardcode permission
         profileItems: [
           {
             label: "Einstellungen",

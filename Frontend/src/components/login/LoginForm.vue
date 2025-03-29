@@ -94,7 +94,7 @@
           this.$refs.toast.toastAddError("Einloggen nicht erfolgreich");
         }*/
         if(loginUser.name === "dev" && this.password === "1234"){
-          this.$router.push("einstellungen/profil");
+          this.$router.push("nutzerverwaltung");
         }
       },
   
