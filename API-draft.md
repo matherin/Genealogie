@@ -1,3 +1,5 @@
+Alle POST brauchen keine id
+
 ## Kunden
 
 /customers GET
@@ -28,6 +30,8 @@
     ...
 }
 
+/customers/<id> DELETE
+
 ## Waren 
 
 /wares GET
@@ -50,17 +54,20 @@
 /contracts GET
 [
     {
-    "vid": int,
-    "kunde": {
-        siehe /customers/<id> GET
-    },
-    "ware": {
-        siehe /wares/<id> GET
+        "vid": int,
+        "kunde": {
+            siehe /customers/<id> GET
+        },
+        "ware": {
+            siehe /wares/<id> GET
+            }
+        "menge": int,
+        "datum": "String",
+        "mwst": float,
+        "annahme": boolean,
+        "user":{
+            siehe /users/<id> GET
         }
-    "menge": int,
-    "datum": "String",
-    "mwst": float,
-    "annahme": boolean
     },
     ...
 ]
@@ -77,10 +84,13 @@
     "menge": int,
     "datum": "String",
     "mwst": float,
-    "annahme": boolean
+    "annahme": boolean,
+    "user":{
+        siehe /users/<id> GET
+    }
 }
 
-
+/contracts/<id> DELETE
 
 ## Benutzer
 
@@ -117,7 +127,7 @@
     "password": "String"            in SHA512
 }
 
-
+/users/<id> DELETE
 
 
 
