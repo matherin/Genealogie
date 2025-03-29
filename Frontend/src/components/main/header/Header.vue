@@ -25,35 +25,19 @@
             </Menu>
           </div>
           <div class="header-container-bar">
-            <router-link
-              :class="{ routeractive: isActive('/gruppenleitung') }"
-              v-if="['group', 'admin'].includes(permissionLevel)"
-              class="header-container-bar-item"
-              to="/gruppenleitung/gruppen"
-            >
-              Gruppenansicht</router-link
-            >
-            <router-link
-              :class="{ routeractive: isActive('/standortleitung') }"
-              v-if="['location'].includes(permissionLevel)"
-              class="header-container-bar-item"
-              to="/standortleitung/gruppen"
-            >
-              Standortleitung</router-link
-            >
-            <router-link
+            <!--<router-link
               :class="{ routeractive: isActive('/verwaltung') }"
               v-if="permissionLevel === 'admin'"
               class="header-container-bar-item"
               to="/verwaltung/nutzer"
             >
               Verwaltung</router-link
-            >
+            >-->
           </div>
         </div>
         <div class="header-container-logo">
           <div class="header-container-logo-art"></div>
-          <p class="header-container-logo-text" @click="onTitleClick">MensaNow</p>
+          <p class="header-container-logo-text" @click="onTitleClick">Metcera-Recycling</p>
         </div>
       </div>
     </div>
