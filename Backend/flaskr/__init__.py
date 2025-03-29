@@ -32,13 +32,11 @@ def create_app(test_config=None):
         return "Welcome to Metci!", 200
     
     # import der blueprints
-    app.register_blueprint(accounts_bp)
-    app.register_blueprint(group_bp)
-    app.register_blueprint(location_bp)
-    app.register_blueprint(additional_bp)
+    app.register_blueprint(users_bp)
+    app.register_blueprint(customers_bp)
+    app.register_blueprint(contracts_bp)
+    app.register_blueprint(wares_bp)
     app.register_blueprint(auth_bp)
-    app.register_blueprint(invoice_bp)
-    app.register_blueprint(meal_bp)
 
     db.init_app(app)
 
@@ -47,11 +45,11 @@ def create_app(test_config=None):
         db.create_all()
 
         from types import SimpleNamespace
-        from .request_handling.accounts_service import create_account, get_accounts
+        from .request_handling.users_service import create_users, get_users
 
         # Überprüfen, ob bereits Accounts existieren
         req = SimpleNamespace(get_json=lambda: {})
-        accs, status = get_accounts(req)
+        accs, status = get_users(req)
 
         if not accs.json:  # Falls keine Benutzer vorhanden sind
             admin_data = {
@@ -61,7 +59,7 @@ def create_app(test_config=None):
             }
 
             admin_request = SimpleNamespace(get_json=lambda: admin_data)
-            create_account(admin_request)
+            create_users(admin_request)
 
     return app
 
