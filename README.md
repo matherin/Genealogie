@@ -17,6 +17,7 @@ Dieses Projekt ist eine Anwendung zur Verwaltung von Waren, die von Kunden in ei
 
 - Eingeschränkte Rechte
 - Kann keine Preise ändern oder neue Benutzer erstellen
+- Kann Verträge einsehen
 
 ## Funktionen
 
