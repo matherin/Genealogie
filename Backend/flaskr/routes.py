@@ -2,7 +2,7 @@ from urllib import response
 from flask import Blueprint, request, jsonify, redirect, url_for
 from .database import db
 from .datamodels import *
-from .request_handling import contracts_service, customers_service, groups_service, orders_service, auth_service, meals_service, users_service, wares_service
+from .request_handling import contracts_service, customers_service, auth_service, users_service, wares_service
 from .auth.validate_request import validate_admin_request, validate_location_request, validate_group_request
 from datetime import datetime
 
@@ -48,30 +48,6 @@ def delete_user(user_id):
     if res:
         return res
     return users_service.delete_user(user_id)
-
-### Customer ###
-@customers_bp.route('/customers', methods=['POST'])
-def create_customer():
-    return customers_service.create_customer(request)
-
-@customers_bp.route('/customers', methods=['GET'])
-def get_customers():
-    return customers_service.get_customers(request)
-
-@customers_bp.route('/customers/<int:customer_id>', methods=['GET'])
-def get_customer(customer_id):
-    return customers_service.get_customer_by_id(customer_id, request)
-
-@customers_bp.route('/customers/<int:customer_id>', methods=['PUT'])
-def update_customer(customer_id):
-    data = request.get_json()
-    if not data:
-        return {"error": "Fehlende Daten für das Update."}, 400
-    return customers_service.update_customer(customer_id, data)
-
-@customers_bp.route('/customers/<int:customer_id>', methods=['DELETE'])
-def delete_customer(customer_id):
-    return customers_service.delete_customer(customer_id)
 
 
 ### Customer ###
@@ -124,7 +100,7 @@ def delete_contract(contract_id):
     return contracts_service.delete_contract(contract_id)
 
 
-### wares ###
+### ware ###
 @wares_bp.route('/wares', methods=['POST'])
 def create_ware():
     return wares_service.create_ware(request)

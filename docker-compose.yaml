@@ -44,6 +44,8 @@ services:
       - app-network
     expose:
       - "5000"  # Expose backend internally to NGINX
+    env_file:
+      - .env
 
 
   nginx:

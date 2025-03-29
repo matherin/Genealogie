@@ -1,9 +1,11 @@
+import os
 from flask import Flask, request, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from .database import db
-from .routes import accounts_bp, group_bp, location_bp, additional_bp, auth_bp, invoice_bp, meal_bp
+from .routes import users_bp, wares_bp, contracts_bp, auth_bp, customers_bp
 from .auth.jwt import validate_session
 from dotenv import load_dotenv
+
 
 from flask_cors import CORS
 
@@ -14,7 +16,7 @@ def create_app(test_config=None):
     # Initialisierung der Flask-App und SQLAlchemy
     app = Flask(__name__)
     CORS(app, origins="*", methods=["PUT", "OPTIONS", "GET", "POST"], allow_headers=["Content-Type", "Authorization"])
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://{os.getenv('POSTGRES_USER)}:{os.getenv('POSTGRES_PASSWORD)}@database:5432/{os.getenv('POSTGRES_DB')}"
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@database:5432/{os.getenv('POSTGRES_DB')}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     @app.before_request
