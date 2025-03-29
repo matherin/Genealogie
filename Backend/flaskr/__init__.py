@@ -20,7 +20,7 @@ def create_app(test_config=None):
     @app.before_request
     def auth():
         cookie = request.cookies.get("Session")
-        if not cookie: 
+        if not cookie:
             return
             
         if not validate_session(request.cookies.get("Session")):
@@ -29,7 +29,7 @@ def create_app(test_config=None):
 
     @app.route('/')
     def home():
-        return "Welcome to MensaNow!", 200
+        return "Welcome to Metci!", 200
     
     # import der blueprints
     app.register_blueprint(accounts_bp)
@@ -46,56 +46,21 @@ def create_app(test_config=None):
     with app.app_context():
         db.create_all()
 
-        ## TEMPORARY DAS PASST SCHON 🤮
         from types import SimpleNamespace
-        from .request_handling.accounts_service import create_account,  get_accounts
+        from .request_handling.accounts_service import create_account, get_accounts
 
-        # check if accouints are there already
-        req = SimpleNamespace(get_json= lambda : data)
-        accs,status = get_accounts(req)
-        if len([x for x in accs.json if x['vorname']=='Dev']) == 0:
-            # init test admin account to log
-            # DevDev:MN1234 
-            # QUICK AND DIRTY !!!!!
-            data = {
-                "vorname": "Dev",
-                "nachname": "Dev",
-                "password": "c5e827217051734e6a645c004d9c2d00096a90209429072f383836e915f3520dbcdf82501e888adf2b7e3301b89c46fd4ccc5e6bc59f5a8ced2e94e1a7a28a7d",
-                "role": "admin", 
+        # Überprüfen, ob bereits Accounts existieren
+        req = SimpleNamespace(get_json=lambda: {})
+        accs, status = get_accounts(req)
+
+        if not accs.json:  # Falls keine Benutzer vorhanden sind
+            admin_data = {
+                "username": "Admin",
+                "password": "1234567",
+                "role": "admin",
             }
 
-            admin_request = SimpleNamespace(get_json=lambda : data)
-            create_account(admin_request)
-
-            data = {
-                "vorname": "Locat",
-                "nachname": "Ion",
-                "password": "c5e827217051734e6a645c004d9c2d00096a90209429072f383836e915f3520dbcdf82501e888adf2b7e3301b89c46fd4ccc5e6bc59f5a8ced2e94e1a7a28a7d",
-                "role": "location"
-            }
-
-            admin_request = SimpleNamespace(get_json=lambda : data)
-            create_account(admin_request)
-
-
-            data = {
-                "vorname": "Group",
-                "nachname": "Per",
-                "password": "c5e827217051734e6a645c004d9c2d00096a90209429072f383836e915f3520dbcdf82501e888adf2b7e3301b89c46fd4ccc5e6bc59f5a8ced2e94e1a7a28a7d",
-                "role": "group"
-            }
-
-            admin_request = SimpleNamespace(get_json=lambda : data)
-            create_account(admin_request)
-
-            data = {
-                "vorname": "Max",
-                "nachname": "Mustermann",
-                "password": "c5e827217051734e6a645c004d9c2d00096a90209429072f383836e915f3520dbcdf82501e888adf2b7e3301b89c46fd4ccc5e6bc59f5a8ced2e94e1a7a28a7d",
-                "role": "user"
-            }
-
-            admin_request = SimpleNamespace(get_json=lambda : data)
+            admin_request = SimpleNamespace(get_json=lambda: admin_data)
             create_account(admin_request)
 
     return app

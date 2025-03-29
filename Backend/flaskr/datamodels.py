@@ -1,228 +1,71 @@
-from email.policy import default
-from click import group
-from . import db
-from sqlalchemy import *
+from sqlalchemy import Column, Integer, String, Boolean, DECIMAL, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
-from datetime import date
+from . import db
 
-'''
-Hier kommen alle Datenmodelle in eins rein, dass ist weniger umständlich vielleicht 
-und ein bisschen übersichtlicher.
-
-Die zu den Datenmodellen dazugehörigen Funktionen, die aber nur in 'routes.py' aufgerufen 
-werden, sind in dem '/request_handling' Ordner unter der jeweiligen 'x_service.py' Datei.
-'''
-
-class Location(db.Model):
-    __tablename__ = "locations"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-
-    groups = relationship("Group", back_populates="location")
-    accounts = db.relationship("Account", back_populates="location")
-
-    def to_dict(self):
-        return {
-            "location_id": self.id,
-            "name": self.name,
-            "groups": [group.to_dict() for group in self.groups]
-        }
-
-
-class Group(db.Model):
-    __tablename__ = "groups"
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    name = db.Column(db.String(100), nullable=False)
-
-    location_id = Column(ForeignKey("locations.id"))
-    location = relationship("Location", back_populates="groups")
-
-    leaders = relationship("Account", secondary="group_leader", back_populates="led_groups_by_leader")
-    members = relationship("Account", secondary="group_members")
-
-    group_orders = relationship("GroupOrder", back_populates="group")
-
-
-    def to_dict(self):
-
-        leader_list = sorted(
-                [{"account_id": leader.id, "vorname": leader.vorname, "nachname": leader.nachname} for leader in self.leaders],
-                key = lambda x : x['account_id'], 
-                reverse=True)
-
-        member_list = [{"account_id": member.id, "vorname": member.vorname, "nachname": member.nachname} for member in self.members]
-
-        # filter members
-        # -> all members such that m.id not in leader.id
-        member_list = [m for m in member_list if m['account_id'] not in {x['account_id'] for x in leader_list}]
-        return {
-            "group_id": self.id,
-            "name": self.name,
-            "leaders": leader_list,
-            "members": member_list, 
-            "location_id": self.location_id
-        }
-    
-    def __repr__(self):
-        return f"<Group(id={self.id}, name={self.name})>"
-    
-
-
-class Account(db.Model):
-    __tablename__ = "accounts"
-
-    id = db.Column(db.Integer, primary_key=True)
-    vorname = db.Column(db.String(50), nullable=False)
-    nachname = db.Column(db.String(50), nullable=False)
-
-    password = db.Column(db.String(128), nullable=False)
-    
-    role = db.Column(db.String(20), nullable=False, default="standard_user")
-    location_id = Column(Integer, ForeignKey("locations.id"))
-    location = relationship("Location")
-
-    group = relationship("Group", secondary="group_members")
-    led_groups_by_leader = relationship("Group", secondary="group_leader", back_populates="leaders")
-
-    account_orders = relationship("AccountOrder", back_populates="account")
-
-    def to_dict(self):
-        return {
-            "account_id": self.id,
-            "vorname": self.vorname,
-            "nachname": self.nachname,
-            "role": self.role,
-            "groups": [
-            {
-                "group_id": group.id,
-                "group_name": group.name,
-                "location_name": group.location.name if group.location else None,
-                "location_id": group.location_id if group.location else None,
-            }
-            for group in self.group
-        ],
-            # "location_id": self.location.id if self.location and not self.group else None
-            "location_id": self.location_id
-        }
-
-
-    
-    def __repr__(self):
-        return f"<Account(id={self.id}, vorname={self.vorname}, nachname={self.nachname}, role={self.role})>"
-    
-class Meal(db.Model):
-    __tablename__ = "meals"
-
-    id = db.Column(db.Integer, primary_key=True)
-    price = db.Column(db.Float, nullable=False)
-
-    meal_orders = relationship("MealOrder", back_populates="meal")
-
-    def to_dict(self):
-        return {
-            "meal_id": self.id,
-            "price": self.price
-        }
-
-
-'''
-Bestellungs Managment (Orders)
-'''
-# Standortbestellung
-class LocationOrder(db.Model):
-    __tablename__ = "location_orders"
-
+class User(db.Model):
+    __tablename__ = "users"
     id = Column(Integer, primary_key=True)
-    date = Column(Date, nullable=False, default=date.today)
-    content = relationship("MealOrder", back_populates="location_order")
+    username = Column(String(255), nullable=False)
+    role = Column(String(255))
+    password = Column(String(255), nullable=False)
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "date": self.date,
-            "content": [meal_order.to_dict() for meal_order in self.content]
-        }
-
-class MealOrder(db.Model):
-    __tablename__ = "meal_orders"
-
+class Address(db.Model):
+    __tablename__ = "adressen"
     id = Column(Integer, primary_key=True)
-    meal_id = Column(Integer, ForeignKey("meals.id"), nullable=False)
-    meal = relationship("Meal", back_populates="meal_orders")
-    count = Column(Integer, nullable=False)
+    street = Column(String(255), nullable=False)
+    house_number = Column(String(10), nullable=False)
+    postal_code = Column(String(10), nullable=False)
+    city = Column(String(100), nullable=False)
+    country = Column(String(100), nullable=False)
 
-    location_order_id = Column(Integer, ForeignKey("location_orders.id"))
-    location_order = relationship("LocationOrder", back_populates="content")
-
-    def to_dict(self):
-        return {
-            "meal_id": self.meal_id,
-            "count": self.count
-        }
-
-# Gruppenbestellung
-class GroupOrder(db.Model):
-    __tablename__ = "group_orders"
+class Customer(db.Model):
+    __tablename__ = "kunden"
     id = Column(Integer, primary_key=True)
-    group_id = Column(Integer, ForeignKey('groups.id'))
-    date = Column(Date, nullable=False) 
-    group = relationship("Group", back_populates="group_orders")
-    content = relationship("AccountOrder", back_populates="group_order")
+    company = Column(String(255))
+    account_number = Column(String(50))
+    tax_number = Column(String(50))
+    contact1 = Column(String(255), nullable=False)
+    contact2 = Column(String(255))
+    contact3 = Column(String(255))
+    phone1 = Column(String(20))
+    phone2 = Column(String(20))
+    phone3 = Column(String(20))
+    email1 = Column(String(255), nullable=False)
+    email2 = Column(String(255))
+    email3 = Column(String(255))
+    delivery_address_id = Column(Integer, ForeignKey("adressen.id"), nullable=False)
+    billing_address_id = Column(Integer, ForeignKey("adressen.id"), nullable=False)
+    private = Column(Boolean)
+    notes = Column(String)
 
-    def to_dict(self):
-        return {
-            "order_id": self.id,
-            "date": self.date, 
-            "content": [person_order.to_dict() for person_order in self.content]
-        }
+    delivery_address = relationship("Address", foreign_keys=[delivery_address_id])
+    billing_address = relationship("Address", foreign_keys=[billing_address_id])
 
-    def __repr__(self):
-        return f"<GroupOrder(id={self.id}, group_id={self.group_id}, date={self.date}, group={self.group}, content={self.content})"
-
-
-class AccountOrder(db.Model):
-    __tablename__ = "account_orders"
-
+class Contract(db.Model):
+    __tablename__ = "vertraege"
     id = Column(Integer, primary_key=True)
-    
-    account_id = Column(Integer, ForeignKey('accounts.id'), nullable=False)
-    account = relationship("Account", back_populates="account_orders")
+    customer_id = Column(Integer, ForeignKey("kunden.id"), nullable=False)
+    date = Column(TIMESTAMP)
+    input = Column(Boolean)
 
-    meal_id = Column(Integer, nullable=False)
-    valid = Column(Boolean, nullable=False, default=True)
-    
-    group_order_id = Column(Integer, ForeignKey("group_orders.id"))
-    group_order = relationship("GroupOrder", back_populates="content")
+    customer = relationship("Customer")
 
+class Goods(db.Model):
+    __tablename__ = "waren"
+    id = Column(Integer, primary_key=True)
+    description = Column(String(255))
+    price = Column(DECIMAL(10,2))
+    unit = Column(String(50))
+    waste_code = Column(String(250))
+    collection_group = Column(String(250))
+    category = Column(String(250))
+    tax_class = Column(String(250))
 
-    def to_dict(self):
-        return {
-            "order_id": self.id,
-            "account_id": self.account_id,
-            "valid": self.valid,
-            "meal_id": self.meal_id,
-            "group_order_id": self.group_order_id
-        }
+class ContractGoods(db.Model):
+    __tablename__ = "vertrag_waren"
+    contract_id = Column(Integer, ForeignKey("vertraege.id"), primary_key=True)
+    goods_id = Column(Integer, ForeignKey("waren.id"), primary_key=True)
+    quantity = Column(Integer, nullable=False)
 
-    def __repr__(self):  
-        return f"<AccountOrder(id={self.id}, account_id={self.account_id}, meal_id={self.meal_id}, valid={self.valid}, group_order_id={self.group_order_id})>"
-
-
-''' 
-Linking Tables zum Verknüpfen von Gruppe mit Leader und Members oder Orders zu Account
-'''
-# Gruppen
-class GroupMembers(db.Model):
-    __tablename__ = "group_members"
-    id = Column(Integer, primary_key=true)
-    member_id = Column("member_id", Integer, ForeignKey("accounts.id"))
-    group_id = Column("group_id", Integer, ForeignKey("groups.id"))
-
-class GroupLeader(db.Model):
-    __tablename__ = "group_leader"
-    id = Column(Integer, primary_key=true)
-    leader_id = Column("leader_id", Integer, ForeignKey("accounts.id"))
-    group_id = Column("group_id", Integer, ForeignKey("groups.id"))
+    contract = relationship("Contract")
+    goods = relationship("Goods")
