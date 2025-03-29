@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kufam:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kufam:ital,wght@0,400..900;1,400..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+
+    --primary-color: orange !important;  /* Hauptfarbe auf Orange setzen */
+    --primary-color-light: #FFA500 !important; /* Hellerer Orangeton */
+    --primary-color-dark: #FF8C00 !important; /* Dunklerer Orangeton */
+
+  --font-family: 'Manrope', sans-serif;
+  --font-family2: "Kufam", serif;
+  --font-family3: 'Raleway', sans-serif;
+
+  --font-size-normal: 1rem;
+  --font-size-regular: 1.15rem;
+  --font-size-medium: 1.4rem;
+  --font-size-big: 1.6rem;
+  --font-size-large: 2rem;
+
+  --gradient-text: linear-gradient(89.97deg, #AE67FA 1.84%, #F49867 102.67%);
+  --gradient-bar: linear-gradient(103.22deg, #AE67FA -13.86%, #F49867 99.55%);
+
+  --gradient-red: linear-gradient(to left, #ea7779, #d05153);
+  --gradient-blue: linear-gradient(to left, #92C2D4, #6fa0b2);
+  --gradient-green: linear-gradient(to left, #80b96d, #5c9e5f);
+
+  --color-red: #EA7779;
+  --color-blue: #92C2D4;
+  --color-green: #80b96d;
+
+  --color-menu-left: #fcfbfb;
+  --color-basic: #EFF1F5;
+  --color-basic-two: #e4e6eb;
+  --color-primary: #283D4D;
+  --color-secondary: #ff9100;
+
+  --color-font-basic: #EFF1F5;
+  --color-font-basic-two: #e4e6eb;
+  --color-font-basic-a8: #d0d7e4b0;
+  --color-font-primary: #2a333d;
+  --color-font-primary-lighter: #565f74;
+  --color-font-primary-a8: #394154a2;
+
+  --color-border-basic: #cbd5e1;
+  --color-border-basic-lighter: #e1e6ec;
+
+  --m-xs: 0.25rem;
+  --m-s: 0.5rem;
+  --m-m: 1rem;
+  --m-l: 2rem;
+  --m-xl: 3rem;
+  --m-xxl: 5rem;
+}
