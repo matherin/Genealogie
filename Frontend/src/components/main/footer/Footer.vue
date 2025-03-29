@@ -4,38 +4,33 @@
         <table>
           <thead>
             <tr>
-              <th>Zusatzinformationen</th>
-              <th>Lebenshilfe Borna</th>
+              <th>Metcera-Recycling</th>
               <th>Kontaktinformationen</th>
+              <th>Öffnungszeiten</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Diese Website ist durch eine</td>
               <td>
-                <a href="https://lebenshilfe-borna.de/?page_id=39">Borna GmbH</a>
+                <a href="https://www.metcera-recycling.de">Metcera GmbH</a>
               </td>
-              <td>E-Mail: TestMail@gmail.com</td>
+              <td>E-Mail: info@metcera-recycling.de</td>
+              <td style="font-weight: bold;">Montag bis Freitag:</td>
             </tr>
             <tr>
-              <td>Kooperation zwischen der</td>
-              <td>E-Mail: info@lebenshilfe-borna.de</td>
-              <td></td>
+              <td>Sestewitzer Str. 7</td>
+              <td>Tel.: 034297 - 778066</td>
+              <td>8:00 - 12:00 Uhr, 12:30- 16:30 Uhr</td>
             </tr>
             <tr>
-              <td>Lebenshilfe-Borna und der</td>
-              <td>Tel.: 03433/ 20979-0</td>
+              <td>04463 Großpösna</td>
               <td></td>
-            </tr>
-            <tr>
-              <td>Universität Leipzig entstanden.</td>
-              <td>Am Wilhelmschacht 1</td>
-              <td></td>
+              <td style="font-weight: bold;">Samstag und Sonntag:</td>
             </tr>
             <tr>
               <td></td>
-              <td>04552 Borna</td>
               <td></td>
+              <td>geschlossen</td>
             </tr>
           </tbody>
         </table>
