@@ -4,9 +4,9 @@ import Login from "./../components/login/Login.vue";
 
 import ChangePassword from "./../components/main/settings/changePassword.vue";
 import Profile from "./../components/main/settings/Profile.vue";
-import Einstellungen from "./../components/main/settings/SettingsMain.vue";
 import NutzerverwaltungMain from "@/components/main/Nutzerverwaltung/NutzerverwaltungMain.vue";
 import Nutzerverwaltung from "@/components/main/Nutzerverwaltung/Nutzerverwaltung.vue";
+import SettingsMain from "./../components/main/settings/SettingsMain.vue";
 
 const routes = [
   {
@@ -24,14 +24,14 @@ const routes = [
     component: NutzerverwaltungMain,
     children: [
      // { path: "standorte", component: Standortverwaltung, props: true },
-      { path: "übersicht", component: Nutzerverwaltung },
+      { path: "nutzertabelle", component: Nutzerverwaltung },
       //{ path: "abrechnungen", component: AbrechnungMain },
     ],
   },
   {
     path: "/einstellungen",
     name: "Einstellungen",
-    component: Einstellungen,
+    component: SettingsMain,
     children: [
       { path: "passwort", component: ChangePassword },
       { path: "profil", component: Profile },

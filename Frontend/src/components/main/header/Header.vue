@@ -29,7 +29,7 @@
               :class="{ routeractive: isActive('/nutzerverwaltung') }"
               v-if="permissionLevel === 'admin'"
               class="header-container-bar-item"
-              to="/nutzerverwaltung/übersicht"
+              to="/nutzerverwaltung/nutzertabelle"
             >
               Verwaltung</router-link
             >

@@ -12,6 +12,7 @@
       </div>
       <div class="vw-main-container-right">
         <Toast ref="toast" />
+        <router-view />
       </div>
     </div>
   </template>
@@ -62,7 +63,7 @@
               {
                 label: "Nutzerübersicht",
                 icon: "pi pi-users",
-                command: () => this.$router.push("/übersicht"),
+                command: () => this.$router.push("/nutzerverwaltung/nutzertabelle"),
               },
             ],
           },
