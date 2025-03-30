@@ -25,11 +25,11 @@ def create_user(request):
 
     # check if the password is well formed
     # ^[a-f0-9]{128}$ matches all hex strings of the length 128
-    if not re.match(r"^[a-f0-9]{128}$", data['password']):
-        return {"error": "The password hash is malformed"}, 400
+    # if not re.match(r"^[a-f0-9]{128}$", data['password']):
+    #     return {"error": "The password hash is malformed"}, 400
 
     new_user = User(
-        username=data["vorname"],
+        username=data["username"],
         password=data["password"],
         role=role
     )
@@ -46,15 +46,15 @@ def update_user(user_id, data):
 
     # Persönliche Daten aktualisieren
     if "username" in data:
-        user.vorname = data["username"]
+        user.username = data["username"]
     
 
     if 'password' in data:
         # gehastes Passwort ändern
-        if not re.match(r"^[a-f0-9]{128}$", data['password']):
-            return {"error": "The password hash is malformed"}, 400
-        else: 
-            user.password = data['password']
+        # if not re.match(r"^[a-f0-9]{128}$", data['password']):
+        #     return {"error": "The password hash is malformed"}, 400
+        # else: 
+        user.password = data['password']
 
     db.session.add(user)
     db.session.commit()
@@ -71,7 +71,7 @@ def update_password(user_id, new_password):
 
     return {"message": "Password updated successfully"}, 200
 
-def get_user_by_id(id, request):
+def get_user(id, request):
     user = User.query.filter_by(id=id).first()
 
     if not user:

@@ -11,10 +11,10 @@ def handle_login_request(request):
     if not data:
         return {"error": "Data for account creation missing."}, 400
 
-    if 'name' not in data or 'password' not in data:
+    if 'username' not in data or 'password' not in data:
         return {"error": "Necessary field for login missing."}, 400
 
-    if type(data['name']) != str:
+    if type(data['username']) != str:
         return {"error": "Name must be a string."}, 400
 
     if type(data['password']) != str:
@@ -23,7 +23,7 @@ def handle_login_request(request):
     if len(data['password']) == 0:
         return {"error": "Password can not be empty."}, 400
     
-    if len(data['name']) == 0:
+    if len(data['username']) == 0:
         return {"error": "Name can not be empty."}, 400
 
     # Login-Abfrage in der Datenbank

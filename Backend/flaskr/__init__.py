@@ -61,7 +61,7 @@ def create_app(test_config=None):
 
         if not accs.json:  # Falls keine Benutzer vorhanden sind
             admin_data = {
-                "username": "Admin",
+                "username": "admin",
                 "password": "1234567",
                 "role": "admin",
             }

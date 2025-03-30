@@ -28,13 +28,13 @@ class Address(db.Model):
     street = Column(String(255), nullable=False)
     house_number = Column(String(10), nullable=False)
     postal_code = Column(String(10), nullable=False)
-    city = Column(String(100), nullable=False)
-    country = Column(String(100), nullable=False)
+    city = Column(String(100), nullable=True)
+    country = Column(String(100), nullable=True)
 
     def to_dict(self):
         return {
             "straße": self.street,
-            "hausnummer": int(self.house_number),
+            "hausnummer": self.house_number,
             "plz": self.postal_code,
             "stadt": self.city,
             "land": self.country
@@ -68,20 +68,28 @@ class Customer(db.Model):
 
     def to_dict(self, include_id=True):
         data = {
+            "kid": self.id if include_id else None,
             "firma": self.company,
             "kontonummer": self.account_number,
             "steuernummer": self.tax_number,
             "kontakte": [self.contact1, self.contact2, self.contact3],
             "telefonnummern": [self.phone1, self.phone2, self.phone3],
             "emails": [self.email1, self.email2, self.email3],
-            "lieferadresse": self.delivery_address.to_dict() if self.delivery_address else None,
-            "rechnungsadresse": self.billing_address.to_dict() if self.billing_address else None,
+            "lieferadresse": self._address_to_dict(self.delivery_address),
+            "rechnungsadresse": self._address_to_dict(self.billing_address),
             "privat": self.private,
             "notizen": self.notes
         }
-        if include_id:
-            data["kid"] = self.id
         return data
+
+    def _address_to_dict(self, address):
+        """Helper method to return address data safely"""
+        if address:
+            return {
+                "id": address.id,
+                **address.to_dict()
+            }
+        return {}
     
     def __repr__(self):
         return f"<Customer(id={self.id}, firma={self.company})>"
