@@ -46,43 +46,16 @@
             <span v-else v-html="highlightText(data.account_id)" />
           </template>
         </Column>
-        <Column field="vorname" header="Vorname" sortable style="width: 20%">
+        <Column field="username" header="Username" sortable style="width: 20%">
           <template #body="{ data }">
             <Skeleton v-if="this.currentlyLoading" width="50%" />
             <span v-else v-html="highlightText(data.vorname)" />
-          </template>
-        </Column>
-        <Column field="nachname" header="Nachname" sortable style="width: 20%">
-          <template #body="{ data }">
-            <Skeleton v-if="this.currentlyLoading" width="50%" />
-            <span v-else v-html="highlightText(data.nachname)" />
           </template>
         </Column>
         <Column field="role" header="Rolle" sortable style="width: 10%">
           <template #body="{ data }">
             <Skeleton v-if="this.currentlyLoading" width="70%" />
             <span v-else v-html="highlightText(data.role)" />
-          </template>
-        </Column>
-        <Column field="location" header="Standort" sortable style="width: 20%">
-          <template #body="{ data }">
-            <Skeleton v-if="this.currentlyLoading" width="40%" />
-            <span v-else>
-              {{ data.groups?.length ? highlightText(data.groups[0].location_name) : highlightText(data.fallbackLocationName || 'N/A') }}
-            </span>
-          </template>
-        </Column>
-        <Column field="groups" header="Gruppe" sortable style="width: 20%">
-          <template #body="{ data }">
-            <Skeleton v-if="this.currentlyLoading" width="40%" />
-            <span
-              v-else
-              v-html="
-                highlightText(
-                  data.groups?.length ? data.groups[0].group_name : 'N/A'
-                )
-              "
-            />
           </template>
         </Column>
         <Column header="Aktionen" style="width: 10%">
@@ -140,16 +113,7 @@
           global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         },
         userData: [],
-        messageVisible: false,
         currentlyLoading: true,
-        locationCache:{},
-        placeholderRows: Array.from({ length: 12 }, () => ({
-          account_id: 0,
-          vorname: "",
-          nachname: "",
-          role: "",
-          groups: "",
-        })),
       };
     },
     mounted() {
@@ -159,7 +123,7 @@
       async fetchUserData() {
         this.currentlyLoading = true;
         try{
-          const response= await fetch(`${baseUrl}/api/accounts`, {
+          const response= await fetch(`${baseUrl}/api/users`, {
             method: "GET",
             credentials: "include",
           });
@@ -167,37 +131,12 @@
                 throw new Error("Network response was not ok");
               }
               const data= await response.json();
-              for(const user of data){
-                if(!user.groups || user.groups.length===0){
-                  user.fallbackLocationName = await this.getLocationNameByID(user.location_id);
-                }
-              }
-          
               this.userData = data;
               this.currentlyLoading = false;
-            
         } catch(error){
             console.error("Error fetching data:", error);
             this.$refs.toast.toastAddError("Daten konnten nicht geladen werden");
           }
-      },
-  
-      async getLocationNameByID(location_id){
-        if(!location_id) return "N/A";
-        if(this.locationCache[location_id]){
-          return this.locationCache[location_id];
-        }
-        try{
-          const response = await fetch(`${baseUrl}/api/locations/${location_id}/name`,{method: "GET", credentials: "include"});
-          if(!response.ok) throw new Error("Failed to fetch location");
-          const data = await response.json();
-          const name = data?.name || "N/A";
-          this.locationCache[location_id] = name;
-          return name;
-        } catch (error){
-          console.error(`Error fetching location for ID ${location_id}:`, error);
-          return "N/A";
-        }
       },
   
       highlightText(text) {
@@ -207,13 +146,6 @@
         return text
           .toString()
           .replace(regex, '<span class="highlight">$1</span>');
-      },
-      showMessage() {
-        this.messageVisible = true;
-  
-        setTimeout(() => {
-          this.messageVisible = false;
-        }, 1800);
       },
     },
   };
