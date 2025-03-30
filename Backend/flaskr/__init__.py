@@ -5,8 +5,7 @@ from .database import db
 from .routes import users_bp, wares_bp, contracts_bp, auth_bp, customers_bp
 from .auth.jwt import validate_session
 from dotenv import load_dotenv
-
-
+from flasgger import Swagger
 from flask_cors import CORS
 
 # Load environment variables from .env file
@@ -18,6 +17,13 @@ def create_app(test_config=None):
     CORS(app, origins="*", methods=["PUT", "OPTIONS", "GET", "POST"], allow_headers=["Content-Type", "Authorization"])
     app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@database:5432/{os.getenv('POSTGRES_DB')}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Initialize Swagger
+    app.config['SWAGGER'] = {
+        "title": "Metci API",
+        "uiversion": 3
+    }
+    swagger = Swagger(app)
 
     @app.before_request
     def auth():
@@ -47,7 +53,7 @@ def create_app(test_config=None):
         db.create_all()
 
         from types import SimpleNamespace
-        from .request_handling.users_service import create_users, get_users
+        from .request_handling.users_service import create_user, get_users
 
         # Überprüfen, ob bereits Accounts existieren
         req = SimpleNamespace(get_json=lambda: {})
@@ -61,7 +67,7 @@ def create_app(test_config=None):
             }
 
             admin_request = SimpleNamespace(get_json=lambda: admin_data)
-            create_users(admin_request)
+            create_user(admin_request)
 
     return app
 

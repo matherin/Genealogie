@@ -1,5 +1,7 @@
 Flask
 flask_sqlalchemy
+flask-restful
+flasgger
 uuid
 psycopg2-binary
 flask_cors

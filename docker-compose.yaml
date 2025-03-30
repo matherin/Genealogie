@@ -42,8 +42,8 @@ services:
         condition: service_healthy
     networks:
       - app-network
-    expose:
-      - "5000"  # Expose backend internally to NGINX
+    ports:
+      - "80:5000"   # Expose backend internally to NGINX
     env_file:
       - .env
 

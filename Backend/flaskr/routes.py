@@ -1,26 +1,55 @@
 from urllib import response
 from flask import Blueprint, request, jsonify, redirect, url_for
+from flasgger import swag_from
 from .database import db
 from .datamodels import *
 from .request_handling import contracts_service, customers_service, auth_service, users_service, wares_service
-from .auth.validate_request import validate_admin_request, validate_location_request, validate_group_request
-from datetime import datetime
+from .auth.validate_request import validate_admin_request
 
 # Blueprints
 users_bp = Blueprint('users', __name__, url_prefix='/api')
-customers_bp = Blueprint('customers', __name__, url_prefix='/api' )
-contracts_bp = Blueprint('contracts', __name__, url_prefix='/api' )
-wares_bp = Blueprint('wares', __name__, url_prefix='/api' )
+customers_bp = Blueprint('customers', __name__, url_prefix='/api')
+contracts_bp = Blueprint('contracts', __name__, url_prefix='/api')
+wares_bp = Blueprint('wares', __name__, url_prefix='/api')
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 ### Authentication ###
-# route for the reception of the credentials and login handling
 @auth_bp.route("/login", methods=['POST'])
+@swag_from({
+    'summary': 'User Login',
+    'description': 'Authenticate user and return a session token.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'username': {'type': 'string'},
+                    'password': {'type': 'string'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Successful login'},
+        401: {'description': 'Unauthorized'}
+    }
+})
 def user_login():
     return auth_service.handle_login_request(request)
 
 ### User ###
 @users_bp.route('/users', methods=['POST'])
+@swag_from({
+    'summary': 'Create a User',
+    'description': 'Creates a new user with the given details.',
+    'responses': {
+        201: {'description': 'User created successfully'},
+        400: {'description': 'Bad request'}
+    }
+})
 def create_user():
     res = validate_admin_request(request)
     if res:
@@ -28,26 +57,102 @@ def create_user():
     return users_service.create_user(request)
 
 @users_bp.route('/users', methods=['GET'])
+@swag_from({
+    'summary': 'Get Users',
+    'description': 'Retrieves all users from the system.',
+    'responses': {
+        200: {'description': 'A list of users'}
+    }
+})
 def get_users():
     return users_service.get_users(request)
 
 @users_bp.route('/users/<int:user_id>', methods=['GET'])
+@swag_from({
+    'summary': 'Get User by ID',
+    'description': 'Retrieve details of a specific user.',
+    'parameters': [{
+        'name': 'user_id',
+        'in': 'path',
+        'required': True,
+        'type': 'integer'
+    }],
+    'responses': {
+        200: {'description': 'User details'},
+        404: {'description': 'User not found'}
+    }
+})
 def get_user(user_id):
     return users_service.get_user_by_id(user_id, request)
 
 @users_bp.route('/users/<int:user_id>', methods=['PUT'])
+@swag_from({
+    'summary': 'Update User',
+    'description': 'Updates the details of an existing user.',
+    'responses': {
+        200: {'description': 'User updated successfully'},
+        400: {'description': 'Bad request'}
+    }
+})
 def update_user(user_id):
     data = request.get_json()
     if not data:
-        return {"error": "Fehlende Daten für das Update."}, 400
+        return {"error": "Missing data for update."}, 400
     return users_service.update_user(user_id, data)
 
 @users_bp.route('/users/<int:user_id>', methods=['DELETE'])
+@swag_from({
+    'summary': 'Delete User',
+    'description': 'Deletes a user from the system.',
+    'responses': {
+        200: {'description': 'User deleted'},
+        403: {'description': 'Unauthorized'},
+        404: {'description': 'User not found'}
+    }
+})
 def delete_user(user_id):
     res = validate_admin_request(request)
     if res:
         return res
     return users_service.delete_user(user_id)
+
+@users_bp.route('/users/<int:user_id>/password', methods=['PUT'])
+@swag_from({
+    'summary': 'Update User Password',
+    'description': 'Updates the password of an existing user.',
+    'parameters': [
+        {
+            'name': 'user_id',
+            'in': 'path',  # <---- This tells Swagger that user_id is in the URL
+            'required': True,
+            'type': 'integer',
+            'description': 'The ID of the user whose password is being updated'
+        },
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'password': {'type': 'string', 'description': 'New user password'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Password updated successfully'},
+        400: {'description': 'Bad request'},
+        404: {'description': 'User not found'}
+    }
+})
+def update_user_password(user_id):
+    data = request.get_json()
+
+    if not data or 'password' not in data:
+        return {"error": "Missing password data."}, 400
+
+    return users_service.update_password(user_id, data['password'])
 
 
 ### Customer ###

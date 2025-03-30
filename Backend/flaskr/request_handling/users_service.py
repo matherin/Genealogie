@@ -60,6 +60,17 @@ def update_user(user_id, data):
     db.session.commit()
     return {"success": "Account update successful"}, 200
 
+def update_password(user_id, new_password):
+    user = User.query.get(user_id)
+    
+    if not user:
+        return {"error": "User not found"}, 404
+
+    user.password = new_password
+    db.session.commit()
+
+    return {"message": "Password updated successfully"}, 200
+
 def get_user_by_id(id, request):
     user = User.query.filter_by(id=id).first()
 
