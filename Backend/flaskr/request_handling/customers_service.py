@@ -204,11 +204,3 @@ def update_customer(customer_id, data):
     db.session.commit()
 
     return jsonify({"success": "Customer update successful"}), 200
-
-# def get_location_name_by_id(location_id): 
-#     location = Location.query.get(location_id)
-
-#     if not location:    
-#         return {"error": "Could not find location given by id"}, 400
-
-#     return {"location_id": location.id, "name": location.name}, 200
