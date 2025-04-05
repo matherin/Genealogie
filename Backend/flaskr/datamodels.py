@@ -117,7 +117,7 @@ class Contract(db.Model):
     def __repr__(self):
         return f"<Contract(id={self.id}, kunde_id={self.customer_id}, datum={self.date})>"
 
-class Goods(db.Model):
+class Good(db.Model):
     __tablename__ = "waren"
     id = Column(Integer, primary_key=True)
     description = Column(String(255))
@@ -142,23 +142,23 @@ class Goods(db.Model):
         return data
     
     def __repr__(self):
-        return f"<Goods(id={self.id}, bezeichnung={self.description}, preis={self.price})>"
+        return f"<Good(id={self.id}, bezeichnung={self.description}, preis={self.price})>"
 
 class ContractGoods(db.Model):
     __tablename__ = "vertrag_waren"
     contract_id = Column(Integer, ForeignKey("vertraege.id"), primary_key=True)
-    goods_id = Column(Integer, ForeignKey("waren.id"), primary_key=True)
+    good_id = Column(Integer, ForeignKey("waren.id"), primary_key=True)
     quantity = Column(Integer, nullable=False)
 
     contract = relationship("Contract")
-    goods = relationship("Goods")
+    good = relationship("Good")
 
     def to_dict(self):
         return {
             "vertrag": self.contract.to_dict(),
-            "ware": self.goods.to_dict(),
+            "ware": self.good.to_dict(),
             "menge": self.quantity
         }
     
     def __repr__(self):
-        return f"<ContractGoods(vertrag_id={self.contract_id}, ware_id={self.goods_id}, menge={self.quantity})>"
+        return f"<ContractGoods(vertrag_id={self.contract_id}, ware_id={self.good_id}, menge={self.quantity})>"

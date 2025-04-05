@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, redirect, url_for
 from flasgger import swag_from
 from .database import db
 from .datamodels import *
-from .request_handling import contracts_service, customers_service, auth_service, users_service, wares_service
+from .request_handling import contracts_service, customers_service, auth_service, users_service, goods_service
 from .auth.validate_request import validate_admin_request
 
 # Blueprints
@@ -47,6 +47,18 @@ def user_login():
     'tags': ['User'],
     'summary': 'Create a User',
     'description': 'Creates a new user with the given details.',
+    'parameters' : [{
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'username': {'type': 'string', 'description': 'New username'},
+                    'password': {'type': 'string', 'description': 'New user password'}
+                }
+            }
+        }],
     'responses': {
         201: {'description': 'User created successfully'},
         400: {'description': 'Bad request'}
@@ -381,29 +393,251 @@ def update_customer(customer_id):
 def delete_customer(customer_id):
     return customers_service.delete_customer(customer_id)
 
-### ware ###
-@goods_bp.route('/wares', methods=['GET'])
-def get_wares():
-    return wares_service.get_wares(request)
+### Goods ###
+@goods_bp.route('/goods', methods=['POST'])
+@swag_from({
+    'tags': ['Goods'],
+    'summary': 'Create Goods',
+    'description': 'Creates a new goods entry with the given details.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'description': {
+                        'type': 'string',
+                        'description': 'Description of the goods',
+                        'example': 'Old electronics'
+                    },
+                    'price': {
+                        'type': 'number',
+                        'format': 'float',
+                        'description': 'Price per unit',
+                        'example': 50.00
+                    },
+                    'unit': {
+                        'type': 'string',
+                        'description': 'Unit of measurement',
+                        'example': 'kg'
+                    },
+                    'waste_code': {
+                        'type': 'string',
+                        'description': 'Waste code for categorization',
+                        'example': '123456'
+                    },
+                    'collection_group': {
+                        'type': 'string',
+                        'description': 'Collection group classification',
+                        'example': 'Electronics'
+                    },
+                    'category': {
+                        'type': 'string',
+                        'description': 'Category of goods',
+                        'example': 'E-waste'
+                    },
+                    'tax_class': {
+                        'type': 'string',
+                        'description': 'Applicable tax class',
+                        'example': 'standard'
+                    }
+                },
+                'required': ['description', 'price', 'unit']
+            }
+        }
+    ],
+    'responses': {
+        201: {
+            'description': 'Goods created successfully',
+            'content': {
+                'application/json': {
+                    'example': {
+                        'success': 'Goods created successfully',
+                        'id': 1
+                    }
+                }
+            }
+        },
+        400: {
+            'description': 'Bad request - missing or invalid data',
+            'content': {
+                'application/json': {
+                    'example': {
+                        'error': 'Missing required fields (description, price, unit).'
+                    }
+                }
+            }
+        }
+    }
+})
+def create_good():
+    return goods_service.create_good(request)
 
-@goods_bp.route('/wares', methods=['POST'])
-def create_ware():
-    return wares_service.create_ware(request)
+@goods_bp.route('/goods', methods=['GET'])
+@swag_from({
+    'tags': ['Goods'],
+    'summary': 'Get Goods',
+    'description': 'Retrieves all goods from the system.',
+    'responses': {
+        200: {
+            'description': 'A list of goods',
+            'content': {
+                'application/json': {
+                    'example': [
+                        {
+                            'wid': 1,
+                            'bezeichnung': 'Old electronics',
+                            'preis': 50.0,
+                            'einheit': 'kg',
+                            'abfallschlüssel': '123456',
+                            'sammelgruppe': 'Electronics',
+                            'kategorie': 'E-waste'
+                        }
+                    ]
+                }
+            }
+        }
+    }
+})
+def get_goods():
+    return goods_service.get_goods(request)
 
-@goods_bp.route('/wares/<int:ware_id>', methods=['GET'])
-def get_ware(ware_id):
-    return wares_service.get_ware_by_id(ware_id, request)
+@goods_bp.route('/goods/<int:good_id>', methods=['GET'])
+@swag_from({
+    'tags': ['Goods'],
+    'summary': 'Get Good by ID',
+    'description': 'Retrieve details of a specific good.',
+    'parameters': [
+        {
+            'name': 'good_id',
+            'in': 'path',
+            'required': True,
+            'type': 'integer',
+            'description': 'The ID of the good'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Good details',
+            'content': {
+                'application/json': {
+                    'example': {
+                        'wid': 1,
+                        'bezeichnung': 'Old electronics',
+                        'preis': 50.0,
+                        'einheit': 'kg',
+                        'abfallschlüssel': '123456',
+                        'sammelgruppe': 'Electronics',
+                        'kategorie': 'E-waste'
+                    }
+                }
+            }
+        },
+        404: {'description': 'Good not found'}
+    }
+})
+def get_good(good_id):
+    return goods_service.get_good(good_id, request)
 
-@goods_bp.route('/wares/<int:ware_id>', methods=['PUT'])
-def update_ware(ware_id):
+
+@goods_bp.route('/goods/<int:good_id>', methods=['PUT'])
+@swag_from({
+    'tags': ['Goods'],
+    'summary': 'Update Good',
+    'description': 'Updates the details of an existing good.',
+    'parameters': [
+        {
+            'name': 'good_id',
+            'in': 'path',
+            'required': True,
+            'type': 'integer',
+            'description': 'The ID of the good to update'
+        },
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'description': {
+                        'type': 'string',
+                        'description': 'Description of the goods',
+                        'example': 'Old electronics'
+                    },
+                    'price': {
+                        'type': 'number',
+                        'format': 'float',
+                        'description': 'Price per unit',
+                        'example': 50.00
+                    },
+                    'unit': {
+                        'type': 'string',
+                        'description': 'Unit of measurement',
+                        'example': 'kg'
+                    },
+                    'waste_code': {
+                        'type': 'string',
+                        'description': 'Waste code for categorization',
+                        'example': '123456'
+                    },
+                    'collection_group': {
+                        'type': 'string',
+                        'description': 'Collection group classification',
+                        'example': 'Electronics'
+                    },
+                    'category': {
+                        'type': 'string',
+                        'description': 'Category of goods',
+                        'example': 'E-waste'
+                    },
+                    'tax_class': {
+                        'type': 'string',
+                        'description': 'Applicable tax class',
+                        'example': 'standard'
+                    }
+                },
+                'required': ['description', 'price', 'unit']
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Good updated successfully'},
+        400: {'description': 'Bad request, invalid input data'},
+        404: {'description': 'Good not found'}
+    }
+})
+def update_good(good_id):
     data = request.get_json()
     if not data:
         return {"error": "Fehlende Daten für das Update."}, 400
-    return wares_service.update_ware(ware_id, data)
+    return goods_service.update_good(good_id, data)
 
-@goods_bp.route('/wares/<int:ware_id>', methods=['DELETE'])
-def delete_ware(ware_id):
-    return wares_service.delete_ware(ware_id)
+
+@goods_bp.route('/goods/<int:good_id>', methods=['DELETE'])
+@swag_from({
+    'tags': ['Goods'],
+    'summary': 'Delete Good',
+    'description': 'Deletes a good from the system.',
+    'parameters': [
+        {
+            'name': 'good_id',
+            'in': 'path',
+            'required': True,
+            'type': 'integer',
+            'description': 'The ID of the good to be deleted'
+        }
+    ],
+    'responses': {
+        200: {'description': 'Good deleted successfully'},
+        404: {'description': 'Good not found'}
+    }
+})
+def delete_good(good_id):
+    return goods_service.delete_good(good_id)
+
 
 
 ### Contract ###
