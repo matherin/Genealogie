@@ -55,7 +55,8 @@ def user_login():
                 'type': 'object',
                 'properties': {
                     'username': {'type': 'string', 'description': 'New username'},
-                    'password': {'type': 'string', 'description': 'New user password'}
+                    'password': {'type': 'string', 'description': 'New user password'},
+                    'role': {'type': 'string', 'description': 'New role', 'example': 'user'}
                 }
             }
         }],

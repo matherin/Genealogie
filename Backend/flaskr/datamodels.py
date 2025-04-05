@@ -85,7 +85,6 @@ class Customer(db.Model):
         """Helper method to return address data safely"""
         if address:
             return {
-                "id": address.id,
                 **address.to_dict()
             }
         return {}
