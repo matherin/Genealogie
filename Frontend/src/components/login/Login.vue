@@ -10,7 +10,7 @@
         </div>
         <Transition :css="false" appear @enter="onEnter" @appear="onEnter">
           <div class="login-container-left-body">
-            <p class="login-container-left-body-title">Metcera-Recycling</p>
+            <p class="login-container-left-body-title">Metci</p>
             <p class="login-container-left-body-subtitle">
               Diese Seite dient der Verwaltung der Betriebsinternen Daten von Metcera-Recycling.
             </p>

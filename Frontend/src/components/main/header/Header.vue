@@ -37,7 +37,7 @@
         </div>
         <div class="header-container-logo">
           <div class="header-container-logo-art"></div>
-          <p class="header-container-logo-text" @click="onTitleClick">Metcera-Recycling</p>
+          <p class="header-container-logo-text" @click="onTitleClick">Metci</p>
         </div>
       </div>
     </div>
