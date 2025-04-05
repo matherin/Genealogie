@@ -19,7 +19,7 @@
       >
         <template #header>
           <div class="user-table-header">
-            <p class="user-table-header-title">Nutzerübersicht</p>
+            <p class="user-table-header-title">Nutzertabelle</p>
             <div class="user-table-header-button-container">
               <IconField class="user-table-header-button">
                 <AddUserButton @addUserData="fetchUserData" />

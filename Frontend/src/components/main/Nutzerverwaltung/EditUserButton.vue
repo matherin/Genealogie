@@ -6,7 +6,6 @@
         class="p-button-edit"
         @click="
           visible = true;
-          getGruppen();
           this.editUser = { ...editableUser };
         "
       />
@@ -47,6 +46,7 @@
           <div v-if="passwordVisible" class="items">
             <label class="password-text">Neues Passwort:</label>
             <label>{{ this.newPassword }}</label>
+            <Button @click="copyPassword" icon="pi pi-clone" class="copy-User"/>
           </div>
         </div>
         <div class="buttons">
@@ -233,6 +233,18 @@
   .reset-button {
     background-color: white;
     color: var(--p-dialog-color);
+  }
+  
+  .copy-User{
+    border-color: transparent !important;
+    background-color: transparent !important;
+    color: gray !important;
+    width: 20px;
+    height: 20px;
+  }
+
+  .copy-User:hover{
+    color: black !important;
   }
   </style>
   

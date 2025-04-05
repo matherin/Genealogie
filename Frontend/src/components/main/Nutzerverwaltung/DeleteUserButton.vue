@@ -60,7 +60,7 @@
       async onDeleteUser() {
         try {
           const response = await fetch(
-            `${baseUrl}/api/accounts/${this.deleteUser}`,
+            `${baseUrl}/api/users/${this.deleteUser}`,
             { method: "DELETE", credentials: "include" }
           );
           if (!response.ok) {

@@ -28,7 +28,7 @@
       Menu,
       Toast,
     },
-    /*beforeRouteEnter(to, form, next) {
+    beforeRouteEnter(to, form, next) {
       const session = getSessionCookies();
       let permission = "user";
       if (session?.aud) permission = session.aud;
@@ -52,7 +52,7 @@
       )
         next("/");
         else next();
-    },*/
+    },
     data() {
       return {
         route: useRoute(),

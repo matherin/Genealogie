@@ -75,7 +75,7 @@
     methods: {
       async checkForLogin() {
         const hashedPassword = await this.encodePassword(this.password);
-        const loginUser = { name: this.username, password: hashedPassword };
+        const loginUser = { username: this.username, password: hashedPassword };
         try {
           const response = await fetch(`${baseUrl}/api/auth/login`, {
             method: "POST",
@@ -99,7 +99,7 @@
         let session = getSessionCookies()
   
         if (!session || !session?.aud || session.aud === 'user') this.$router.push("/einstellungen/profil");
-        else if (session.aud === 'admin') this.$router.push("nutzerverwaltung");
+        else if (session.aud === 'admin') this.$router.push("nutzerverwaltung/nutzertabelle");
         else this.$router.push("einstellungen/profil");
   
       },

@@ -99,7 +99,7 @@
             password: hashedPassword,
           };
   
-          const response = await fetch(`${baseUrl}/api/accounts/${userID}`, {
+          const response = await fetch(`${baseUrl}/api/users/${userID}/password`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
