@@ -2,11 +2,11 @@
   <div>
     <Toast ref="toast" />
     <Button @click="visible = true" icon="pi pi-trash" severity="danger" outlined class="p-button-delete" />
-    <Dialog v-model:visible="visible" modal header="Nutzer löschen" :style="{ width: '25rem' }">
-      <span class="text information">Möchten Sie den Nutzer wirklich löschen?</span>
+    <Dialog v-model:visible="visible" modal header="Kunden löschen" :style="{ width: '25rem' }">
+      <span class="text information">Möchten Sie den Kunden wirklich löschen?</span>
       <div class="buttons">
-        <Button type="button" label="Abbrechen" severity="secondary" @click="closeDeleteUserMode" />
-        <Button type="button" label="Löschen" @click="onDeleteUser" />
+        <Button type="button" label="Abbrechen" severity="secondary" @click="closeDeleteCustomerMode" />
+        <Button type="button" label="Löschen" @click="onDeleteCustomer" />
       </div>
     </Dialog>
   </div>
@@ -20,8 +20,8 @@ import Toast from "@/components/custom/toast/Toast.vue";
 var baseUrl = window.location.origin;
 
 export default {
-  name: "DeleteUserButton",
-  emits: ["deleteUserData"],
+  name: "DeleteCustomerButton",
+  emits: ["deleteCustomerData"],
   components: {
     Button,
     Dialog,
@@ -33,31 +33,31 @@ export default {
     };
   },
   props: {
-    deleteUser: {
+    deleteCustomer: {
       type: Number,
       required: true,
     },
   },
   methods: {
-    async onDeleteUser() {
+    async onDeleteCustomer() {
       try {
         const response = await fetch(
-          `${baseUrl}/api/users/${this.deleteUser}`,
+          `${baseUrl}/api/customers/${this.deleteCustomer}`,
           { method: "DELETE", credentials: "include" }
         );
         if (!response.ok) {
           throw new Error(`Fehler beim Löschen. Status: ${response.status}`);
         }
-        this.$refs.toast.toastAddSuccess("Nutzer wurde erfolgreich entfernt");
-        this.$emit("deleteUserData");
-        this.closeDeleteUserMode();
+        this.$refs.toast.toastAddSuccess("Kunde wurde erfolgreich entfernt");
+        this.$emit("deleteCustomerData");
+        this.closeDeleteCustomerMode();
       } catch (error) {
-        console.error("Fehler beim Löschen des Benutzers:", error);
-        this.$refs.toast.toastAddError("Nutzer konnte nicht gelöscht werden");
+        console.error("Fehler beim Löschen des Kundens:", error);
+        this.$refs.toast.toastAddError("Kunde konnte nicht gelöscht werden");
       }
     },
 
-    closeDeleteUserMode() {
+    closeDeleteCustomerMode() {
       this.visible = false;
     },
   },

@@ -7,6 +7,8 @@ import Profile from "./../components/main/settings/Profile.vue";
 import NutzerverwaltungMain from "@/components/main/Nutzerverwaltung/NutzerverwaltungMain.vue";
 import Nutzerverwaltung from "@/components/main/Nutzerverwaltung/Nutzerverwaltung.vue";
 import SettingsMain from "./../components/main/settings/SettingsMain.vue";
+import Kundenverwaltung from "@/components/main/Kundenverwaltung/Kundenverwaltung.vue";
+import KundenverwaltungMain from "@/components/main/Kundenverwaltung/KundenverwaltungMain.vue";
 
 const routes = [
   {
@@ -23,9 +25,16 @@ const routes = [
     name: "Nutzer",
     component: NutzerverwaltungMain,
     children: [
-     // { path: "standorte", component: Standortverwaltung, props: true },
       { path: "nutzertabelle", component: Nutzerverwaltung },
-      //{ path: "abrechnungen", component: AbrechnungMain },
+    ],
+  },
+  
+  {
+    path: "/kundenverwaltung",
+    name: "Kunden",
+    component: KundenverwaltungMain,
+    children: [
+      { path: "kundentabelle", component: Kundenverwaltung },
     ],
   },
   {

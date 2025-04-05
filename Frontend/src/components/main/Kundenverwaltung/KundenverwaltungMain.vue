@@ -58,9 +58,9 @@ export default {
           label: "Ansichten",
           items: [
             {
-              label: "Nutzertabelle",
+              label: "Kundentabelle",
               icon: "pi pi-users",
-              command: () => this.$router.push("/nutzerverwaltung/nutzertabelle"),
+              command: () => this.$router.push("/kundenverwaltung/kundentabelle"),
             },
           ],
         },

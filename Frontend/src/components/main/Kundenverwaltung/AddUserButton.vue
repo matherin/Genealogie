@@ -1,34 +1,29 @@
 <template>
     <div>
         <Toast ref="toast" />
-        <Button icon="pi pi-pen-to-square" class="p-button-edit" @click="
+        <Button class="custom-add-user-button" label="Nutzer hinzufügen" icon="pi pi-user" @click="
             visible = true;
-        this.editUser = { ...editableUser };
+        setPassword();
         " />
-        <Dialog v-model:visible="visible" modal header="Nutzer bearbeiten" :style="{ width: '30rem' }">
-            <div class="item-container">
-                <div class="items">
-                    <label for="username" class="text">Username</label>
-                    <InputText id="username" v-model="editUser.username" class="flex-auto" autocomplete="off" />
-                </div>
-                <div class="items">
-                    <label for="role" class="text">Rolle</label>
-                    <Select v-model="editUser.role" optionValue="role" :options="rollen" optionLabel="role"
-                        placeholder="Rolle auswählen" />
-                </div>
-                <div v-if="!passwordVisible" class="items">
-                    <Button type="button" class="reset-button" label="Passwort zurücksetzen"
-                        @click="resetPassword"></Button>
-                </div>
-                <div v-if="passwordVisible" class="items-password">
-                    <label class="password-text">Neues Passwort:</label>
-                    <label>{{ this.newPassword }}</label>
-                    <Button @click="copyPassword" icon="pi pi-clone" class="copy-User" />
-                </div>
+        <Dialog v-model:visible="visible" modal header="Nutzer hinzufügen" :style="{ width: '25rem' }">
+            <div class="items">
+                <label for="username" class="text">Username</label>
+                <InputText id="username" v-model="newUser.username" class="flex-auto" autocomplete="off"
+                    placeholder="Username eingeben" />
+            </div>
+            <div class="items">
+                <label for="role" class="text">Rolle</label>
+                <Select v-model="newUser.role" optionValue="role" :options="rollen" optionLabel="role"
+                    placeholder="Rolle auswählen" />
+            </div>
+            <div class="items-password">
+                <label class="password-text">Passwort:</label>
+                <label>{{ this.newPassword }}</label>
+                <Button @click="copyPassword" icon="pi pi-clone" class="copy-User" />
             </div>
             <div class="buttons">
-                <Button type="button" label="Abbrechen" severity="secondary" @click="closeEditUserMode"></Button>
-                <Button type="button" label="Speichern" @click="sendDataToBackend"></Button>
+                <Button type="button" label="Abbrechen" severity="secondary" @click="closeAddUserMode"></Button>
+                <Button type="button" label="Speichern" @click="sendNewUserDataToBackend"></Button>
             </div>
         </Dialog>
     </div>
@@ -45,8 +40,8 @@ import { toRaw } from "vue";
 var baseUrl = window.location.origin;
 
 export default {
-    name: "EditUserButton",
-    emits: ["editUserData"],
+    name: "AddUserButton",
+    emits: ["addUserData"],
     components: {
         Button,
         Dialog,
@@ -54,61 +49,42 @@ export default {
         Select,
         Toast,
     },
-    props: {
-        editableUser: {
-            type: Object,
-            required: true,
-        },
-    },
     data() {
         return {
             visible: false,
-            passwordVisible: false,
             hashedPassword: "",
-            editUser: null,
             newPassword: "",
+            newUser: {
+                role: "",
+                username: "",
+                password: "",
+            },
             rollen: [{ role: "user" }, { role: "admin" }],
         };
     },
     methods: {
-        async sendDataToBackend() {
-            if (
-                !this.editUser.username ||
-                !this.editUser.role
-            ) {
+        async sendNewUserDataToBackend() {
+            if (!this.newUser.username || !this.newUser.role) {
                 this.$refs.toast.toastAddError(
-                    "Bitte weisen Sie dem Account alle Felder zu."
+                    "Bitte füllen Sie alle Felder aus."
                 );
+                return;
             }
             let user = {
-                ...this.editUser
+                ...this.newUser, password: this.hashedPassword
             };
-            if (this.passwordVisible) {
-                user.password = this.hashedPassword;
-            }
-            const userID = user.id;
-            delete user.id;
             user = toRaw(user);
             try {
-                const response = await fetch(`${baseUrl}/api/users/${userID}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(user),
-                    credentials: "include",
-                });
+                const response = await fetch(`${baseUrl}/api/users`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user), credentials: 'include' });
                 if (!response.ok) {
                     throw new Error(`HTTP error. Status: ${response.status}`);
                 }
-                this.$refs.toast.toastAddSuccess(
-                    "Nutzer wurde erfolgreich aktualisiert"
-                );
-                this.$emit("editUserData");
-                this.closeEditUserMode();
+                this.$refs.toast.toastAddSuccess("Nutzer erfolgreich hinzugefügt");
+                this.$emit('addUserData');
+                this.closeAddUserMode();
             } catch (error) {
-                this.$refs.toast.toastAddError(
-                    "Nutzer konnte nicht aktualisiert werden"
-                );
                 console.error("Upload error:", error);
+                this.$refs.toast.toastAddError("Nutzer konnte nicht hinzugefügt werden");
             }
         },
 
@@ -122,16 +98,19 @@ export default {
             });
         },
 
-        closeEditUserMode() {
+        closeAddUserMode() {
             this.visible = false;
-            this.editUser = null;
+            this.newUser = {
+                role: "",
+                username: "",
+                password: "",
+            };
         },
 
-        async resetPassword() {
+        async setPassword() {
             this.hashedPassword = await this.generateHashedPassword(
                 this.generatePassword(12)
             );
-            this.passwordVisible = true;
         },
 
         generatePassword(length) {
@@ -157,16 +136,7 @@ export default {
 };
 </script>
 
-<style>
-.column {
-    display: flex;
-    flex-direction: column;
-}
-
-.item-container {
-    margin-bottom: 1, 5rem;
-}
-
+<style scoped>
 .items {
     display: flex;
     align-items: center;
@@ -206,20 +176,18 @@ export default {
     flex: auto;
 }
 
-.footer-button {
-    justify-content: end;
+.custom-add-user-button {
+    background-color: var(--color-secondary) !important;
+    border: 1px solid var(--color-secondary) !important;
 }
 
-.p-button-edit {
-    background-color: white;
-    color: var(--p-dialog-color);
-    height: 28px !important;
-    width: 28px !important;
+.custom-add-user-button:hover {
+    border-color: #fdab3f !important;
+    background-color: #fdab3f !important;
 }
 
-.reset-button {
-    background-color: white;
-    color: var(--p-dialog-color);
+.custom-add-user-button:active {
+    background-color: #c78915 !important;
 }
 
 .copy-User {

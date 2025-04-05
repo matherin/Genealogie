@@ -1,19 +1,20 @@
 <template>
   <div class="user-table">
     <Toast ref="toast" />
-    <DataTable dataKey="id" :value="this.currentlyLoading ? this.placeholderRows : this.userData" size="small"
+    <DataTable dataKey="kid" :value="this.currentlyLoading ? this.placeholderRows : this.customerData" size="small"
       removableSort tableStyle="width: 80vw" responsiveLayout="scroll" paginator :rows="12" :filters="filters"
       :globalFilterFields="[
-        'id',
-        'username',
-        'role',
+        'kid',
+        'company',
+        'contact1',
+        'phone1',
       ]">
       <template #header>
         <div class="user-table-header">
-          <p class="user-table-header-title">Nutzertabelle</p>
+          <p class="user-table-header-title">Kundentabelle</p>
           <div class="user-table-header-button-container">
             <IconField class="user-table-header-button">
-              <AddUserButton @addUserData="fetchUserData" />
+              <AddCustomerButton @addCustomerData="fetchCustomerData" />
             </IconField>
             <IconField class="user-table-header-button">
               <InputIcon class="pi pi-search" />
@@ -22,8 +23,8 @@
           </div>
         </div>
       </template>
-      <template #empty> Keine Nutzer gefunden.</template>
-      <Column field="id" header="ID" sortable style="width: 10%">
+      <template #empty> Keine Kunden gefunden.</template>
+      <Column field="kid" header="ID" sortable style="width: 10%">
         <template #body="{ data }">
           <div class="custom-row-div" v-if="this.currentlyLoading">
             <Skeleton width="50%" />
@@ -31,16 +32,22 @@
           <span v-else v-html="highlightText(data.id)" />
         </template>
       </Column>
-      <Column field="username" header="Username" sortable style="width: 20%">
+      <Column field="company" header="Firma" sortable style="width: 20%">
         <template #body="{ data }">
           <Skeleton v-if="this.currentlyLoading" width="50%" />
-          <span v-else v-html="highlightText(data.username)" />
+          <span v-else v-html="highlightText(data.company)" />
         </template>
       </Column>
-      <Column field="role" header="Rolle" sortable style="width: 10%">
+      <Column field="contact1" header="Kontakt" sortable style="width: 20%">
         <template #body="{ data }">
           <Skeleton v-if="this.currentlyLoading" width="70%" />
-          <span v-else v-html="highlightText(data.role)" />
+          <span v-else v-html="highlightText(data.contact1)" />
+        </template>
+      </Column> 
+      <Column field="phone1" header="Telefonnummer" sortable style="width: 15%">
+        <template #body="{ data }">
+          <Skeleton v-if="this.currentlyLoading" width="70%" />
+          <span v-else v-html="highlightText(data.phone1)" />
         </template>
       </Column>
       <Column header="Aktionen" style="width: 10%">
@@ -48,10 +55,10 @@
           <Skeleton v-if="this.currentlyLoading" width="100%" />
           <div v-else class="row">
             <div class="space">
-              <EditUserButton :editableUser="slotProps.data" @editUserData="fetchUserData" />
+              <EditCustomerButton :editableCustomer="slotProps.data" @editCustomerData="fetchCustomerData" />
             </div>
             <div class="space">
-              <DeleteUserButton :deleteUser="slotProps.data.id" @deleteUserData="fetchUserData" />
+              <DeleteCustomerButton :deleteCustomer="slotProps.data.id" @deleteCustomerData="fetchCustomerData" />
             </div>
           </div>
         </template>
@@ -66,11 +73,11 @@ import Column from "primevue/column";
 import IconField from "primevue/iconfield";
 import InputText from "primevue/inputtext";
 import InputIcon from "primevue/inputicon";
-import DeleteUserButton from "./DeleteUserButton.vue";
+import DeleteCustomerButton from "./DeleteCustomerButton.vue";
 import Skeleton from "primevue/skeleton";
 import Toast from "@/components/custom/toast/Toast.vue";
-import AddUserButton from "./AddUserButton.vue";
-import EditUserButton from "./EditUserButton.vue";
+import AddCustomerButton from "./AddUserButton.vue";
+import EditCustomerButton from "./EditCustomerButton.vue";
 
 const FilterMatchMode = { CONTAINS: "contains" };
 
@@ -79,9 +86,9 @@ var baseUrl = window.location.origin;
 export default {
   name: "NutzerverwaltungTable",
   components: {
-    DeleteUserButton,
-    AddUserButton,
-    EditUserButton,
+    DeleteCustomerButton,
+    AddCustomerButton,
+    EditCustomerButton,
     Column,
     DataTable,
     IconField,
@@ -95,18 +102,18 @@ export default {
       filters: {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
-      userData: [],
+      customerData: [],
       currentlyLoading: true,
     };
   },
   mounted() {
-    this.fetchUserData();
+    this.fetchCustomerData();
   },
   methods: {
-    async fetchUserData() {
+    async fetchCustomerData() {
       this.currentlyLoading = true;
       try {
-        const response = await fetch(`${baseUrl}/api/users`, {
+        const response = await fetch(`${baseUrl}/api/customers`, {
           method: "GET",
           credentials: "include",
         });
@@ -114,7 +121,7 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        this.userData = data;
+        this.customerData = data;
         this.currentlyLoading = false;
       } catch (error) {
         console.error("Error fetching data:", error);
