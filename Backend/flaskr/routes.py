@@ -87,7 +87,7 @@ def get_users():
     }
 })
 def get_user(user_id):
-    return users_service.get_user_by_id(user_id, request)
+    return users_service.get_user(user_id, request)
 
 @users_bp.route('/users/<int:user_id>', methods=['PUT'])
 @swag_from({
