@@ -76,7 +76,7 @@
       async checkForLogin() {
         const hashedPassword = await this.encodePassword(this.password);
         const loginUser = { name: this.username, password: hashedPassword };
-        /*try {
+        try {
           const response = await fetch(`${baseUrl}/api/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -92,9 +92,6 @@
         } catch (error) {
           console.error("Upload error:", error);
           this.$refs.toast.toastAddError("Einloggen nicht erfolgreich");
-        }*/
-        if(loginUser.name === "dev" && this.password === "1234"){
-          this.$router.push("nutzerverwaltung");
         }
       },
   
@@ -102,9 +99,7 @@
         let session = getSessionCookies()
   
         if (!session || !session?.aud || session.aud === 'user') this.$router.push("/einstellungen/profil");
-        else if (session.aud === 'group') this.$router.push("/gruppenleitung/gruppen");
-        else if (session.aud === 'location') this.$router.push("/standortleitung/gruppen");
-        else if (session.aud === 'admin') this.$router.push("/verwaltung/nutzer");
+        else if (session.aud === 'admin') this.$router.push("nutzerverwaltung");
         else this.$router.push("einstellungen/profil");
   
       },

@@ -12,19 +12,17 @@
         :rows="12"
         :filters="filters"
         :globalFilterFields="[
-          'account_id',
-          'vorname',
-          'nachname',
+          'id',
+          'username',
           'role',
-          'gruppe',
         ]"
       >
         <template #header>
           <div class="user-table-header">
-            <p class="user-table-header-title">Nutzeransicht</p>
+            <p class="user-table-header-title">Nutzerübersicht</p>
             <div class="user-table-header-button-container">
               <IconField class="user-table-header-button">
-                <!--<AddUserButton @addUserData="fetchUserData" />-->
+                <AddUserButton @addUserData="fetchUserData" />
               </IconField>
               <IconField class="user-table-header-button">
                 <InputIcon class="pi pi-search" />
@@ -43,13 +41,13 @@
             <div class="custom-row-div" v-if="this.currentlyLoading">
               <Skeleton width="50%" />
             </div>
-            <span v-else v-html="highlightText(data.account_id)" />
+            <span v-else v-html="highlightText(data.id)" />
           </template>
         </Column>
         <Column field="username" header="Username" sortable style="width: 20%">
           <template #body="{ data }">
             <Skeleton v-if="this.currentlyLoading" width="50%" />
-            <span v-else v-html="highlightText(data.vorname)" />
+            <span v-else v-html="highlightText(data.username)" />
           </template>
         </Column>
         <Column field="role" header="Rolle" sortable style="width: 10%">
@@ -63,14 +61,14 @@
             <Skeleton v-if="this.currentlyLoading" width="100%" />
             <div v-else class="row">
               <div class="space">
-                <!--<EditUserButton
+                <EditUserButton
                   :editableUser="slotProps.data"
                   @editUserData="fetchUserData"
-                />-->
+                />
               </div>
               <div class="space">
                 <DeleteUserButton
-                  :deleteUser="slotProps.data.account_id"
+                  :deleteUser="slotProps.data.id"
                   @deleteUserData="fetchUserData"
                 />
               </div>
@@ -90,6 +88,8 @@
   import DeleteUserButton from "./DeleteUserButton.vue";
   import Skeleton from "primevue/skeleton";
   import Toast from "@/components/custom/toast/Toast.vue";
+  import AddUserButton from "./AddUserButton.vue";
+  import EditUserButton from "./EditUserButton.vue";
   
   const FilterMatchMode = { CONTAINS: "contains" };
   
@@ -99,6 +99,8 @@
     name: "NutzerverwaltungTable",
     components: {
       DeleteUserButton,
+      AddUserButton,
+      EditUserButton,
       Column,
       DataTable,
       IconField,
