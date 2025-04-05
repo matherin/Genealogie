@@ -10,7 +10,7 @@ from .auth.validate_request import validate_admin_request
 users_bp = Blueprint('users', __name__, url_prefix='/api')
 customers_bp = Blueprint('customers', __name__, url_prefix='/api')
 contracts_bp = Blueprint('contracts', __name__, url_prefix='/api')
-wares_bp = Blueprint('wares', __name__, url_prefix='/api')
+goods_bp = Blueprint('goods', __name__, url_prefix='/api')
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 ### Authentication ###
@@ -381,6 +381,31 @@ def update_customer(customer_id):
 def delete_customer(customer_id):
     return customers_service.delete_customer(customer_id)
 
+### ware ###
+@goods_bp.route('/wares', methods=['GET'])
+def get_wares():
+    return wares_service.get_wares(request)
+
+@goods_bp.route('/wares', methods=['POST'])
+def create_ware():
+    return wares_service.create_ware(request)
+
+@goods_bp.route('/wares/<int:ware_id>', methods=['GET'])
+def get_ware(ware_id):
+    return wares_service.get_ware_by_id(ware_id, request)
+
+@goods_bp.route('/wares/<int:ware_id>', methods=['PUT'])
+def update_ware(ware_id):
+    data = request.get_json()
+    if not data:
+        return {"error": "Fehlende Daten für das Update."}, 400
+    return wares_service.update_ware(ware_id, data)
+
+@goods_bp.route('/wares/<int:ware_id>', methods=['DELETE'])
+def delete_ware(ware_id):
+    return wares_service.delete_ware(ware_id)
+
+
 ### Contract ###
 @contracts_bp.route('/contracts', methods=['POST'])
 def create_contract():
@@ -404,28 +429,3 @@ def update_contract(contract_id):
 @contracts_bp.route('/contracts/<int:contract_id>', methods=['DELETE'])
 def delete_contract(contract_id):
     return contracts_service.delete_contract(contract_id)
-
-
-### ware ###
-@wares_bp.route('/wares', methods=['POST'])
-def create_ware():
-    return wares_service.create_ware(request)
-
-@wares_bp.route('/wares', methods=['GET'])
-def get_wares():
-    return wares_service.get_wares(request)
-
-@wares_bp.route('/wares/<int:ware_id>', methods=['GET'])
-def get_ware(ware_id):
-    return wares_service.get_ware_by_id(ware_id, request)
-
-@wares_bp.route('/wares/<int:ware_id>', methods=['PUT'])
-def update_ware(ware_id):
-    data = request.get_json()
-    if not data:
-        return {"error": "Fehlende Daten für das Update."}, 400
-    return wares_service.update_ware(ware_id, data)
-
-@wares_bp.route('/wares/<int:ware_id>', methods=['DELETE'])
-def delete_ware(ware_id):
-    return wares_service.delete_ware(ware_id)

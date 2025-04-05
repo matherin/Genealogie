@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from .database import db
-from .routes import users_bp, wares_bp, contracts_bp, auth_bp, customers_bp
+from .routes import users_bp, goods_bp, contracts_bp, auth_bp, customers_bp
 from .auth.jwt import validate_session
 from dotenv import load_dotenv
 from flasgger import Swagger
@@ -43,7 +43,7 @@ def create_app(test_config=None):
     app.register_blueprint(users_bp)
     app.register_blueprint(customers_bp)
     app.register_blueprint(contracts_bp)
-    app.register_blueprint(wares_bp)
+    app.register_blueprint(goods_bp)
     app.register_blueprint(auth_bp)
 
     db.init_app(app)
@@ -62,7 +62,7 @@ def create_app(test_config=None):
         if not accs.json:  # Falls keine Benutzer vorhanden sind
             admin_data = {
                 "username": "admin",
-                "password": "1234567",
+                "password": "e13efc991a9bf44bbb4da87cdbb725240184585ccaf270523170e008cf2a3b85f45f86c3da647f69780fb9e971caf5437b3d06d418355a68c9760c70a31d05c7",
                 "role": "admin",
             }
 

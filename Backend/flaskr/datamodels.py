@@ -12,8 +12,7 @@ class User(db.Model):
     def to_dict(self, include_id=True):
         data = {
             "username": self.username,
-            "role": self.role,
-            "password": self.password
+            "role": self.role
         }
         if include_id:
             data["id"] = self.id
