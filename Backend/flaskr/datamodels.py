@@ -22,7 +22,7 @@ class User(db.Model):
         return f"<User(id={self.id}, username={self.username}, role={self.role})>"
 
 class Address(db.Model):
-    __tablename__ = "adressen"
+    __tablename__ = "address"
     id = Column(Integer, primary_key=True)
     street = Column(String(255), nullable=False)
     house_number = Column(String(10), nullable=False)
@@ -32,18 +32,18 @@ class Address(db.Model):
 
     def to_dict(self):
         return {
-            "straße": self.street,
-            "hausnummer": self.house_number,
-            "plz": self.postal_code,
-            "stadt": self.city,
-            "land": self.country
+            "street": self.street,
+            "house-number": self.house_number,
+            "postal_code": self.postal_code,
+            "city": self.city,
+            "country": self.country
         }
     
     def __repr__(self):
         return f"<Address(id={self.id}, street={self.street}, city={self.city})>"
 
 class Customer(db.Model):
-    __tablename__ = "kunden"
+    __tablename__ = "customer"
     id = Column(Integer, primary_key=True)
     company = Column(String(255))
     account_number = Column(String(50))
@@ -57,8 +57,8 @@ class Customer(db.Model):
     email1 = Column(String(255), nullable=False)
     email2 = Column(String(255))
     email3 = Column(String(255))
-    delivery_address_id = Column(Integer, ForeignKey("adressen.id"), nullable=False)
-    billing_address_id = Column(Integer, ForeignKey("adressen.id"), nullable=False)
+    delivery_address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
+    billing_address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
     private = Column(Boolean)
     notes = Column(String)
 
@@ -67,17 +67,17 @@ class Customer(db.Model):
 
     def to_dict(self, include_id=True):
         data = {
-            "kid": self.id if include_id else None,
-            "firma": self.company,
-            "kontonummer": self.account_number,
-            "steuernummer": self.tax_number,
-            "kontakte": [self.contact1, self.contact2, self.contact3],
-            "telefonnummern": [self.phone1, self.phone2, self.phone3],
+            "id": self.id if include_id else None,
+            "company": self.company,
+            "account_number": self.account_number,
+            "tax_number": self.tax_number,
+            "contacts": [self.contact1, self.contact2, self.contact3],
+            "phone_numbers": [self.phone1, self.phone2, self.phone3],
             "emails": [self.email1, self.email2, self.email3],
-            "lieferadresse": self._address_to_dict(self.delivery_address),
-            "rechnungsadresse": self._address_to_dict(self.billing_address),
-            "privat": self.private,
-            "notizen": self.notes
+            "delivery_addresss": self._address_to_dict(self.delivery_address),
+            "billing_address": self._address_to_dict(self.billing_address),
+            "private": self.private,
+            "notes": self.notes
         }
         return data
 
@@ -94,9 +94,9 @@ class Customer(db.Model):
         return f"<Customer(id={self.id}, firma={self.company})>"
 
 class Contract(db.Model):
-    __tablename__ = "vertraege"
+    __tablename__ = "contract"
     id = Column(Integer, primary_key=True)
-    customer_id = Column(Integer, ForeignKey("kunden.id"), nullable=False)
+    customer_id = Column(Integer, ForeignKey("customer.id"), nullable=False)
     date = Column(TIMESTAMP)
     input = Column(Boolean)
 
@@ -104,10 +104,10 @@ class Contract(db.Model):
 
     def to_dict(self, include_id=True):
         data = {
-            "kunde": self.customer.to_dict(),
-            "datum": self.date.strftime("%d-%m-%Y") if self.date else None,
+            "customer": self.customer.to_dict(),
+            "date": self.date.strftime("%d-%m-%Y") if self.date else None,
             "mwst": float(self.vat) if self.vat else None,
-            "annahme": self.acceptance,
+            "acceptance": self.acceptance,
             "user": self.user.to_dict()
         }
         if include_id:
@@ -118,7 +118,7 @@ class Contract(db.Model):
         return f"<Contract(id={self.id}, kunde_id={self.customer_id}, datum={self.date})>"
 
 class Good(db.Model):
-    __tablename__ = "waren"
+    __tablename__ = "good"
     id = Column(Integer, primary_key=True)
     description = Column(String(255))
     price = Column(DECIMAL(10,2))
@@ -130,24 +130,24 @@ class Good(db.Model):
 
     def to_dict(self, include_id=True):
         data = {
-            "bezeichnung": self.description,
-            "preis": float(self.price) if self.price else None,
-            "einheit": self.unit,
-            "abfallschlüssel": self.waste_code,
-            "sammelgruppe": self.collection_group,
-            "kategorie": self.category
+            "description": self.description,
+            "price": float(self.price) if self.price else None,
+            "unit": self.unit,
+            "waste_code": self.waste_code,
+            "collection_group": self.collection_group,
+            "category": self.category
         }
         if include_id:
             data["wid"] = self.id
         return data
     
     def __repr__(self):
-        return f"<Good(id={self.id}, bezeichnung={self.description}, preis={self.price})>"
+        return f"<Good(id={self.id}, discription={self.description}, price={self.price})>"
 
 class ContractGoods(db.Model):
     __tablename__ = "vertrag_waren"
-    contract_id = Column(Integer, ForeignKey("vertraege.id"), primary_key=True)
-    good_id = Column(Integer, ForeignKey("waren.id"), primary_key=True)
+    contract_id = Column(Integer, ForeignKey("contract.id"), primary_key=True)
+    good_id = Column(Integer, ForeignKey("good.id"), primary_key=True)
     quantity = Column(Integer, nullable=False)
 
     contract = relationship("Contract")
@@ -155,10 +155,10 @@ class ContractGoods(db.Model):
 
     def to_dict(self):
         return {
-            "vertrag": self.contract.to_dict(),
-            "ware": self.good.to_dict(),
-            "menge": self.quantity
+            "contract": self.contract.to_dict(),
+            "good": self.good.to_dict(),
+            "quantity": self.quantity
         }
     
     def __repr__(self):
-        return f"<ContractGoods(vertrag_id={self.contract_id}, ware_id={self.good_id}, menge={self.quantity})>"
+        return f"<ContractGoods(vertrag_id={self.contract_id}, good_id={self.good_id}, quantity={self.quantity})>"
