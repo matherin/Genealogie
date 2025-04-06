@@ -8,7 +8,7 @@
         <Dialog v-model:visible="visible" modal header="Nutzer bearbeiten" :style="{ width: '30rem' }">
             <div class="item-container">
                 <div class="items">
-                    <label for="username" class="text">Username</label>
+                    <label for="username" class="text">Nutzername</label>
                     <InputText id="username" v-model="editUser.username" class="flex-auto" autocomplete="off" />
                 </div>
                 <div class="items">
@@ -67,7 +67,7 @@ export default {
             hashedPassword: "",
             editUser: null,
             newPassword: "",
-            rollen: [{ role: "user" }, { role: "admin" }],
+            rollen: [{ role: "Nutzer" }, { role: "Administrator" }],
         };
     },
     methods: {
@@ -80,8 +80,13 @@ export default {
                     "Bitte weisen Sie dem Account alle Felder zu."
                 );
             }
+            const roleMap={
+                Nutzer: "user",
+                Administrator: "admin",
+            };
             let user = {
-                ...this.editUser
+                ...this.editUser, 
+                role: roleMap[this.editUser.role]
             };
             if (this.passwordVisible) {
                 user.password = this.hashedPassword;
@@ -187,7 +192,7 @@ export default {
 
 .text {
     font-weight: 600;
-    width: 24px;
+    width: 40px;
 }
 
 .password-text {
@@ -198,7 +203,7 @@ export default {
     display: flex;
     justify-content: end;
     gap: 1rem;
-    margin-top: 10px;
+    margin-top: 1rem;
 }
 
 .flex-auto {

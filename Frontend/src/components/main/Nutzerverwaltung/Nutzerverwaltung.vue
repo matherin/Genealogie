@@ -31,7 +31,7 @@
           <span v-else v-html="highlightText(data.id)" />
         </template>
       </Column>
-      <Column field="username" header="Username" sortable style="width: 20%">
+      <Column field="username" header="Nutzername" sortable style="width: 20%">
         <template #body="{ data }">
           <Skeleton v-if="this.currentlyLoading" width="50%" />
           <span v-else v-html="highlightText(data.username)" />
@@ -114,7 +114,14 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        this.userData = data;
+        const roleMap={
+          user: "Nutzer",
+          admin: "Administrator",
+        };
+        this.userData = data.map(user => ({
+          ...user,
+          role: roleMap[user.role] || user.role
+        }));
         this.currentlyLoading = false;
       } catch (error) {
         console.error("Error fetching data:", error);

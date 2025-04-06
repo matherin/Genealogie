@@ -13,7 +13,7 @@
             <span class="user-info-value">{{ userData.id }}</span>
           </div>
           <div class="user-info-row">
-            <span class="user-info-label">Username:</span>
+            <span class="user-info-label">Nutzername:</span>
             <span class="user-info-value">{{ userData.username }}</span>
           </div>
           <div class="user-info-row">

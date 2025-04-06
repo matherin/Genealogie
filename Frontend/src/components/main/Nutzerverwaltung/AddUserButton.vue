@@ -5,9 +5,9 @@
             visible = true;
         setPassword();
         " />
-        <Dialog v-model:visible="visible" modal header="Nutzer hinzufügen" :style="{ width: '25rem' }">
+        <Dialog v-model:visible="visible" modal header="Nutzer hinzufügen" :style="{ width: '30rem' }">
             <div class="items">
-                <label for="username" class="text">Username</label>
+                <label for="username" class="text">Nutzername</label>
                 <InputText id="username" v-model="newUser.username" class="flex-auto" autocomplete="off"
                     placeholder="Username eingeben" />
             </div>
@@ -59,7 +59,7 @@ export default {
                 username: "",
                 password: "",
             },
-            rollen: [{ role: "user" }, { role: "admin" }],
+            rollen: [{ role: "Nutzer" }, { role: "Administrator" }],
         };
     },
     methods: {
@@ -70,8 +70,14 @@ export default {
                 );
                 return;
             }
+            const roleMap={
+                Nutzer: "user",
+                Administrator: "admin",
+            };
             let user = {
-                ...this.newUser, password: this.hashedPassword
+                ...this.newUser, 
+                role: roleMap[this.newUser.role],
+                password: this.hashedPassword
             };
             user = toRaw(user);
             try {
@@ -157,7 +163,7 @@ export default {
 
 .text {
     font-weight: 600;
-    width: 24px;
+    width: 40px;
 }
 
 .password-text {
@@ -168,7 +174,7 @@ export default {
     display: flex;
     justify-content: end;
     gap: 1rem;
-    margin-top: 10px;
+    margin-top: 1rem;
 }
 
 .flex-auto {
