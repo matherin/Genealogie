@@ -5,7 +5,7 @@
             visible = true;
         this.editUser = { ...editableUser };
         " />
-        <Dialog v-model:visible="visible" modal header="Nutzer bearbeiten" :style="{ width: '30rem' }">
+        <Dialog v-model:visible="visible" modal header="Nutzer bearbeiten" :style="{ width: '30rem' }" @hide="closeEditUserMode">
             <div class="item-container">
                 <div class="items">
                     <label for="username" class="text">Nutzername</label>
@@ -130,6 +130,7 @@ export default {
         closeEditUserMode() {
             this.visible = false;
             this.editUser = null;
+            this.passwordVisible = false;
         },
 
         async resetPassword() {
@@ -192,6 +193,8 @@ export default {
 
 .text {
     font-weight: 600;
+    min-width: 40px;
+    white-space: nowrap;
     width: 40px;
 }
 
@@ -208,7 +211,7 @@ export default {
 
 .flex-auto {
     display: flex;
-    flex: auto;
+    flex: 1;
 }
 
 .footer-button {
