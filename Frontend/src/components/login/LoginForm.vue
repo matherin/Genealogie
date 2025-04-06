@@ -9,7 +9,7 @@
           class="login-form-container-username-text login-info-text-layout"
           :class="{ moved: usernameIsFocused }"
         >
-          BENUTZERNAME
+          NUTZERNAME
         </p>
         <input
           class="login-form-container-username-input login-input-layout"
