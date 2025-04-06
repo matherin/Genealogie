@@ -35,19 +35,26 @@
       <Column field="company" header="Firma" sortable style="width: 20%">
         <template #body="{ data }">
           <Skeleton v-if="this.currentlyLoading" width="50%" />
-          <span v-else v-html="highlightText(data.company)" />
+          <div v-else>
+            <div v-if="!data.private">
+              <span v-html="highlightText(data.company)" />
+            </div>
+            <div v-else>
+              <span v-html="highlightText('-')" />
+            </div>
+          </div>
         </template>
       </Column>
       <Column field="contact1" header="Kontakt" sortable style="width: 20%">
         <template #body="{ data }">
           <Skeleton v-if="this.currentlyLoading" width="70%" />
-          <span v-else v-html="highlightText(data.contact1)" />
+          <span v-else v-html="highlightText(data.contacts[0])" />
         </template>
       </Column> 
       <Column field="phone1" header="Telefonnummer" sortable style="width: 15%">
         <template #body="{ data }">
           <Skeleton v-if="this.currentlyLoading" width="70%" />
-          <span v-else v-html="highlightText(data.phone1)" />
+          <span v-else v-html="highlightText(data.phone_numbers[0])" />
         </template>
       </Column>
       <Column header="Aktionen" style="width: 10%">
@@ -76,7 +83,7 @@ import InputIcon from "primevue/inputicon";
 import DeleteCustomerButton from "./DeleteCustomerButton.vue";
 import Skeleton from "primevue/skeleton";
 import Toast from "@/components/custom/toast/Toast.vue";
-import AddCustomerButton from "./AddUserButton.vue";
+import AddCustomerButton from "./AddCustomerButton.vue";
 import EditCustomerButton from "./EditCustomerButton.vue";
 
 const FilterMatchMode = { CONTAINS: "contains" };

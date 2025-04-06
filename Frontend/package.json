@@ -18,7 +18,8 @@
         "primeicons": "^7.0.0",
         "primevue": "^4.2.5",
         "vue": "^3.5.12",
-        "vue-router": "^4.4.5"
+        "vue-router": "^4.4.5",
+        "quill": "^2.0.3"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.2.3",

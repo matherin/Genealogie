@@ -79,6 +79,7 @@ export default {
                 this.$refs.toast.toastAddError(
                     "Bitte weisen Sie dem Account alle Felder zu."
                 );
+                return;
             }
             const roleMap={
                 Nutzer: "user",
@@ -170,7 +171,7 @@ export default {
 }
 
 .item-container {
-    margin-bottom: 1, 5rem;
+    margin-bottom: 1.5rem;
 }
 
 .items {
