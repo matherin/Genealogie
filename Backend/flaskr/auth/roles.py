@@ -1,8 +1,6 @@
 # constants to verify user roles from JWT
 
-JWT_ROLE_GROUP = "group"
 JWT_ROLE_ADMIN = "admin"
-JWT_ROLE_LOCATION = "location"
 JWT_ROLE_USER = "user"
 
 def has_admin_rights(role):
@@ -13,22 +11,10 @@ def has_admin_rights(role):
     """
     return role == JWT_ROLE_ADMIN
 
-def has_location_rights(role):
+def has_user_rights(role):
     """
-    has_location_rights returns whether the token bearer
+    has_user_rights returns whether the token bearer
     is allowed to access a ressource which only the users
-    in the location domain are allowed to access
-
-    this also includes the admins
+    in the user domain are allowed to access
     """
-    return role == JWT_ROLE_LOCATION or has_admin_rights(role)
-
-def has_group_rights(role):
-    """
-    has_group_rights returns whether the token bearer
-    is allowed to access a ressource which only the users
-    in the location domain are allowed to access
-
-    this also includes the admins and location
-    """
-    return role == JWT_ROLE_GROUP or has_location_rights(role) or has_admin_rights(role)
+    return role == JWT_ROLE_USER or has_admin_rights(role)

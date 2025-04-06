@@ -138,6 +138,7 @@ class Contract(db.Model):
             "subtotal": float(contract_good.good.price) * contract_good.quantity
         } for contract_good in self.contract_goods
         ]
+        print(goods_list)
 
         total_price = sum(item["subtotal"] for item in goods_list)
 
@@ -173,4 +174,4 @@ class ContractGoods(db.Model):
         }
     
     def __repr__(self):
-        return f"<ContractGoods(vertrag_id={self.contract_id}, good_id={self.good_id}, quantity={self.quantity})>"
+        return f"<ContractGoods(contract_id={self.contract_id}, good_id={self.good_id}, quantity={self.quantity})>"
