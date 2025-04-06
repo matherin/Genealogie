@@ -33,7 +33,7 @@ class Address(db.Model):
     def to_dict(self):
         return {
             "street": self.street,
-            "house-number": self.house_number,
+            "house_number": self.house_number,
             "postal_code": self.postal_code,
             "city": self.city,
             "country": self.country
@@ -74,7 +74,7 @@ class Customer(db.Model):
             "contacts": [self.contact1, self.contact2, self.contact3],
             "phone_numbers": [self.phone1, self.phone2, self.phone3],
             "emails": [self.email1, self.email2, self.email3],
-            "delivery_addresss": self._address_to_dict(self.delivery_address),
+            "delivery_address": self._address_to_dict(self.delivery_address),
             "billing_address": self._address_to_dict(self.billing_address),
             "private": self.private,
             "notes": self.notes
@@ -127,13 +127,25 @@ class Contract(db.Model):
     input = Column(Boolean)
 
     customer = relationship("Customer")
-
+    contract_goods = relationship("ContractGoods", back_populates="contract", lazy="joined")
+    
     def to_dict(self, include_id=True):
+        goods_list = [
+        {
+            "good": contract_good.good.to_dict(),
+            "quantity": contract_good.quantity,
+            "subtotal": float(contract_good.good.price) * contract_good.quantity
+        } for contract_good in self.contract_goods
+        ]
+
+        total_price = sum(item["subtotal"] for item in goods_list)
+
         data = {
             "customer": self.customer.to_dict(),
             "date": self.date.strftime("%d-%m-%Y") if self.date else None,
-            "mwst": float(self.vat) if self.vat else None,
             "input": self.input,
+            "goods": goods_list,
+            "total_price": round(total_price, 2),
         }
         if include_id:
             data["vid"] = self.id
@@ -144,12 +156,12 @@ class Contract(db.Model):
 
 
 class ContractGoods(db.Model):
-    __tablename__ = "vertrag_waren"
+    __tablename__ = "contract_goods"
     contract_id = Column(Integer, ForeignKey("contract.id"), primary_key=True)
     good_id = Column(Integer, ForeignKey("good.id"), primary_key=True)
     quantity = Column(Integer, nullable=False)
 
-    contract = relationship("Contract")
+    contract = relationship("Contract", back_populates="contract_goods")
     good = relationship("Good")
 
     def to_dict(self):

@@ -3,6 +3,8 @@ from flask import jsonify
 from sqlalchemy import *
 from ..datamodels import *
 from ..database import db
+from sqlalchemy.orm import joinedload
+from datetime import datetime
 
 def create_contract(request):
     data = request.get_json()
@@ -26,7 +28,6 @@ def create_contract(request):
 
     # Validate and parse date
     try:
-        from datetime import datetime
         contract_date = datetime.strptime(date_str, "%d-%m-%Y")
     except ValueError:
         return {"error": "Date format should be DD-MM-YYYY."}, 400
@@ -82,3 +83,51 @@ def delete_contract(contract_id):
     db.session.commit()
 
     return {"success": "Contract deleted successfully"}, 200
+
+def get_contracts(request):
+    contracts = Contract.query.options(
+        joinedload(Contract.customer),
+        joinedload(Contract.contract_goods).joinedload(ContractGoods.good)
+    ).filter_by(id=id).all()
+    contracts_list = [contract.to_dict() for contract in contracts]
+    return jsonify(contracts_list), 200
+
+
+def get_contract(contract_id, request):
+    contract = Contract.query.options(
+        joinedload(Contract.customer),
+        joinedload(Contract.contract_goods).joinedload(ContractGoods.good)
+    ).filter_by(id=id).first()
+
+    if not contract:
+        return {"error": "Contract not found"}, 404
+
+    return jsonify(contract.to_dict()), 200
+
+
+def update_contract(contract_id, data):
+    contract = Contract.query.options(joinedload(Contract.customer)).get(contract_id)
+    if not contract:
+        return jsonify({"error": "Contract not found"}), 404
+
+    # Update customer ID if provided
+    if "customer_id" in data:
+        customer = Customer.query.get(data["customer_id"])
+        if not customer:
+            return jsonify({"error": "Customer with the given ID not found"}), 400
+        contract.customer_id = data["customer_id"]
+
+    # Update date if provided
+    if "date" in data:
+        try:
+            contract.date = datetime.strptime(data["date"], "%d-%m-%Y")
+        except ValueError:
+            return jsonify({"error": "Date format must be DD-MM-YYYY"}), 400
+
+    # Update input/output flag
+    if "input" in data:
+        contract.input = data["input"]
+
+    # Commit changes
+    db.session.commit()
+    return jsonify({"success": "Contract updated successfully"}), 200

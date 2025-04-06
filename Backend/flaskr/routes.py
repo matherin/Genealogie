@@ -704,14 +704,72 @@ def create_contract():
     return contracts_service.create_contract(request)
 
 @contracts_bp.route('/contracts', methods=['GET'])
+@swag_from({
+    'tags': ['Contracts'],
+    'summary': 'Get all Contracts',
+    'description': 'Returns a list of all contracts including related customer information.',
+    'responses': {
+        200: {'description': 'List of contracts returned successfully'},
+    }
+})
 def get_contracts():
     return contracts_service.get_contracts(request)
 
 @contracts_bp.route('/contracts/<int:contract_id>', methods=['GET'])
+@swag_from({
+    'tags': ['Contracts'],
+    'summary': 'Get a Contract by ID',
+    'description': 'Returns the contract with the given ID along with associated customer information.',
+    'parameters': [
+        {
+            'name': 'contract_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'The ID of the contract to retrieve'
+        }
+    ],
+    'responses': {
+        200: {'description': 'Contract found and returned successfully'},
+        404: {'description': 'Contract not found'}
+    }
+})
 def get_contract(contract_id):
-    return contracts_service.get_contract_by_id(contract_id, request)
+    return contracts_service.get_contract(contract_id, request)
 
 @contracts_bp.route('/contracts/<int:contract_id>', methods=['PUT'])
+@swag_from({
+    'tags': ['Contracts'],
+    'summary': 'Update a Contract',
+    'description': 'Updates an existing contract by its ID. You can update the customer, date, and whether it is an input contract.',
+    'parameters': [
+        {
+            'name': 'contract_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'The ID of the contract to update'
+        },
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'customer_id': {'type': 'integer', 'description': 'ID of the customer associated with this contract'},
+                    'date': {'type': 'string', 'description': 'Date of the contract (DD-MM-YYYY)'},
+                    'input': {'type': 'boolean', 'description': 'Indicates if the contract is an input contract'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Contract updated successfully'},
+        400: {'description': 'Bad request - invalid data or IDs'},
+        404: {'description': 'Contract not found'}
+    }
+})
 def update_contract(contract_id):
     data = request.get_json()
     if not data:
