@@ -2,7 +2,7 @@ import jwt
 from jwt import ExpiredSignatureError, InvalidAudienceError, InvalidTokenError
 import datetime
 import time
-from .roles import JWT_ROLE_ADMIN, JWT_ROLE_LOCATION, JWT_ROLE_GROUP, JWT_ROLE_USER
+from .roles import JWT_ROLE_ADMIN, JWT_ROLE_USER
 
 # ich weiß, ich weiß, aber das ist ja für das projekt egal. (und auch nicht das einzige secret im source code :o )
 _JWT_SECRET = "caephooze3quie1saht7phihahhah1Oagh1Airoh7naigaiquay5elie4ail5Phieciex3wei3iequ6sheedor2hoo0YaiwaePhia2oot7Quaighohgh7seiwoo6ahruThee1saejooShoCaeRee5oodaepho0uoquie5eisaetaeBolepoo4phoweiji0iwaeliephaedeexeeNeang2a"
@@ -16,9 +16,7 @@ def validate_session(session):
             algorithms=["HS256"],
             options={"verify_signature": True, "require": ["iat", "exp", "aud"]},
             audience=[
-                JWT_ROLE_ADMIN, 
-                JWT_ROLE_GROUP,
-                JWT_ROLE_LOCATION,
+                JWT_ROLE_ADMIN,
                 JWT_ROLE_USER
                 ] 
         )
