@@ -55,5 +55,4 @@ Dieses Projekt ist eine Anwendung zur Verwaltung von Waren, die von Kunden in ei
 
 # Arbeitszeit:
 
-- Robin: 14,5 h
-start 12:30
+- Robin: 20 h
