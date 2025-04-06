@@ -1,167 +1,204 @@
 <template>
   <div>
     <Toast ref="toast" />
-    <Button icon="pi pi-pen-to-square" class="p-button-edit" @click="
+    <Button icon="pi pi-eye" outlined class="p-button-edit" @click="
       visible = true;
+    readOnlyMode = true;
     this.editCustomer = JSON.parse(JSON.stringify(this.editableCustomer));
-    console.log(this.editCustomer);
     " />
-    <Dialog v-model:visible="visible" modal header="Kunden bearbeiten" >
+    <Dialog v-model:visible="visible" modal>
+      <template #header>
+        <div class="dialog-header">
+          <span v-if="readOnlyMode" class="header-text">Kundenübersicht</span>
+          <span v-else class="header-text">Kunden bearbeiten</span>
+          <Button :icon="!readOnlyMode ? 'pi pi-eye' : 'pi pi-pen-to-square'" class="button" severity="primary" outlined
+            @click="readOnlyMode = !readOnlyMode; closeEditCustomerMode();" />
+        </div>
+      </template>
       <div class="item-container">
 
-        <div class="items-alone">
-          <label class="text">Privatperson</label>
-          <ToggleSwitch v-model="editCustomer.private" />
-        </div>
+        <div class="column-left">
+          <div class="item-group">
+            <div class="items-alone">
+              <label class="text">Privatperson</label>
+              <ToggleSwitch v-model="editCustomer.private" :disabled="readOnlyMode" />
+            </div>
 
-        <div class="items-alone" v-if="!editCustomer.private">
-          <label class="text">Firma</label>
-          <InputText id="account_number" v-model="editCustomer.company" class="flex-auto" autocomplete="off"
-            placeholder="Musterfirma GmbH" />
-        </div>
+            <div class="items-alone" v-if="!editCustomer.private">
+              <label class="text">Firma<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="account_number" v-model="editCustomer.company"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterfirma GmbH' : ''" :readonly="readOnlyMode" />
+            </div>
 
-        <div class="item-group">
-          <label class="group-text">Kontaktpersonen</label>
-          <div class="items">
-            <label class="text">Kontakt 1</label>
-            <InputText id="contact1" v-model="editCustomer.contacts[0]" class="flex-auto" autocomplete="off"
-              placeholder="Max Mustermann" />
-          </div>
-          <div class="items">
-            <label class="text">Kontakt 2*</label>
-            <InputText id="contact2" v-model="editCustomer.contacts[1]" class="flex-auto" autocomplete="off"
-              placeholder="Max Mustermann" />
-          </div>
-          <div class="items">
-            <label class="text">Kontakt 3*</label>
-            <InputText id="contact3" v-model="editCustomer.contacts[2]" class="flex-auto" autocomplete="off"
-              placeholder="Max Mustermann" />
-          </div>
-        </div>
 
-        <div class="item-group">
-          <label class="group-text">E-Mail-Adressen</label>
-          <div class="items">
-            <label class="text">E-Mail 1</label>
-            <InputText id="email1" v-model="editCustomer.emails[0]" class="flex-auto" autocomplete="off"
-              placeholder="Max.Mustermann@gmail.com" />
-          </div>
-          <div class="items">
-            <label class="text">E-Mail 2*</label>
-            <InputText id="email2" v-model="editCustomer.emails[1]" class="flex-auto" autocomplete="off"
-              placeholder="Max.Mustermann@gmail.com" />
-          </div>
-          <div class="items">
-            <label class="text">E-Mail 3*</label>
-            <InputText id="email3" v-model="editCustomer.emails[2]" class="flex-auto" autocomplete="off"
-              placeholder="Max.Mustermann@gmail.com" />
-          </div>
-        </div>
+            <div class="items-alone">
+              <label class="text">IBAN<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="account_number" v-model="editCustomer.account_number"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'DE01 2345 6789 1011 1213 14' : ''" :readonly="readOnlyMode" />
+            </div>
 
-        <div class="item-group">
-          <label class="group-text">Telefonnummern</label>
-          <div class="items">
-            <label class="text">Telef-Nr. 1</label>
-            <InputText id="phone1" v-model="editCustomer.phone_numbers[0]" class="flex-auto" autocomplete="off"
-              placeholder="+4912345678910" />
+            <div class="items-alone">
+              <label class="text">Steuernummer<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="account_number" v-model="editCustomer.tax_number"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '012345678910' : ''" :readonly="readOnlyMode" />
+            </div>
           </div>
-          <div class="items">
-            <label class="text">Telef-Nr. 2*</label>
-            <InputText id="phone2" v-model="editCustomer.phone_numbers[1]" class="flex-auto" autocomplete="off"
-              placeholder="+4912345678910" />
-          </div>
-          <div class="items">
-            <label class="text">Telef-Nr. 3*</label>
-            <InputText id="phone3" v-model="editCustomer.phone_numbers[2]" class="flex-auto" autocomplete="off"
-              placeholder="+4912345678910" />
-          </div>
-        </div>
 
-        <div class="item-group">
-          <label class="group-text">Lieferadresse</label>
-          <div class="items">
-            <label class="text">Land</label>
-            <InputText id="country" v-model="editCustomer.delivery_address.country" class="flex-auto" autocomplete="off"
-              placeholder="Musterland" />
+          <div class="item-group">
+            <label class="group-text">Kontaktpersonen</label>
+            <div class="items">
+              <label class="text">Kontakt 1<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="contact1" v-model="editCustomer.contacts[0]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Max Mustermann' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Kontakt 2</label>
+              <InputText id="contact2" v-model="editCustomer.contacts[1]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Max Mustermann' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Kontakt 3</label>
+              <InputText id="contact3" v-model="editCustomer.contacts[2]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Max Mustermann' : ''" :readonly="readOnlyMode" />
+            </div>
           </div>
-          <div class="items">
-            <label class="text">Stadt</label>
-            <InputText id="city" v-model="editCustomer.delivery_address.city" class="flex-auto" autocomplete="off"
-              placeholder="Musterhausen" />
-          </div>
-          <div class="items">
-            <label class="text">Postleitzahl</label>
-            <InputText id="postal_code" v-model="editCustomer.delivery_address.postal_code" class="flex-auto"
-              autocomplete="off" placeholder="12345" />
-          </div>
-          <div class="items">
-            <label class="text">Straße</label>
-            <InputText id="street" v-model="editCustomer.delivery_address.street" class="flex-auto" autocomplete="off"
-              placeholder="Musterstraße" />
-          </div>
-          <div class="items">
-            <label class="text">Hausnummer</label>
-            <InputText id="house_number" v-model="editCustomer.delivery_address.house_number" class="flex-auto"
-              autocomplete="off" placeholder="1a" />
-          </div>
-        </div>
 
-        <div class="item-group">
-          <label class="group-text">Rechnungsadresse</label>
-          <div class="items">
-            <label class="text">Land</label>
-            <InputText id="country" v-model="editCustomer.billing_address.country" class="flex-auto" autocomplete="off"
-              placeholder="Musterland" />
+          <div class="item-group">
+            <label class="group-text">E-Mail-Adressen</label>
+            <div class="items">
+              <label class="text">E-Mail 1<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="email1" v-model="editCustomer.emails[0]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Max.Mustermann@gmail.com' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">E-Mail 2</label>
+              <InputText id="email2" v-model="editCustomer.emails[1]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Max.Mustermann@gmail.com' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">E-Mail 3</label>
+              <InputText id="email3" v-model="editCustomer.emails[2]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Max.Mustermann@gmail.com' : ''" :readonly="readOnlyMode" />
+            </div>
           </div>
-          <div class="items">
-            <label class="text">Stadt</label>
-            <InputText id="city" v-model="editCustomer.billing_address.city" class="flex-auto" autocomplete="off"
-              placeholder="Musterhausen" />
-          </div>
-          <div class="items">
-            <label class="text">Postleitzahl</label>
-            <InputText id="postal_code" v-model="editCustomer.billing_address.postal_code" class="flex-auto"
-              autocomplete="off" placeholder="12345" />
-          </div>
-          <div class="items">
-            <label class="text">Straße</label>
-            <InputText id="street" v-model="editCustomer.billing_address.street" class="flex-auto" autocomplete="off"
-              placeholder="Musterstraße" />
-          </div>
-          <div class="items">
-            <label class="text">Hausnummer</label>
-            <InputText id="house_number" v-model="editCustomer.billing_address.house_number" class="flex-auto"
-              autocomplete="off" placeholder="1a" />
+
+          <div class="item-group">
+            <label class="group-text">Telefonnummern</label>
+            <div class="items">
+              <label class="text">Telef-Nr. 1<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="phone1" v-model="editCustomer.phone_numbers[0]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '+4912345678910' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Telef-Nr. 2</label>
+              <InputText id="phone2" v-model="editCustomer.phone_numbers[1]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '+4912345678910' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Telef-Nr. 3</label>
+              <InputText id="phone3" v-model="editCustomer.phone_numbers[2]"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '+4912345678910' : ''" :readonly="readOnlyMode" />
+            </div>
           </div>
         </div>
 
-        <div class="items-alone">
-          <label class="text">IBAN</label>
-          <InputText id="account_number" v-model="editCustomer.account_number" class="flex-auto" autocomplete="off"
-            placeholder="DE01 2345 6789 1011 1213 14" />
-        </div>
+        <div class="column-right">
+          <div class="item-group">
+            <label class="group-text">Rechnungsadresse</label>
+            <div class="items">
+              <label class="text">Land<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="country" v-model="editCustomer.billing_address.country"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterland' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Stadt<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="city" v-model="editCustomer.billing_address.city"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterhausen' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Postleitzahl<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="postal_code" v-model="editCustomer.billing_address.postal_code"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '12345' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Straße<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="street" v-model="editCustomer.billing_address.street"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterstraße' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Hausnummer<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="house_number" v-model="editCustomer.billing_address.house_number"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '1a' : ''" :readonly="readOnlyMode" />
+            </div>
+          </div>
 
-        <div class="items-alone">
-          <label class="text">Steuernummer</label>
-          <InputText id="account_number" v-model="editCustomer.tax_number" class="flex-auto" autocomplete="off"
-            placeholder="012345678910" />
-        </div>
 
-        <div class="items-notes">
-          <label class="text">Notizen*</label>
-          <Editor id="notes" v-model="editCustomer.notes" editorStyle="height: 320px"
-            placeholder="Notizen schreiben..." />
-        </div>
+          <div class="item-group">
+            <label class="group-text">Lieferadresse</label>
+            <div class="items">
+              <label class="text">Land<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="country" v-model="editCustomer.delivery_address.country"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterland' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Stadt<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="city" v-model="editCustomer.delivery_address.city"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterhausen' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Postleitzahl<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="postal_code" v-model="editCustomer.delivery_address.postal_code"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '12345' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Straße<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="street" v-model="editCustomer.delivery_address.street"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterstraße' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div class="items">
+              <label class="text">Hausnummer<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="house_number" v-model="editCustomer.delivery_address.house_number"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '1a' : ''" :readonly="readOnlyMode" />
+            </div>
+          </div>
 
+          <div class="items-notes">
+            <label class="text">Notizen</label>
+            <Editor id="notes" v-model="editCustomer.notes" editorStyle="height: 320px"
+              :placeholder="!readOnlyMode ? 'Notiz schreiben...' : ''" :readonly="readOnlyMode" />
+          </div>
+        </div>
       </div>
-      <template #footer>
+      <template v-if="!readOnlyMode" #footer>
         <div class="dialog-footer">
           <div class="dialog-footer-left">
-            <span class="footer-note">*Optionale Felder</span>
+            <span class="footer-note">*Pflichtfelder</span>
           </div>
           <div class="buttons">
-            <Button type="button" label="Abbrechen" severity="secondary" @click="closeEditCustomerMode"
-              autofocus></Button>
+            <Button type="button" label="Abbrechen" severity="secondary"
+              @click="closeEditCustomerMode(); readOnlyMode = true" autofocus></Button>
             <Button type="button" label="Speichern" @click="sendDataToBackend" autofocus></Button>
           </div>
         </div>
@@ -204,6 +241,7 @@ export default {
     return {
       visible: false,
       editCustomer: null,
+      readOnlyMode: false,
     };
   },
   methods: {
@@ -256,6 +294,7 @@ export default {
         );
         this.$emit("editCustomerData");
         this.closeEditCustomerMode();
+        this.readOnlyMode = true;
       } catch (error) {
         this.$refs.toast.toastAddError(
           "Kunde konnte nicht aktualisiert werden"
@@ -265,8 +304,7 @@ export default {
     },
 
     closeEditCustomerMode() {
-      this.visible = false;
-      this.editCustomer = null;
+      this.editCustomer = JSON.parse(JSON.stringify(this.editableCustomer));
     },
   },
 };
@@ -279,18 +317,28 @@ export default {
 }
 
 .item-container {
-  margin-bottom: 1.5rem;
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  gap: 2rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+}
+
+.column-left,
+.column-right {
+  flex: 1;
+  display: flex;
   flex-direction: column;
+  gap: 2rem;
 }
 
 .items-alone {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4rem;
-  margin-left: 20px;
+  gap: 2rem;
+  margin-left: 10px;
   margin-bottom: 4px;
   width: 80%;
 }
@@ -299,7 +347,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4rem;
+  gap: 2rem;
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 4px;
@@ -318,8 +366,6 @@ export default {
 }
 
 .item-group {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
   width: 80%;
 }
 
@@ -339,9 +385,25 @@ export default {
 
 .group-text {
   font-weight: 600;
-  width: 24px;
-  text-decoration: solid;
+  position: relative;
+  width: 100%;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.group-text::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  background-color: #ccc;
+  margin-left: 1rem;
+}
+
+.header-text {
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-decoration: underline;
 }
 
 .password-text {
@@ -382,6 +444,13 @@ export default {
   max-width: 500px;
 }
 
+.read-only-input {
+  border: none !important;
+  background-color: transparent !important;
+  pointer-events: none;
+  box-shadow: none !important;
+}
+
 .footer-button {
   justify-content: end;
 }
@@ -404,11 +473,25 @@ export default {
 }
 
 .p-dialog {
-  min-width: 400px !important;
-  min-height: 400px !important;
-  max-width: 60rem !important;
-  width: 60rem !important;
+  max-width: 90rem !important;
+  width: 90vw !important;
   max-height: 70rem !important;
-  overflow: auto !important;
+  overflow: hidden !important;
+}
+
+.p-dialog .p-dialog-content {
+  max-height: 60vh;
+  overflow-y: auto;
+  border-radius: 1rem;
+  padding-right: 1rem;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  width: 100%;
 }
 </style>
