@@ -56,6 +56,9 @@ def update_user(user_id, data):
         # else: 
         user.password = data['password']
 
+    if 'role' in data:
+        user.role = data['role']
+
     db.session.add(user)
     db.session.commit()
     return {"success": "Account update successful"}, 200

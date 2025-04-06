@@ -123,7 +123,8 @@ def get_user(user_id):
                 'type': 'object',
                 'properties': {
                     'username': {'type': 'string', 'description': 'New username'},
-                    'password': {'type': 'string', 'description': 'New user password'}
+                    'password': {'type': 'string', 'description': 'New user password'},
+                    'role': {'type': 'string', 'description': 'New user role'}
                 }
             }
         }
@@ -643,6 +644,62 @@ def delete_good(good_id):
 
 ### Contract ###
 @contracts_bp.route('/contracts', methods=['POST'])
+@swag_from({
+    'tags': ['Contracts'],
+    'summary': 'Create a Contract',
+    'description': 'Creates a new contract linked to an existing customer and optionally associates goods with the contract.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'customer_id': {
+                        'type': 'integer',
+                        'description': 'The ID of the customer the contract belongs to',
+                        'required': True
+                    },
+                    'date': {
+                        'type': 'string',
+                        'description': 'The date of the contract in format DD-MM-YYYY',
+                        'example': '30-03-2025',
+                        'required': True
+                    },
+                    'input': {
+                        'type': 'boolean',
+                        'description': 'Indicates whether the contract is an input (True) or output (False)'
+                    },
+                    'goods': {
+                        'type': 'array',
+                        'description': 'List of goods associated with the contract',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'good_id': {
+                                    'type': 'integer',
+                                    'description': 'ID of the good to be linked to the contract',
+                                    'required': True
+                                },
+                                'quantity': {
+                                    'type': 'integer',
+                                    'description': 'Quantity of the good in the contract',
+                                    'required': True
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    'responses': {
+        201: {'description': 'Contract created successfully'},
+        400: {'description': 'Bad request - missing or incorrect data'},
+        404: {'description': 'Customer or good not found'}
+    }
+})
 def create_contract():
     return contracts_service.create_contract(request)
 
@@ -662,5 +719,23 @@ def update_contract(contract_id):
     return contracts_service.update_contract(contract_id, data)
 
 @contracts_bp.route('/contracts/<int:contract_id>', methods=['DELETE'])
+@swag_from({
+    'tags': ['Contracts'],
+    'summary': 'Delete a Contract',
+    'description': 'Deletes a contract by its ID along with all associated goods from the contract.',
+    'parameters': [
+        {
+            'name': 'contract_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'The ID of the contract to delete'
+        }
+    ],
+    'responses': {
+        200: {'description': 'Contract deleted successfully'},
+        404: {'description': 'Contract not found'}
+    }
+})
 def delete_contract(contract_id):
     return contracts_service.delete_contract(contract_id)

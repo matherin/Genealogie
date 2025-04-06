@@ -91,31 +91,6 @@ class Customer(db.Model):
     
     def __repr__(self):
         return f"<Customer(id={self.id}, firma={self.company})>"
-
-class Contract(db.Model):
-    __tablename__ = "contract"
-    id = Column(Integer, primary_key=True)
-    customer_id = Column(Integer, ForeignKey("customer.id"), nullable=False)
-    date = Column(TIMESTAMP)
-    input = Column(Boolean)
-
-    customer = relationship("Customer")
-
-    def to_dict(self, include_id=True):
-        data = {
-            "customer": self.customer.to_dict(),
-            "date": self.date.strftime("%d-%m-%Y") if self.date else None,
-            "mwst": float(self.vat) if self.vat else None,
-            "acceptance": self.acceptance,
-            "user": self.user.to_dict()
-        }
-        if include_id:
-            data["vid"] = self.id
-        return data
-    
-    def __repr__(self):
-        return f"<Contract(id={self.id}, kunde_id={self.customer_id}, datum={self.date})>"
-
 class Good(db.Model):
     __tablename__ = "good"
     id = Column(Integer, primary_key=True)
@@ -142,6 +117,31 @@ class Good(db.Model):
     
     def __repr__(self):
         return f"<Good(id={self.id}, discription={self.description}, price={self.price})>"
+    
+
+class Contract(db.Model):
+    __tablename__ = "contract"
+    id = Column(Integer, primary_key=True)
+    customer_id = Column(Integer, ForeignKey("customer.id"), nullable=False)
+    date = Column(TIMESTAMP)
+    input = Column(Boolean)
+
+    customer = relationship("Customer")
+
+    def to_dict(self, include_id=True):
+        data = {
+            "customer": self.customer.to_dict(),
+            "date": self.date.strftime("%d-%m-%Y") if self.date else None,
+            "mwst": float(self.vat) if self.vat else None,
+            "input": self.input,
+        }
+        if include_id:
+            data["vid"] = self.id
+        return data
+    
+    def __repr__(self):
+        return f"<Contract(id={self.id}, kunde_id={self.customer_id}, datum={self.date})>"
+
 
 class ContractGoods(db.Model):
     __tablename__ = "vertrag_waren"
