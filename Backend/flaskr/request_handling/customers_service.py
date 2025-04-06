@@ -17,15 +17,31 @@ def create_customer(request):
     company = data.get("company", "").strip()
     account_number = data.get("account_number", "").strip()
     tax_number = data.get("tax_number", "").strip()
-    contact1 = data.get("contact1", "").strip()
-    contact2 = data.get("contact2", "").strip() or None
-    contact3 = data.get("contact3", "").strip() or None
-    phone1 = data.get("phone1", "").strip() or None
-    phone2 = data.get("phone2", "").strip() or None
-    phone3 = data.get("phone3", "").strip() or None
-    email1 = data.get("email1", "").strip()
-    email2 = data.get("email2", "").strip() or None
-    email3 = data.get("email3", "").strip() or None
+
+    # Check if contacts data exists and has the correct number of contacts (max 3)
+    contact_data = data.get("contacts")
+    if not contact_data or len(contact_data) > 3:
+        return {"error": "Contacts must be provided and contain a maximum of 3 entries."}, 400
+    contact1 = contact_data[0].strip() if contact_data[0] else None
+    contact2 = contact_data[1].strip() if len(contact_data) > 1 else None
+    contact3 = contact_data[2].strip() if len(contact_data) > 2 else None
+
+    # Check if phone numbers data exists and has the correct number (max 3)
+    phone_data = data.get("phone_numbers")
+    if not phone_data or len(phone_data) > 3:
+        return {"error": "Phone numbers must be provided and contain a maximum of 3 entries."}, 400
+    phone1 = phone_data[0].strip() if phone_data[0] else None
+    phone2 = phone_data[1].strip() if len(phone_data) > 1 else None
+    phone3 = phone_data[2].strip() if len(phone_data) > 2 else None
+
+    # Check if emails data exists and has the correct number (max 3)
+    email_data = data.get("emails")
+    if not email_data or len(email_data) > 3:
+        return {"error": "Emails must be provided and contain a maximum of 3 entries."}, 400
+    email1 = email_data[0].strip() if email_data[0] else None
+    email2 = email_data[1].strip() if len(email_data) > 1 else None
+    email3 = email_data[2].strip() if len(email_data) > 2 else None
+
     private = data.get("private", False)
     notes = data.get("notes", "").strip() or None
 
@@ -141,54 +157,94 @@ def update_customer(customer_id, data):
         customer.account_number = data["account_number"]
     if "tax_number" in data:
         customer.tax_number = data["tax_number"]
-    if "contact1" in data:
-        customer.contact1 = data["contact1"]
-    if "contact2" in data:
-        customer.contact2 = data["contact2"]
-    if "contact3" in data:
-        customer.contact3 = data["contact3"]
-    if "phone1" in data:
-        customer.phone1 = data["phone1"]
-    if "phone2" in data:
-        customer.phone2 = data["phone2"]
-    if "phone3" in data:
-        customer.phone3 = data["phone3"]
-    if "email1" in data:
-        customer.email1 = data["email1"]
-    if "email2" in data:
-        customer.email2 = data["email2"]
-    if "email3" in data:
-        customer.email3 = data["email3"]
     if "private" in data:
         customer.private = data["private"]
     if "notes" in data:
         customer.notes = data["notes"]
 
-    # Update the delivery address if provided
+    # Validate and update emails
+    if "emails" in data:
+        email_data = data["emails"]
+        if not email_data or len(email_data) > 3:
+            return jsonify({"error": "Emails must be provided and contain a maximum of 3 entries."}), 400
+        customer.email1 = email_data[0] if len(email_data) > 0 else None
+        customer.email2 = email_data[1] if len(email_data) > 1 else None
+        customer.email3 = email_data[2] if len(email_data) > 2 else None
+
+    # Validate and update phone numbers
+    if "phone_numbers" in data:
+        phone_data = data["phone_numbers"]
+        if not phone_data or len(phone_data) > 3:
+            return jsonify({"error": "Phone numbers must be provided and contain a maximum of 3 entries."}), 400
+        customer.phone1 = phone_data[0] if len(phone_data) > 0 else None
+        customer.phone2 = phone_data[1] if len(phone_data) > 1 else None
+        customer.phone3 = phone_data[2] if len(phone_data) > 2 else None
+    
+    # Validate and update contacts
+    if "contacts" in data:
+        contact_data = data["contacts"]
+        if not contact_data or len(contact_data) > 3:
+            return jsonify({"error": "Contacts must be provided and contain a maximum of 3 entries."}), 400
+        customer.contact1 = contact_data[0] if len(contact_data) > 0 else None
+        customer.contact2 = contact_data[1] if len(contact_data) > 1 else None
+        customer.contact3 = contact_data[2] if len(contact_data) > 2 else None
+
+    # Handle address updates (separate delivery and billing addresses)
     if "delivery_address" in data:
         delivery_data = data["delivery_address"]
         delivery_address = Address.query.get(customer.delivery_address_id)
         if not delivery_address:
             return jsonify({"error": "Delivery address not found"}), 404
         
-        if "street" in delivery_data:
-            delivery_address.street = delivery_data["street"]
-        if "house_number" in delivery_data:
-            delivery_address.house_number = delivery_data["house_number"]
-        if "postal_code" in delivery_data:
-            delivery_address.postal_code = delivery_data["postal_code"]
-        if "city" in delivery_data:
-            delivery_address.city = delivery_data["city"]
-        if "country" in delivery_data:
-            delivery_address.country = delivery_data["country"]
-
-    # Update the billing address if provided
-    if "billing_address" in data:
+        # Check if the delivery and billing address are the same
+        if customer.delivery_address_id == customer.billing_address_id:
+            # If they're the same, create a new address for billing if one is updated
+            if "billing_address" in data:
+                billing_data = data["billing_address"]
+                new_billing_address = Address(
+                    street=billing_data.get("street", delivery_address.street),
+                    house_number=billing_data.get("house_number", delivery_address.house_number),
+                    postal_code=billing_data.get("postal_code", delivery_address.postal_code),
+                    city=billing_data.get("city", delivery_address.city),
+                    country=billing_data.get("country", delivery_address.country)
+                )
+                db.session.add(new_billing_address)
+                db.session.commit()  # Commit to get the new address ID
+                
+                # Now update the customer to link the new billing address
+                customer.billing_address_id = new_billing_address.id
+            # Update delivery address only if necessary
+            if "street" in delivery_data:
+                delivery_address.street = delivery_data["street"]
+            if "house_number" in delivery_data:
+                delivery_address.house_number = delivery_data["house_number"]
+            if "postal_code" in delivery_data:
+                delivery_address.postal_code = delivery_data["postal_code"]
+            if "city" in delivery_data:
+                delivery_address.city = delivery_data["city"]
+            if "country" in delivery_data:
+                delivery_address.country = delivery_data["country"]
+        else:
+            # If addresses are different, update them separately
+            if "street" in delivery_data:
+                delivery_address.street = delivery_data["street"]
+            if "house_number" in delivery_data:
+                delivery_address.house_number = delivery_data["house_number"]
+            if "postal_code" in delivery_data:
+                delivery_address.postal_code = delivery_data["postal_code"]
+            if "city" in delivery_data:
+                delivery_address.city = delivery_data["city"]
+            if "country" in delivery_data:
+                delivery_address.country = delivery_data["country"]
+    
+    # Update the billing address if provided and delivery/billing are not linked
+    if "billing_address" in data and customer.delivery_address_id != customer.billing_address_id:
         billing_data = data["billing_address"]
         billing_address = Address.query.get(customer.billing_address_id)
         if not billing_address:
             return jsonify({"error": "Billing address not found"}), 404
         
+        # Only update the billing address fields that are provided
         if "street" in billing_data:
             billing_address.street = billing_data["street"]
         if "house_number" in billing_data:

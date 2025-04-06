@@ -91,6 +91,7 @@ class Customer(db.Model):
     
     def __repr__(self):
         return f"<Customer(id={self.id}, firma={self.company})>"
+    
 class Good(db.Model):
     __tablename__ = "good"
     id = Column(Integer, primary_key=True)
@@ -145,7 +146,7 @@ class Contract(db.Model):
             "date": self.date.strftime("%d-%m-%Y") if self.date else None,
             "input": self.input,
             "goods": goods_list,
-            "total_price": round(total_price, 2),
+            "total_price": round(total_price, 2)
         }
         if include_id:
             data["vid"] = self.id

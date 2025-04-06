@@ -207,7 +207,6 @@ def update_user_password(user_id):
 
 
 ### Customers ###
-
 @customers_bp.route('/customers', methods=['POST'])
 @swag_from({
     'tags': ['Customers'],
@@ -224,15 +223,36 @@ def update_user_password(user_id):
                     'company': {'type': 'string', 'description': 'Company name of the customer'},
                     'account_number': {'type': 'string', 'description': 'Customer account number'},
                     'tax_number': {'type': 'string', 'description': 'Tax number of the customer'},
-                    'contact1': {'type': 'string', 'description': 'Primary contact person', 'required': True},
-                    'contact2': {'type': 'string', 'description': 'Secondary contact person'},
-                    'contact3': {'type': 'string', 'description': 'Third contact person'},
-                    'phone1': {'type': 'string', 'description': 'Primary phone number'},
-                    'phone2': {'type': 'string', 'description': 'Secondary phone number'},
-                    'phone3': {'type': 'string', 'description': 'Third phone number'},
-                    'email1': {'type': 'string', 'description': 'Primary email address', 'required': True},
-                    'email2': {'type': 'string', 'description': 'Secondary email address'},
-                    'email3': {'type': 'string', 'description': 'Third email address'},
+                    'contacts': {
+                        'type': 'array',
+                        'description': 'List of contact persons (up to 3 contacts)',
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                            'example': 'John Doe'
+                        },
+                        'example': ['John Doe', 'Jane Smith', 'Alice Johnson']
+                    },
+                    'phone_numbers': {
+                        'type': 'array',
+                        'description': 'List of phone numbers (up to 3 phone numbers)',
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                            'example': '+1234567890'
+                        },
+                        'example': ['+1234567890', '+1987654321', '+1122334455']
+                    },
+                    'emails': {
+                        'type': 'array',
+                        'description': 'List of email addresses (up to 3 emails)',
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                            'example': 'email@example.com'
+                        },
+                        'example': ['john.doe@example.com', 'jane.smith@example.com', 'alice.johnson@example.com']
+                    },
                     'private': {'type': 'boolean', 'description': 'Indicates if the customer is private'},
                     'notes': {'type': 'string', 'description': 'Additional notes about the customer'},
                     'delivery_address': {
@@ -324,15 +344,36 @@ def get_customer(customer_id):
                     'company': {'type': 'string', 'description': 'The company name of the customer'},
                     'account_number': {'type': 'string', 'description': 'The account number of the customer'},
                     'tax_number': {'type': 'string', 'description': 'The tax number of the customer'},
-                    'contact1': {'type': 'string', 'description': 'Primary contact information for the customer'},
-                    'contact2': {'type': 'string', 'description': 'Secondary contact information for the customer (optional)'},
-                    'contact3': {'type': 'string', 'description': 'Tertiary contact information for the customer (optional)'},
-                    'phone1': {'type': 'string', 'description': 'Primary phone number for the customer'},
-                    'phone2': {'type': 'string', 'description': 'Secondary phone number for the customer (optional)'},
-                    'phone3': {'type': 'string', 'description': 'Tertiary phone number for the customer (optional)'},
-                    'email1': {'type': 'string', 'description': 'Primary email for the customer'},
-                    'email2': {'type': 'string', 'description': 'Secondary email for the customer (optional)'},
-                    'email3': {'type': 'string', 'description': 'Tertiary email for the customer (optional)'},
+                    'contacts': {
+                        'type': 'array',
+                        'description': 'List of contact persons (up to 3 contacts)',
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                            'example': 'John Doe'
+                        },
+                        'example': ['John Doe', 'Jane Smith', 'Alice Johnson']
+                    },
+                    'phone_numbers': {
+                        'type': 'array',
+                        'description': 'List of phone numbers (up to 3 phone numbers)',
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                            'example': '+1234567890'
+                        },
+                        'example': ['+1234567890', '+1987654321', '+1122334455']
+                    },
+                    'emails': {
+                        'type': 'array',
+                        'description': 'List of email addresses (up to 3 emails)',
+                        'maxItems': 3,
+                        'items': {
+                            'type': 'string',
+                            'example': 'email@example.com'
+                        },
+                        'example': ['john.doe@example.com', 'jane.smith@example.com', 'alice.johnson@example.com']
+                    },
                     'private': {'type': 'boolean', 'description': 'Indicates whether the customer is a private customer'},
                     'notes': {'type': 'string', 'description': 'Additional notes about the customer (optional)'},
                     'delivery_address': {

@@ -88,7 +88,7 @@ def get_contracts(request):
     contracts = Contract.query.options(
         joinedload(Contract.customer),
         joinedload(Contract.contract_goods).joinedload(ContractGoods.good)
-    ).filter_by(id=id).all()
+    ).all()
     contracts_list = [contract.to_dict() for contract in contracts]
     return jsonify(contracts_list), 200
 
@@ -97,7 +97,7 @@ def get_contract(contract_id, request):
     contract = Contract.query.options(
         joinedload(Contract.customer),
         joinedload(Contract.contract_goods).joinedload(ContractGoods.good)
-    ).filter_by(id=id).first()
+    ).filter_by(id=contract_id).first()
 
     if not contract:
         return {"error": "Contract not found"}, 404
