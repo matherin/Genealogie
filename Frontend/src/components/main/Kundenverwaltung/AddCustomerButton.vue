@@ -6,156 +6,152 @@
         " />
         <Dialog v-model:visible="visible" modal header="Kunden erstellen" resizable>
             <div class="item-container">
+                <div class="column-left">
+                    <div class="item-group">
+                        <div class="items-alone">
+                            <label class="text">Privatperson</label>
+                            <ToggleSwitch v-model="newCustomer.private" />
+                        </div>
+                        <div class="items-alone" v-if="!newCustomer.private">
+                            <label class="text">Firma*</label>
+                            <InputText id="account_number" v-model="newCustomer.company" class="flex-auto"
+                                autocomplete="off" placeholder="Musterfirma GmbH" />
+                        </div>
+                        <div class="items-alone">
+                            <label class="text">IBAN*</label>
+                            <InputText id="account_number" v-model="newCustomer.account_number" class="flex-auto"
+                                autocomplete="off" placeholder="DE01 2345 6789 1011 1213 14" />
+                        </div>
 
-                <div class="items-alone">
-                    <label class="text">Privatperson</label>
-                    <ToggleSwitch v-model="newCustomer.private" />
-                </div>
-
-                <div class="items-alone" v-if="!newCustomer.private">
-                    <label class="text">Firma</label>
-                    <InputText id="account_number" v-model="newCustomer.company" class="flex-auto" autocomplete="off"
-                        placeholder="Musterfirma GmbH" />
-                </div>
-
-                <div class="item-group">
-                    <label class="group-text">Kontaktpersonen</label>
-                    <div class="items">
-                        <label class="text">Kontakt 1</label>
-                        <InputText id="contact1" v-model="newCustomer.contacts[0]" class="flex-auto" autocomplete="off"
-                            placeholder="Max Mustermann" />
+                        <div class="items-alone">
+                            <label class="text">Steuernummer*</label>
+                            <InputText id="account_number" v-model="newCustomer.tax_number" class="flex-auto"
+                                autocomplete="off" placeholder="012345678910" />
+                        </div>
                     </div>
-                    <div class="items">
-                        <label class="text">Kontakt 2*</label>
-                        <InputText id="contact2" v-model="newCustomer.contacts[1]" class="flex-auto" autocomplete="off"
-                            placeholder="Max Mustermann" />
+                    <div class="item-group">
+                        <label class="group-text">Kontaktpersonen</label>
+                        <div class="items">
+                            <label class="text">Kontakt 1*</label>
+                            <InputText id="contact1" v-model="newCustomer.contacts[0]" class="flex-auto"
+                                autocomplete="off" placeholder="Max Mustermann" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Kontakt 2</label>
+                            <InputText id="contact2" v-model="newCustomer.contacts[1]" class="flex-auto"
+                                autocomplete="off" placeholder="Max Mustermann" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Kontakt 3</label>
+                            <InputText id="contact3" v-model="newCustomer.contacts[2]" class="flex-auto"
+                                autocomplete="off" placeholder="Max Mustermann" />
+                        </div>
                     </div>
-                    <div class="items">
-                        <label class="text">Kontakt 3*</label>
-                        <InputText id="contact3" v-model="newCustomer.contacts[2]" class="flex-auto" autocomplete="off"
-                            placeholder="Max Mustermann" />
+                    <div class="item-group">
+                        <label class="group-text">E-Mail-Adressen</label>
+                        <div class="items">
+                            <label class="text">E-Mail 1*</label>
+                            <InputText id="email1" v-model="newCustomer.emails[0]" class="flex-auto" autocomplete="off"
+                                placeholder="Max.Mustermann@gmail.com" />
+                        </div>
+                        <div class="items">
+                            <label class="text">E-Mail 2</label>
+                            <InputText id="email2" v-model="newCustomer.emails[1]" class="flex-auto" autocomplete="off"
+                                placeholder="Max.Mustermann@gmail.com" />
+                        </div>
+                        <div class="items">
+                            <label class="text">E-Mail 3</label>
+                            <InputText id="email3" v-model="newCustomer.emails[2]" class="flex-auto" autocomplete="off"
+                                placeholder="Max.Mustermann@gmail.com" />
+                        </div>
                     </div>
-                </div>
-
-                <div class="item-group">
-                    <label class="group-text">E-Mail-Adressen</label>
-                    <div class="items">
-                        <label class="text">E-Mail 1</label>
-                        <InputText id="email1" v-model="newCustomer.emails[0]" class="flex-auto" autocomplete="off"
-                            placeholder="Max.Mustermann@gmail.com" />
-                    </div>
-                    <div class="items">
-                        <label class="text">E-Mail 2*</label>
-                        <InputText id="email2" v-model="newCustomer.emails[1]" class="flex-auto" autocomplete="off"
-                            placeholder="Max.Mustermann@gmail.com" />
-                    </div>
-                    <div class="items">
-                        <label class="text">E-Mail 3*</label>
-                        <InputText id="email3" v-model="newCustomer.emails[2]" class="flex-auto" autocomplete="off"
-                            placeholder="Max.Mustermann@gmail.com" />
-                    </div>
-                </div>
-
-                <div class="item-group">
-                    <label class="group-text">Telefonnummern</label>
-                    <div class="items">
-                        <label class="text">Telef-Nr. 1</label>
-                        <InputText id="phone1" v-model="newCustomer.phone_numbers[0]" class="flex-auto"
-                            autocomplete="off" placeholder="+4912345678910" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Telef-Nr. 2*</label>
-                        <InputText id="phone2" v-model="newCustomer.phone_numbers[1]" class="flex-auto"
-                            autocomplete="off" placeholder="+4912345678910" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Telef-Nr. 3*</label>
-                        <InputText id="phone3" v-model="newCustomer.phone_numbers[2]" class="flex-auto"
-                            autocomplete="off" placeholder="+4912345678910" />
-                    </div>
-                </div>
-
-                <div class="item-group">
-                    <label class="group-text">Lieferadresse</label>
-                    <div class="items">
-                        <label class="text">Land</label>
-                        <InputText id="country" v-model="newCustomer.delivery_address.country" class="flex-auto"
-                            autocomplete="off" placeholder="Musterland" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Stadt</label>
-                        <InputText id="city" v-model="newCustomer.delivery_address.city" class="flex-auto"
-                            autocomplete="off" placeholder="Musterhausen" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Postleitzahl</label>
-                        <InputText id="postal_code" v-model="newCustomer.delivery_address.postal_code" class="flex-auto"
-                            autocomplete="off" placeholder="12345" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Straße</label>
-                        <InputText id="street" v-model="newCustomer.delivery_address.street" class="flex-auto"
-                            autocomplete="off" placeholder="Musterstraße" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Hausnummer</label>
-                        <InputText id="house_number" v-model="newCustomer.delivery_address.house_number"
-                            class="flex-auto" autocomplete="off" placeholder="1a" />
+                    <div class="item-group">
+                        <label class="group-text">Telefonnummern</label>
+                        <div class="items">
+                            <label class="text">Telef-Nr. 1*</label>
+                            <InputText id="phone1" v-model="newCustomer.phone_numbers[0]" class="flex-auto"
+                                autocomplete="off" placeholder="+4912345678910" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Telef-Nr. 2</label>
+                            <InputText id="phone2" v-model="newCustomer.phone_numbers[1]" class="flex-auto"
+                                autocomplete="off" placeholder="+4912345678910" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Telef-Nr. 3</label>
+                            <InputText id="phone3" v-model="newCustomer.phone_numbers[2]" class="flex-auto"
+                                autocomplete="off" placeholder="+4912345678910" />
+                        </div>
                     </div>
                 </div>
-
-                <div class="item-group">
-                    <label class="group-text">Rechnungsadresse</label>
-                    <div class="items">
-                        <label class="text">Land</label>
-                        <InputText id="country" v-model="newCustomer.billing_address.country" class="flex-auto"
-                            autocomplete="off" placeholder="Musterland" />
+                <div class="column-right">
+                    <div class="item-group">
+                        <label class="group-text">Rechnungsadresse</label>
+                        <div class="items">
+                            <label class="text">Land*</label>
+                            <InputText id="country" v-model="newCustomer.billing_address.country" class="flex-auto"
+                                autocomplete="off" placeholder="Musterland" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Stadt*</label>
+                            <InputText id="city" v-model="newCustomer.billing_address.city" class="flex-auto"
+                                autocomplete="off" placeholder="Musterhausen" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Postleitzahl*</label>
+                            <InputText id="postal_code" v-model="newCustomer.billing_address.postal_code"
+                                class="flex-auto" autocomplete="off" placeholder="12345" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Straße*</label>
+                            <InputText id="street" v-model="newCustomer.billing_address.street" class="flex-auto"
+                                autocomplete="off" placeholder="Musterstraße" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Hausnummer*</label>
+                            <InputText id="house_number" v-model="newCustomer.billing_address.house_number"
+                                class="flex-auto" autocomplete="off" placeholder="1a" />
+                        </div>
                     </div>
-                    <div class="items">
-                        <label class="text">Stadt</label>
-                        <InputText id="city" v-model="newCustomer.billing_address.city" class="flex-auto"
-                            autocomplete="off" placeholder="Musterhausen" />
+                    <div class="item-group">
+                        <label class="group-text">Lieferadresse</label>
+                        <div class="items">
+                            <label class="text">Land*</label>
+                            <InputText id="country" v-model="newCustomer.delivery_address.country" class="flex-auto"
+                                autocomplete="off" placeholder="Musterland" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Stadt*</label>
+                            <InputText id="city" v-model="newCustomer.delivery_address.city" class="flex-auto"
+                                autocomplete="off" placeholder="Musterhausen" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Postleitzahl*</label>
+                            <InputText id="postal_code" v-model="newCustomer.delivery_address.postal_code"
+                                class="flex-auto" autocomplete="off" placeholder="12345" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Straße*</label>
+                            <InputText id="street" v-model="newCustomer.delivery_address.street" class="flex-auto"
+                                autocomplete="off" placeholder="Musterstraße" />
+                        </div>
+                        <div class="items">
+                            <label class="text">Hausnummer*</label>
+                            <InputText id="house_number" v-model="newCustomer.delivery_address.house_number"
+                                class="flex-auto" autocomplete="off" placeholder="1a" />
+                        </div>
                     </div>
-                    <div class="items">
-                        <label class="text">Postleitzahl</label>
-                        <InputText id="postal_code" v-model="newCustomer.billing_address.postal_code" class="flex-auto"
-                            autocomplete="off" placeholder="12345" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Straße</label>
-                        <InputText id="street" v-model="newCustomer.billing_address.street" class="flex-auto"
-                            autocomplete="off" placeholder="Musterstraße" />
-                    </div>
-                    <div class="items">
-                        <label class="text">Hausnummer</label>
-                        <InputText id="house_number" v-model="newCustomer.billing_address.house_number"
-                            class="flex-auto" autocomplete="off" placeholder="1a" />
+                    <div class="items-notes">
+                        <label class="text">Notizen</label>
+                        <Editor id="notes" v-model="newCustomer.notes" editorStyle="height: 320px"
+                            placeholder="Notizen schreiben..." />
                     </div>
                 </div>
-
-                <div class="items-alone">
-                    <label class="text">IBAN</label>
-                    <InputText id="account_number" v-model="newCustomer.account_number" class="flex-auto"
-                        autocomplete="off" placeholder="DE01 2345 6789 1011 1213 14" />
-                </div>
-
-                <div class="items-alone">
-                    <label class="text">Steuernummer</label>
-                    <InputText id="account_number" v-model="newCustomer.tax_number" class="flex-auto" autocomplete="off"
-                        placeholder="012345678910" />
-                </div>
-
-                <div class="items-notes">
-                    <label class="text">Notizen*</label>
-                    <Editor id="notes" v-model="newCustomer.notes" editorStyle="height: 320px"
-                        placeholder="Notizen schreiben..." />
-                </div>
-
             </div>
             <template #footer>
                 <div class="dialog-footer">
                     <div class="dialog-footer-left">
-                        <span class="footer-note">*Optionale Felder</span>
+                        <span class="footer-note">*Pflichtfelder</span>
                     </div>
                     <div class="buttons">
                         <Button type="button" label="Abbrechen" severity="secondary" @click="closeAddCustomerMode"
@@ -334,38 +330,34 @@ export default {
 </script>
 
 <style scoped>
-.custom-add-customer-button {
-    background-color: var(--color-secondary) !important;
-    border: 1px solid var(--color-secondary) !important;
-}
-
-.custom-add-customer-button:hover {
-    border-color: #fdab3f !important;
-    background-color: #fdab3f !important;
-}
-
-.custom-add-customer-button:active {
-    background-color: #c78915 !important;
-}
-
 .column {
     display: flex;
     flex-direction: column;
 }
 
 .item-container {
-    margin-bottom: 1.5rem;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    gap: 2rem;
+    width: 100%;
+    padding: 1rem 2rem;
+    box-sizing: border-box;
+}
+
+.column-left,
+.column-right {
+    flex: 1;
+    display: flex;
     flex-direction: column;
+    gap: 2rem;
 }
 
 .items-alone {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 4rem;
-    margin-left: 20px;
+    gap: 2rem;
+    margin-left: 10px;
     margin-bottom: 4px;
     width: 80%;
 }
@@ -374,7 +366,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 4rem;
+    gap: 2rem;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 4px;
@@ -393,9 +385,16 @@ export default {
 }
 
 .item-group {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
     width: 80%;
+}
+
+.items-password {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 4px;
 }
 
 .text {
@@ -405,9 +404,29 @@ export default {
 
 .group-text {
     font-weight: 600;
-    width: 24px;
-    text-decoration: solid;
+    position: relative;
+    width: 100%;
     margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.group-text::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background-color: #ccc;
+    margin-left: 1rem;
+}
+
+.header-text {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-decoration: underline;
+}
+
+.password-text {
+    font-weight: 600;
 }
 
 .buttons {
@@ -440,20 +459,58 @@ export default {
 .flex-auto {
     display: flex;
     flex: auto;
-    margin-left: 130px;
+    margin-left: 50px;
     max-width: 500px;
+}
+
+.read-only-input {
+    border: none !important;
+    background-color: transparent !important;
+    pointer-events: none;
+    box-shadow: none !important;
 }
 
 .footer-button {
     justify-content: end;
 }
 
+.reset-button {
+    background-color: white;
+    color: var(--p-dialog-color);
+}
+
+.copy-User {
+    border-color: transparent !important;
+    background-color: transparent !important;
+    color: gray !important;
+    width: 20px;
+    height: 20px;
+}
+
+.copy-User:hover {
+    color: black !important;
+}
+
 .p-dialog {
-    min-width: 400px !important;
-    min-height: 400px !important;
-    max-width: 80vw !important;
-    width: 60rem !important;
-    max-height: 70vh !important;
-    overflow: auto !important;
+    max-width: 90rem !important;
+    width: 90vw !important;
+    max-height: 70rem !important;
+    overflow: hidden !important;
+}
+
+.p-dialog .p-dialog-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    border-radius: 1rem;
+    padding-right: 1rem;
+}
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+    width: 100%;
 }
 </style>
