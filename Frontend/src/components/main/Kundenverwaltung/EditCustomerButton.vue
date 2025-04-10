@@ -1,18 +1,14 @@
 <template>
   <div>
     <Toast ref="toast" />
-    <Button icon="pi pi-eye" outlined class="p-button-edit" @click="
-      visible = true;
-    readOnlyMode = true;
-    this.editCustomer = JSON.parse(JSON.stringify(this.editableCustomer));
-    " />
+    <Button icon="pi pi-eye" outlined class="p-button-edit" @click="onViewClick" />
     <Dialog v-model:visible="visible" modal>
       <template #header>
         <div class="dialog-header">
           <span v-if="readOnlyMode" class="header-text">Kundenübersicht</span>
           <span v-else class="header-text">Kunden bearbeiten</span>
           <Button :icon="!readOnlyMode ? 'pi pi-eye' : 'pi pi-pen-to-square'" class="button" severity="primary" outlined
-            @click="readOnlyMode = !readOnlyMode; closeEditCustomerMode();" />
+            @click="readOnlyMode = !readOnlyMode; checkForDifferentAddress(); closeEditCustomerMode()" />
         </div>
       </template>
       <div class="item-container">
@@ -116,41 +112,6 @@
 
         <div class="column-right">
           <div class="item-group">
-            <label class="group-text">Rechnungsadresse</label>
-            <div class="items">
-              <label class="text">Land<span v-if="!readOnlyMode">*</span></label>
-              <InputText id="country" v-model="editCustomer.billing_address.country"
-                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
-                :placeholder="!readOnlyMode ? 'Musterland' : ''" :readonly="readOnlyMode" />
-            </div>
-            <div class="items">
-              <label class="text">Stadt<span v-if="!readOnlyMode">*</span></label>
-              <InputText id="city" v-model="editCustomer.billing_address.city"
-                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
-                :placeholder="!readOnlyMode ? 'Musterhausen' : ''" :readonly="readOnlyMode" />
-            </div>
-            <div class="items">
-              <label class="text">Postleitzahl<span v-if="!readOnlyMode">*</span></label>
-              <InputText id="postal_code" v-model="editCustomer.billing_address.postal_code"
-                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
-                :placeholder="!readOnlyMode ? '12345' : ''" :readonly="readOnlyMode" />
-            </div>
-            <div class="items">
-              <label class="text">Straße<span v-if="!readOnlyMode">*</span></label>
-              <InputText id="street" v-model="editCustomer.billing_address.street"
-                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
-                :placeholder="!readOnlyMode ? 'Musterstraße' : ''" :readonly="readOnlyMode" />
-            </div>
-            <div class="items">
-              <label class="text">Hausnummer<span v-if="!readOnlyMode">*</span></label>
-              <InputText id="house_number" v-model="editCustomer.billing_address.house_number"
-                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
-                :placeholder="!readOnlyMode ? '1a' : ''" :readonly="readOnlyMode" />
-            </div>
-          </div>
-
-
-          <div class="item-group">
             <label class="group-text">Lieferadresse</label>
             <div class="items">
               <label class="text">Land<span v-if="!readOnlyMode">*</span></label>
@@ -183,10 +144,47 @@
                 :placeholder="!readOnlyMode ? '1a' : ''" :readonly="readOnlyMode" />
             </div>
           </div>
+          <div class="item-group">
+            <div v-if="!readOnlyMode" class="items-alone">
+              <label class="text">Abweichende Rechnungsadresse</label>
+              <ToggleSwitch v-model="showRechnungsadresse" />
+            </div>
+            <label v-if="showRechnungsadresse" class="group-text">Rechnungsadresse</label>
+            <div v-if="showRechnungsadresse" class="items">
+              <label class="text">Land<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="country" v-model="editCustomer.billing_address.country"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterland' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div v-if="showRechnungsadresse" class="items">
+              <label class="text">Stadt<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="city" v-model="editCustomer.billing_address.city"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterhausen' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div v-if="showRechnungsadresse" class="items">
+              <label class="text">Postleitzahl<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="postal_code" v-model="editCustomer.billing_address.postal_code"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '12345' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div v-if="showRechnungsadresse" class="items">
+              <label class="text">Straße<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="street" v-model="editCustomer.billing_address.street"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? 'Musterstraße' : ''" :readonly="readOnlyMode" />
+            </div>
+            <div v-if="showRechnungsadresse" class="items">
+              <label class="text">Hausnummer<span v-if="!readOnlyMode">*</span></label>
+              <InputText id="house_number" v-model="editCustomer.billing_address.house_number"
+                :class="['flex-auto', { 'read-only-input': readOnlyMode }]" autocomplete="off"
+                :placeholder="!readOnlyMode ? '1a' : ''" :readonly="readOnlyMode" />
+            </div>
+          </div>
 
           <div class="items-notes">
             <label class="text">Notizen</label>
-            <Editor id="notes" v-model="editCustomer.notes" editorStyle="height: 320px"
+            <Editor id="notes" v-model="editCustomer.notes" editorStyle="height: 300px"
               :placeholder="!readOnlyMode ? 'Notiz schreiben...' : ''" :readonly="readOnlyMode" />
           </div>
         </div>
@@ -242,10 +240,12 @@ export default {
       visible: false,
       editCustomer: null,
       readOnlyMode: false,
+      showRechnungsadresse: true,
     };
   },
   methods: {
     async sendDataToBackend() {
+      if (!this.showRechnungsadresse) this.editCustomer.billing_address = this.editCustomer.delivery_address;
       if (
         !this.editCustomer.account_number ||
         !this.editCustomer.billing_address ||
@@ -303,7 +303,32 @@ export default {
       }
     },
 
+    checkForDifferentAddress() {
+      if(this.readOnlyMode) return;
+      const delivery = this.editCustomer.delivery_address;
+      const billing = this.editCustomer.billing_address;
+
+      const isSameAdress =
+        delivery.country === billing.country &&
+        delivery.city === billing.city &&
+        delivery.postal_code === billing.postal_code &&
+        delivery.street === billing.street &&
+        delivery.house_number === billing.house_number;
+
+      this.showRechnungsadresse = !isSameAdress;
+      console.log("deli", this.editCustomer.delivery_address);
+      console.log("billy", this.editCustomer.billing_address);
+    },
+
+    onViewClick() {
+      this.visible = true;
+      this.readOnlyMode = true;
+      this.editCustomer = JSON.parse(JSON.stringify(this.editableCustomer));
+      this.checkForDifferentAddress();
+    },
+
     closeEditCustomerMode() {
+      this.showRechnungsadresse = true;
       this.editCustomer = JSON.parse(JSON.stringify(this.editableCustomer));
     },
   },

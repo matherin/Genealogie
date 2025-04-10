@@ -2,7 +2,7 @@
     <div>
         <Toast ref="toast" />
         <Button class="custom-add-customer-button" label="Kunde hinzufügen" icon="pi pi-user" @click="
-            visible = true;
+            openAddCustomerMode
         " />
         <Dialog v-model:visible="visible" modal header="Kunden erstellen" resizable>
             <div class="item-container">
@@ -86,34 +86,6 @@
                 </div>
                 <div class="column-right">
                     <div class="item-group">
-                        <label class="group-text">Rechnungsadresse</label>
-                        <div class="items">
-                            <label class="text">Land*</label>
-                            <InputText id="country" v-model="newCustomer.billing_address.country" class="flex-auto"
-                                autocomplete="off" placeholder="Musterland" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Stadt*</label>
-                            <InputText id="city" v-model="newCustomer.billing_address.city" class="flex-auto"
-                                autocomplete="off" placeholder="Musterhausen" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Postleitzahl*</label>
-                            <InputText id="postal_code" v-model="newCustomer.billing_address.postal_code"
-                                class="flex-auto" autocomplete="off" placeholder="12345" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Straße*</label>
-                            <InputText id="street" v-model="newCustomer.billing_address.street" class="flex-auto"
-                                autocomplete="off" placeholder="Musterstraße" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Hausnummer*</label>
-                            <InputText id="house_number" v-model="newCustomer.billing_address.house_number"
-                                class="flex-auto" autocomplete="off" placeholder="1a" />
-                        </div>
-                    </div>
-                    <div class="item-group">
                         <label class="group-text">Lieferadresse</label>
                         <div class="items">
                             <label class="text">Land*</label>
@@ -141,9 +113,41 @@
                                 class="flex-auto" autocomplete="off" placeholder="1a" />
                         </div>
                     </div>
+                    <div class="item-group">
+                        <div class="items-alone">
+                            <label class="text">Abweichende Rechnungsadresse?</label>
+                            <ToggleSwitch v-model="showRechnungsadresse" />
+                        </div>
+                        <label v-if="showRechnungsadresse" class="group-text">Rechnungsadresse</label>
+                        <div v-if="showRechnungsadresse" class="items">
+                            <label class="text">Land*</label>
+                            <InputText id="country" v-model="newCustomer.billing_address.country" class="flex-auto"
+                                autocomplete="off" placeholder="Musterland" />
+                        </div>
+                        <div v-if="showRechnungsadresse" class="items">
+                            <label class="text">Stadt*</label>
+                            <InputText id="city" v-model="newCustomer.billing_address.city" class="flex-auto"
+                                autocomplete="off" placeholder="Musterhausen" />
+                        </div>
+                        <div v-if="showRechnungsadresse" class="items">
+                            <label class="text">Postleitzahl*</label>
+                            <InputText id="postal_code" v-model="newCustomer.billing_address.postal_code"
+                                class="flex-auto" autocomplete="off" placeholder="12345" />
+                        </div>
+                        <div v-if="showRechnungsadresse" class="items">
+                            <label class="text">Straße*</label>
+                            <InputText id="street" v-model="newCustomer.billing_address.street" class="flex-auto"
+                                autocomplete="off" placeholder="Musterstraße" />
+                        </div>
+                        <div v-if="showRechnungsadresse" class="items">
+                            <label class="text">Hausnummer*</label>
+                            <InputText id="house_number" v-model="newCustomer.billing_address.house_number"
+                                class="flex-auto" autocomplete="off" placeholder="1a" />
+                        </div>
+                    </div>
                     <div class="items-notes">
                         <label class="text">Notizen</label>
-                        <Editor id="notes" v-model="newCustomer.notes" editorStyle="height: 320px"
+                        <Editor id="notes" v-model="newCustomer.notes" editorStyle="height: 300px"
                             placeholder="Notizen schreiben..." />
                     </div>
                 </div>
@@ -191,6 +195,7 @@ export default {
     data() {
         return {
             visible: false,
+            showRechnungsadresse: false,
             newCustomer: {
                 "account_number": "",
                 "billing_address": {
@@ -231,6 +236,7 @@ export default {
     },
     methods: {
         async sendDataToBackend() {
+            if (!this.showRechnungsadresse) this.newCustomer.billing_address = this.newCustomer.delivery_address;
             if (
                 !this.newCustomer.account_number ||
                 !this.newCustomer.billing_address ||
@@ -288,6 +294,48 @@ export default {
 
         closeAddCustomerMode() {
             this.visible = false;
+            this.showRechnungsadresse = false;
+            this.newCustomer = {
+                "account_number": "",
+                "billing_address": {
+                    "city": "",
+                    "country": "",
+                    "house_number": "",
+                    "postal_code": "",
+                    "street": ""
+                },
+                "company": "",
+                "contacts": [
+                    "",
+                    "",
+                    ""
+                ],
+                "delivery_address": {
+                    "city": "",
+                    "country": "",
+                    "house_number": "",
+                    "postal_code": "",
+                    "street": ""
+                },
+                "emails": [
+                    "",
+                    "",
+                    ""
+                ],
+                "notes": "",
+                "phone_numbers": [
+                    "",
+                    "",
+                    ""
+                ],
+                "private": false,
+                "tax_number": ""
+            }
+        },
+
+        openAddCustomerMode() {
+            this.visible = true;
+            this.showRechnungsadresse = false;
             this.newCustomer = {
                 "account_number": "",
                 "billing_address": {
