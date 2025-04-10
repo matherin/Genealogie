@@ -245,7 +245,7 @@ export default {
   },
   methods: {
     async sendDataToBackend() {
-      if (!this.showRechnungsadresse) this.editCustomer.billing_address = this.editCustomer.delivery_address;
+      if (!this.showRechnungsadresse) this.editCustomer.billing_address = JSON.parse(JSON.stringify(this.editCustomer.delivery_address));
       if (
         !this.editCustomer.account_number ||
         !this.editCustomer.billing_address ||
@@ -304,20 +304,17 @@ export default {
     },
 
     checkForDifferentAddress() {
-      if(this.readOnlyMode) return;
+      if (this.readOnlyMode) {
+        this.showRechnungsadresse = true;
+        return;
+      }
+
       const delivery = this.editCustomer.delivery_address;
       const billing = this.editCustomer.billing_address;
 
-      const isSameAdress =
-        delivery.country === billing.country &&
-        delivery.city === billing.city &&
-        delivery.postal_code === billing.postal_code &&
-        delivery.street === billing.street &&
-        delivery.house_number === billing.house_number;
+      const isSame = JSON.stringify(delivery) === JSON.stringify(billing);
 
-      this.showRechnungsadresse = !isSameAdress;
-      console.log("deli", this.editCustomer.delivery_address);
-      console.log("billy", this.editCustomer.billing_address);
+      this.showRechnungsadresse = !isSame;
     },
 
     onViewClick() {
@@ -328,7 +325,6 @@ export default {
     },
 
     closeEditCustomerMode() {
-      this.showRechnungsadresse = true;
       this.editCustomer = JSON.parse(JSON.stringify(this.editableCustomer));
     },
   },
