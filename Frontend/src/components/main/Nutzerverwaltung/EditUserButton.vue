@@ -1,7 +1,7 @@
 <template>
     <div>
         <Toast ref="toast" />
-        <Button icon="pi pi-pen-to-square" class="p-button-edit" @click="
+        <Button icon="pi pi-pen-to-square" class="p-button-edit" outlined @click="
             visible = true;
         this.editUser = { ...editableUser };
         " />

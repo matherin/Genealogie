@@ -27,7 +27,7 @@
           <div class="header-container-bar">
             <router-link
               :class="{ routeractive: isActive('/kundenverwaltung') }"
-              v-if="permissionLevel === 'admin'"
+              v-if="permissionLevel === 'user' || 'admin'"
               class="header-container-bar-item"
               to="/kundenverwaltung/Kundentabelle"
             >

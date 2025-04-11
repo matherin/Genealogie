@@ -511,6 +511,11 @@ export default {
     max-width: 500px;
 }
 
+.custom-add-customer-button {
+    background-color: var(--color-secondary) !important;
+    border: 1px solid var(--color-secondary) !important;
+}
+
 .read-only-input {
     border: none !important;
     background-color: transparent !important;
