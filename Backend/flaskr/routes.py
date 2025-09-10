@@ -227,52 +227,46 @@ def update_user_password(user_id):
                         'type': 'array',
                         'description': 'List of contact persons (up to 3 contacts)',
                         'maxItems': 3,
-                        'items': {
-                            'type': 'string',
-                            'example': 'John Doe'
-                        },
+                        'items': {'type': 'string'},
                         'example': ['John Doe', 'Jane Smith', 'Alice Johnson']
                     },
                     'phone_numbers': {
                         'type': 'array',
                         'description': 'List of phone numbers (up to 3 phone numbers)',
                         'maxItems': 3,
-                        'items': {
-                            'type': 'string',
-                            'example': '+1234567890'
-                        },
+                        'items': {'type': 'string'},
                         'example': ['+1234567890', '+1987654321', '+1122334455']
                     },
                     'emails': {
                         'type': 'array',
                         'description': 'List of email addresses (up to 3 emails)',
                         'maxItems': 3,
-                        'items': {
-                            'type': 'string',
-                            'example': 'email@example.com'
-                        },
+                        'items': {'type': 'string'},
                         'example': ['john.doe@example.com', 'jane.smith@example.com', 'alice.johnson@example.com']
                     },
                     'private': {'type': 'boolean', 'description': 'Indicates if the customer is private'},
                     'notes': {'type': 'string', 'description': 'Additional notes about the customer'},
-                    'delivery_address': {
-                        'type': 'object',
-                        'description': 'Delivery address details',
-                        'properties': {
-                            'street': {'type': 'string', 'description': 'Street name', 'required': True},
-                            'house_number': {'type': 'string', 'description': 'House number', 'required': True},
-                            'postal_code': {'type': 'string', 'description': 'Postal code', 'required': True},
-                            'city': {'type': 'string', 'description': 'City name'},
-                            'country': {'type': 'string', 'description': 'Country name'}
+                    'delivery_addresses': {
+                        'type': 'array',
+                        'description': 'List of delivery addresses for the customer',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'street': {'type': 'string', 'description': 'Street name'},
+                                'house_number': {'type': 'string', 'description': 'House number'},
+                                'postal_code': {'type': 'string', 'description': 'Postal code'},
+                                'city': {'type': 'string', 'description': 'City name'},
+                                'country': {'type': 'string', 'description': 'Country name'}
+                            }
                         }
                     },
                     'billing_address': {
                         'type': 'object',
                         'description': 'Billing address details',
                         'properties': {
-                            'street': {'type': 'string', 'description': 'Street name', 'required': True},
-                            'house_number': {'type': 'string', 'description': 'House number', 'required': True},
-                            'postal_code': {'type': 'string', 'description': 'Postal code', 'required': True},
+                            'street': {'type': 'string', 'description': 'Street name'},
+                            'house_number': {'type': 'string', 'description': 'House number'},
+                            'postal_code': {'type': 'string', 'description': 'Postal code'},
                             'city': {'type': 'string', 'description': 'City name'},
                             'country': {'type': 'string', 'description': 'Country name'}
                         }
@@ -348,55 +342,49 @@ def get_customer(customer_id):
                         'type': 'array',
                         'description': 'List of contact persons (up to 3 contacts)',
                         'maxItems': 3,
-                        'items': {
-                            'type': 'string',
-                            'example': 'John Doe'
-                        },
+                        'items': {'type': 'string'},
                         'example': ['John Doe', 'Jane Smith', 'Alice Johnson']
                     },
                     'phone_numbers': {
                         'type': 'array',
                         'description': 'List of phone numbers (up to 3 phone numbers)',
                         'maxItems': 3,
-                        'items': {
-                            'type': 'string',
-                            'example': '+1234567890'
-                        },
+                        'items': {'type': 'string'},
                         'example': ['+1234567890', '+1987654321', '+1122334455']
                     },
                     'emails': {
                         'type': 'array',
                         'description': 'List of email addresses (up to 3 emails)',
                         'maxItems': 3,
-                        'items': {
-                            'type': 'string',
-                            'example': 'email@example.com'
-                        },
+                        'items': {'type': 'string'},
                         'example': ['john.doe@example.com', 'jane.smith@example.com', 'alice.johnson@example.com']
                     },
                     'private': {'type': 'boolean', 'description': 'Indicates whether the customer is a private customer'},
                     'notes': {'type': 'string', 'description': 'Additional notes about the customer (optional)'},
-                    'delivery_address': {
-                        'type': 'object',
-                        'properties': {
-                            'street': {'type': 'string', 'description': 'Street address for delivery'},
-                            'house_number': {'type': 'string', 'description': 'House number for delivery'},
-                            'postal_code': {'type': 'string', 'description': 'Postal code for delivery'},
-                            'city': {'type': 'string', 'description': 'City for delivery'},
-                            'country': {'type': 'string', 'description': 'Country for delivery'}
-                        },
-                        'description': 'The delivery address of the customer'
+                    'delivery_addresses': {
+                        'type': 'array',
+                        'description': 'List of delivery addresses for the customer',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'street': {'type': 'string', 'description': 'Street address for delivery'},
+                                'house_number': {'type': 'string', 'description': 'House number for delivery'},
+                                'postal_code': {'type': 'string', 'description': 'Postal code for delivery'},
+                                'city': {'type': 'string', 'description': 'City for delivery'},
+                                'country': {'type': 'string', 'description': 'Country for delivery'}
+                            }
+                        }
                     },
                     'billing_address': {
                         'type': 'object',
+                        'description': 'The billing address of the customer',
                         'properties': {
                             'street': {'type': 'string', 'description': 'Street address for billing'},
                             'house_number': {'type': 'string', 'description': 'House number for billing'},
                             'postal_code': {'type': 'string', 'description': 'Postal code for billing'},
                             'city': {'type': 'string', 'description': 'City for billing'},
                             'country': {'type': 'string', 'description': 'Country for billing'}
-                        },
-                        'description': 'The billing address of the customer'
+                        }
                     }
                 }
             }

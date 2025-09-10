@@ -21,6 +21,18 @@ class User(db.Model):
     def __repr__(self):
         return f"<User(id={self.id}, username={self.username}, role={self.role})>"
 
+class DeliveryAddress(db.Model):
+    __tablename__ = "delivery_address"
+    id = Column(Integer, primary_key=True)
+    customer_id = Column(Integer, ForeignKey("customer.id"), nullable=False)
+    address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
+
+    address = relationship("Address")
+    customer = relationship("Customer", back_populates="delivery_addresses")
+    
+    def to_dict(self):
+        return self.address.to_dict()
+
 class Address(db.Model):
     __tablename__ = "address"
     id = Column(Integer, primary_key=True)
@@ -38,7 +50,7 @@ class Address(db.Model):
             "city": self.city,
             "country": self.country
         }
-    
+
     def __repr__(self):
         return f"<Address(id={self.id}, street={self.street}, city={self.city})>"
 
@@ -57,13 +69,15 @@ class Customer(db.Model):
     email1 = Column(String(255), nullable=False)
     email2 = Column(String(255))
     email3 = Column(String(255))
-    delivery_address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
     billing_address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
     private = Column(Boolean)
     notes = Column(String)
 
-    delivery_address = relationship("Address", foreign_keys=[delivery_address_id])
     billing_address = relationship("Address", foreign_keys=[billing_address_id])
+    delivery_addresses = relationship(
+        "DeliveryAddress", back_populates="customer", cascade="all, delete-orphan"
+    )
+
 
     def to_dict(self, include_id=True):
         data = {
@@ -74,21 +88,18 @@ class Customer(db.Model):
             "contacts": [self.contact1, self.contact2, self.contact3],
             "phone_numbers": [self.phone1, self.phone2, self.phone3],
             "emails": [self.email1, self.email2, self.email3],
-            "delivery_address": self._address_to_dict(self.delivery_address),
             "billing_address": self._address_to_dict(self.billing_address),
+            "delivery_addresses": [da.to_dict() for da in self.delivery_addresses],
             "private": self.private,
             "notes": self.notes
         }
         return data
 
     def _address_to_dict(self, address):
-        """Helper method to return address data safely"""
         if address:
-            return {
-                **address.to_dict()
-            }
+            return address.to_dict()
         return {}
-    
+
     def __repr__(self):
         return f"<Customer(id={self.id}, firma={self.company})>"
     
