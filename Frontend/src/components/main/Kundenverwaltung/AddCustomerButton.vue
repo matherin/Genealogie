@@ -85,36 +85,41 @@
                     </div>
                 </div>
                 <div class="column-right">
-                    <div class="item-group">
-                        <label class="group-text">Lieferadresse</label>
-                        <div class="items">
-                            <label class="text">Land*</label>
-                            <InputText id="country" v-model="newCustomer.delivery_address.country" class="flex-auto"
-                                autocomplete="off" placeholder="Musterland" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Stadt*</label>
-                            <InputText id="city" v-model="newCustomer.delivery_address.city" class="flex-auto"
-                                autocomplete="off" placeholder="Musterhausen" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Postleitzahl*</label>
-                            <InputText id="postal_code" v-model="newCustomer.delivery_address.postal_code"
-                                class="flex-auto" autocomplete="off" placeholder="12345" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Straße*</label>
-                            <InputText id="street" v-model="newCustomer.delivery_address.street" class="flex-auto"
-                                autocomplete="off" placeholder="Musterstraße" />
-                        </div>
-                        <div class="items">
-                            <label class="text">Hausnummer*</label>
-                            <InputText id="house_number" v-model="newCustomer.delivery_address.house_number"
-                                class="flex-auto" autocomplete="off" placeholder="1a" />
+                    <div class="item-group" v-for="(address, index) in newCustomer.delivery_address" :key="index">
+                        <label class="group-text">Lieferadresse {{index}}</label>
+                        <div class="items-group" >
+                            <div class="items">
+                                <label class="text">Land*</label>
+                                <InputText id="'country-' + index" v-model="address.country" class="flex-auto"
+                                    autocomplete="off" placeholder="Musterland" />
+                            </div>
+                            <div class="items">
+                                <label class="text">Stadt*</label>
+                                <InputText id="'city-' + index" v-model="address.city" class="flex-auto"
+                                    autocomplete="off" placeholder="Musterhausen" />
+                            </div>
+                            <div class="items">
+                                <label class="text">Postleitzahl*</label>
+                                <InputText id="'postal_code-' + index" v-model="address.postal_code"
+                                    class="flex-auto" autocomplete="off" placeholder="12345" />
+                            </div>
+                            <div class="items">
+                                <label class="text">Straße*</label>
+                                <InputText id="'street-' + index" v-model="address.street" class="flex-auto"
+                                    autocomplete="off" placeholder="Musterstraße" />
+                            </div>
+                            <div class="items">
+                                <label class="text">Hausnummer*</label>
+                                <InputText id="'house_number-' + index" v-model="address.house_number"
+                                    class="flex-auto" autocomplete="off" placeholder="1a" />
+                            </div>
                         </div>
                     </div>
+                    <div class="items">
+                        <Button outlined @click="addDeliveryAddress">Weitere Adresse hinzufügen</Button>
+                    </div>    
                     <div class="item-group">
-                        <div class="items-alone">
+                        <div v-if="!multipleDeliveryAddress" class="items-alone">
                             <label class="text">Abweichende Rechnungsadresse?</label>
                             <ToggleSwitch v-model="showRechnungsadresse" />
                         </div>
@@ -196,6 +201,7 @@ export default {
         return {
             visible: false,
             showRechnungsadresse: false,
+            multipleDeliveryAddress: false,
             newCustomer: {
                 "account_number": "",
                 "billing_address": {
@@ -211,13 +217,15 @@ export default {
                     "",
                     ""
                 ],
-                "delivery_address": {
-                    "city": "",
-                    "country": "",
-                    "house_number": "",
-                    "postal_code": "",
-                    "street": ""
-                },
+                "delivery_address": [
+                    {
+                        "city": "",
+                        "country": "",
+                        "house_number": "",
+                        "postal_code": "",
+                        "street": ""
+                    }
+                ],
                 "emails": [
                     "",
                     "",
@@ -235,8 +243,20 @@ export default {
         };
     },
     methods: {
+
+        addDeliveryAddress(){
+            this.multipleDeliveryAddress = true;
+            this.newCustomer.delivery_address.push({
+                city:"",
+                country:"",
+                house_number: "",
+                postal_code: "",
+                street: ""
+            })
+        },  
+
         async sendDataToBackend() {
-            if (!this.showRechnungsadresse) this.newCustomer.billing_address = this.newCustomer.delivery_address;
+            if (!this.showRechnungsadresse) this.newCustomer.billing_address = this.newCustomer.delivery_address[0];
             if (
                 !this.newCustomer.account_number ||
                 !this.newCustomer.billing_address ||
@@ -247,12 +267,12 @@ export default {
                 !this.newCustomer.billing_address.street ||
                 this.newCustomer.contacts[0] === '' ||
                 !this.newCustomer.contacts.length ||
-                !this.newCustomer.delivery_address ||
-                !this.newCustomer.delivery_address.city ||
-                !this.newCustomer.delivery_address.country ||
-                !this.newCustomer.delivery_address.house_number ||
-                !this.newCustomer.delivery_address.postal_code ||
-                !this.newCustomer.delivery_address.street ||
+                !this.newCustomer.delivery_address[0] ||
+                !this.newCustomer.delivery_address[0].city ||
+                !this.newCustomer.delivery_address[0].country ||
+                !this.newCustomer.delivery_address[0].house_number ||
+                !this.newCustomer.delivery_address[0].postal_code ||
+                !this.newCustomer.delivery_address[0].street ||
                 this.newCustomer.emails[0] === '' ||
                 !this.newCustomer.emails.length ||
                 this.newCustomer.phone_numbers[0] === '' ||
@@ -310,13 +330,15 @@ export default {
                     "",
                     ""
                 ],
-                "delivery_address": {
-                    "city": "",
-                    "country": "",
-                    "house_number": "",
-                    "postal_code": "",
-                    "street": ""
-                },
+                "delivery_address": [
+                    {
+                        "city": "",
+                        "country": "",
+                        "house_number": "",
+                        "postal_code": "",
+                        "street": ""
+                    }
+                ],
                 "emails": [
                     "",
                     "",
@@ -351,13 +373,15 @@ export default {
                     "",
                     ""
                 ],
-                "delivery_address": {
-                    "city": "",
-                    "country": "",
-                    "house_number": "",
-                    "postal_code": "",
-                    "street": ""
-                },
+                "delivery_address": [
+                    {
+                        "city": "",
+                        "country": "",
+                        "house_number": "",
+                        "postal_code": "",
+                        "street": ""
+                    }
+                ],
                 "emails": [
                     "",
                     "",
