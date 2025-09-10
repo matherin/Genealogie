@@ -55,12 +55,12 @@ Dieses Projekt ist eine Anwendung zur Verwaltung von Waren, die von Kunden in ei
 
 # Arbeitszeit:
 
-- Robin: 24 h
+- Robin: 26 h
 
 # Notizen zum Projekt:
 
 - jeder Kunde Gesamt Abrechnung pro Jahr mit Ausdruck
-- mehr als eine Lieferaddresse für einen Kunde
+- mehr als eine Lieferaddresse für einen Kunde done
 - wir bekommen Tabellen für die Waren eingänge 
 - Waren Schrott in/out/Fahrzeuge/Dienstleistungen
 - MwSt für Privat und Firmenkunden unterschiedlich wird bei Waren gespeichert
