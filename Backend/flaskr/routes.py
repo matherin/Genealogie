@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, redirect, url_for
 from flasgger import swag_from
 from .database import db
 from .datamodels import *
-from .request_handling import contracts_service, customers_service, auth_service, users_service, goods_service
+from .request_handling import contracts_service, customers_service, auth_service, users_service, goods_service, invoice_service
 from .auth.validate_request import validate_admin_request
 
 # Blueprints
@@ -12,6 +12,7 @@ customers_bp = Blueprint('customers', __name__, url_prefix='/api')
 contracts_bp = Blueprint('contracts', __name__, url_prefix='/api')
 goods_bp = Blueprint('goods', __name__, url_prefix='/api')
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+invoice_bp = Blueprint('invoice', __name__, url_prefix='/api')
 
 ### Authentication ###
 @auth_bp.route("/login", methods=['POST'])
@@ -826,3 +827,40 @@ def update_contract(contract_id):
 })
 def delete_contract(contract_id):
     return contracts_service.delete_contract(contract_id)
+
+### Invoice ###
+@auth_bp.route("/customer/<int:customer_id>/contracts", methods=['GET'])
+@swag_from({
+    'tags': ['Contracts'],
+    'summary': 'Get all contracts of a customer in a timeframe',
+    'description': 'Fetches contracts of one customer in a given timeframe. By default, it uses the last month. Returns contracts and aggregated totals (money made, taxes paid).',
+    'parameters': [
+        {
+            'name': 'customer_id',
+            'in': 'path',
+            'type': 'integer',
+            'required': True,
+            'description': 'The ID of the customer'
+        },
+        {
+            'name': 'start_date',
+            'in': 'query',
+            'type': 'string',
+            'required': False,
+            'description': 'Start date (YYYY-MM-DD). Default: one month ago.'
+        },
+        {
+            'name': 'end_date',
+            'in': 'query',
+            'type': 'string',
+            'required': False,
+            'description': 'End date (YYYY-MM-DD). Default: today.'
+        }
+    ],
+    'responses': {
+        200: {'description': 'Contracts retrieved successfully'},
+        404: {'description': 'Customer not found'}
+    }
+})
+def get_customer_contracts(customer_id):
+    return invoice_service.get_customer_contracts(customer_id)
