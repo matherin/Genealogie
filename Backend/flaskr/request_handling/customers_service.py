@@ -108,27 +108,25 @@ def delete_customer(customer_id):
     if not customer:
         return {"error": "Customer not found"}, 404
 
-    # Store references before deletion
-    billing_address = customer.billing_address
-    delivery_links = list(customer.delivery_addresses)
+    # Adressen-IDs merken
+    billing_address_id = customer.billing_address_id
+    delivery_address_ids = [d.address_id for d in customer.delivery_addresses]
 
-    # Delete the customer (this cascades and deletes DeliveryAddress due to 'delete-orphan')
+    # Customer löschen (cascaded DeliveryAddresses werden auch gelöscht)
     db.session.delete(customer)
-    db.session.commit()
 
-    # Clean up delivery addresses if no other DeliveryAddress uses them
-    for delivery_link in delivery_links:
-        address = delivery_link.address
-        still_used = DeliveryAddress.query.filter(DeliveryAddress.address_id == address.id).first()
+    # Delivery-Adressen aufräumen
+    for address_id in delivery_address_ids:
+        still_used = DeliveryAddress.query.filter_by(address_id=address_id).first()
         if not still_used:
-            db.session.delete(address)
+            Address.query.filter_by(id=address_id).delete()
 
-    # Check if billing address is orphaned (no other customer uses it)
-    other_customer = Customer.query.filter(Customer.billing_address_id == billing_address.id).first()
-    used_as_delivery = DeliveryAddress.query.filter(DeliveryAddress.address_id == billing_address.id).first()
-
-    if not other_customer and not used_as_delivery:
-        db.session.delete(billing_address)
+    # Billing-Adresse aufräumen
+    if billing_address_id:
+        other_customer = Customer.query.filter_by(billing_address_id=billing_address_id).first()
+        used_as_delivery = DeliveryAddress.query.filter_by(address_id=billing_address_id).first()
+        if not other_customer and not used_as_delivery:
+            Address.query.filter_by(id=billing_address_id).delete()
 
     db.session.commit()
 
