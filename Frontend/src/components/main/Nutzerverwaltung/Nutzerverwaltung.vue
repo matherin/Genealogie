@@ -14,18 +14,22 @@
           <div class="user-table-header-button-container">
             <div class="user-table-header-search">
               <IconField class="user-table-header-button">
-              <InputIcon class="pi pi-search" />
-              <InputText v-model="filters['global'].value" placeholder="Suchen" icon="pi pi-search" />
-            </IconField>
+                <InputIcon class="pi pi-search" />
+                <InputText v-model="filters['global'].value" placeholder="Suchen" icon="pi pi-search" />
+              </IconField>
             </div>
-            <div class="user-table-header-columnselect"><MultiSelect :modelValue="selectedColumns" :options="columns" optionLabel="header"
-              @update:modelValue="onToggle" display="chip" placeholder="Select Columns" />
-</div>
-                      </div>
+            <div class="user-table-header-columnselect">
+              <MultiSelect class="user-table-header-columnselect-toggle"
+                :pt="{ labelContainer: { style: 'padding-right:2.5rem' }, clearIcon: { style: 'right:2.5rem' } }"
+                :modelValue="selectedColumns" showClear selectionLimit="10" :maxSelectedLabels="5" :options="columns" optionLabel="header"
+                @update:modelValue="onToggle" display="chip" :optionDisabled="isOptionDisabled" placeholder="Select Columns" />
+            </div>
+          </div>
         </div>
       </template>
       <template #empty> Keine Nutzer gefunden.</template>
-      <Column field="id" header="ID" sortable style="width: 5%">
+      <Column v-for="(col, index) of selectedColumns" :field="col.field" :header="col.header"
+        :key="col.field + '_' + index">
         <template #body="{ data }">
           <div class="custom-row-div" v-if="this.currentlyLoading">
             <Skeleton width="50%" />
@@ -33,7 +37,6 @@
           <span v-else v-html="highlightText(data.id)" />
         </template>
       </Column>
-      <Column v-for="(col, index) of selectedColumns" :field="col.field" :header="col.header" :key="col.field + '_' + index"></Column>
     </DataTable>
   </div>
 </template>
@@ -71,22 +74,53 @@ export default {
       },
       userData: [],
       currentlyLoading: true,
-      selectedColumns: null,
-      columns: null,
+      selectedColumns: [],
+      columns: [],
+      maxColumns: 10,
     };
   },
-  created(){
+  created() {
     this.columns = [
-      {field: 'firstName', header: 'First Name'},
-      {field: 'lastName', header: 'Last Name'}
-    ]
+      { field: 'firstName', header: 'First Name' },
+      { field: 'lastName', header: 'Last Name' },
+      { field: 'alternateLastName', header: 'Alternate Last Name' },
+      { field: 'alternateFirstName', header: 'Alternate Last Name' },
+      { field: 'age', header: 'Age' },
+      { field: 'monthBorn', header: 'Month Born' },
+      { field: 'sex', header: 'Sex' },
+      { field: 'monthMarried', header: 'Month Married' },
+      { field: 'color', header: 'Color' },
+      { field: 'occupation', header: 'Occupation' },
+      { field: 'skillLevel', header: 'Skill Level' },
+      { field: 'wardNumber', header: 'Ward Number' },
+      { field: 'fatherForeignBorn', header: 'Father Foreign Born' },
+      { field: 'motherForeignBorn', header: 'Mother Foreign Born' },
+      { field: 'attendSchool', header: 'Attend School' },
+      { field: 'read', header: 'Read' },
+      { field: 'write', header: 'Write' },
+      { field: 'dwelling', header: 'Dwelling' },
+      { field: 'personalEstate', header: 'Personal Estate' },
+      { field: 'realEstate', header: 'Real Estate' },
+      { field: 'vote', header: 'Vote' },
+      { field: 'sane', header: 'Sane' },
+      { field: 'soundexCode', header: 'Soundex Code' },
+      { field: 'alternateSoundexCode', header: 'Alternate Soundex Code' },
+      { field: 'addNotes', header: 'Additional Notes' }
+    ];
+    this.selectedColumns = this.columns.slice(0, 2);
   },
   mounted() {
     this.fetchUserData();
   },
   methods: {
-    onToggle(value){
-      this.selectedColumns = this.columns.filter(col => value.includes(col));
+    isOptionDisabled(option) {
+      if (!this.selectedColumns) return false;
+      return (
+        this.selectedColumns.length >= this.maxColumns && !this.selectedColumns.includes(option)
+      );
+    },
+    onToggle(value) {
+      this.selectedColumns = value;
     },
     async fetchUserData() {
       this.currentlyLoading = true;
@@ -201,7 +235,7 @@ export default {
   font-weight: 700;
 }
 
-.user-table-header-columnselect{
+.user-table-header-columnselect {
   margin-left: 10px;
 }
 </style>
