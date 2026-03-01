@@ -37,7 +37,7 @@ def create_app(test_config=None):
 
     @app.route('/')
     def home():
-        return "Welcome to Metci!", 200
+        return "Welcome to Genea!", 200
     
     # import der blueprints
     app.register_blueprint(users_bp)

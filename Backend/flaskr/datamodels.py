@@ -2,187 +2,222 @@ from sqlalchemy import Column, Integer, String, Boolean, DECIMAL, ForeignKey, TI
 from sqlalchemy.orm import relationship
 from . import db
 
-class User(db.Model):
-    __tablename__ = "user"
+class Seventy(db.Model):
+    __tablename__ = "seventy"
     id = Column(Integer, primary_key=True)
-    username = Column(String(255), nullable=False)
-    role = Column(String(255))
-    password = Column(String(255), nullable=False)
-
-    def to_dict(self, include_id=True):
-        data = {
-            "username": self.username,
-            "role": self.role
-        }
-        if include_id:
-            data["id"] = self.id
-        return data
-    
-    def __repr__(self):
-        return f"<User(id={self.id}, username={self.username}, role={self.role})>"
-
-class DeliveryAddress(db.Model):
-    __tablename__ = "delivery_address"
-    id = Column(Integer, primary_key=True)
-    customer_id = Column(Integer, ForeignKey("customer.id"), nullable=False)
-    address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
-
-    address = relationship("Address")
-    customer = relationship("Customer", back_populates="delivery_addresses")
-    
-    def to_dict(self):
-        return self.address.to_dict()
-
-class Address(db.Model):
-    __tablename__ = "address"
-    id = Column(Integer, primary_key=True)
-    street = Column(String(255), nullable=False)
-    house_number = Column(String(10), nullable=False)
-    postal_code = Column(String(10), nullable=False)
-    city = Column(String(100), nullable=True)
-    country = Column(String(100), nullable=True)
-
-    def to_dict(self):
-        return {
-            "street": self.street,
-            "house_number": self.house_number,
-            "postal_code": self.postal_code,
-            "city": self.city,
-            "country": self.country
-        }
-
-    def __repr__(self):
-        return f"<Address(id={self.id}, street={self.street}, city={self.city})>"
-
-class Customer(db.Model):
-    __tablename__ = "customer"
-    id = Column(Integer, primary_key=True)
-    company = Column(String(255))
-    account_number = Column(String(50))
-    tax_number = Column(String(50))
-    contact1 = Column(String(255), nullable=False)
-    contact2 = Column(String(255))
-    contact3 = Column(String(255))
-    phone1 = Column(String(20))
-    phone2 = Column(String(20))
-    phone3 = Column(String(20))
-    email1 = Column(String(255), nullable=False)
-    email2 = Column(String(255))
-    email3 = Column(String(255))
-    billing_address_id = Column(Integer, ForeignKey("address.id"), nullable=False)
-    private = Column(Boolean)
-    notes = Column(String)
-
-    billing_address = relationship("Address", foreign_keys=[billing_address_id])
-    delivery_addresses = relationship(
-        "DeliveryAddress", back_populates="customer", cascade="all, delete-orphan"
-    )
-
+    first_name = Column(String(255))
+    alt_first_name = Column(String(255))
+    last_name = Column(String(255))
+    alt_last_name = Column(String(255))
+    age = Column(Integer)
+    month_born = Column(String(255))
+    male = Column(Boolean)
+    month_married = Column(String(255))
+    color = Column(String(255))
+    occupation = Column(String(255))
+    level_of_skill = Column(String(255))
+    ward_number = Column(Integer)
+    place_of_birth = Column(String(255))
+    ffb = Column(Boolean)
+    mfb = Column(Boolean)
+    a_school = Column(Boolean)
+    read = Column(Boolean)
+    write = Column(Boolean)
+    dwelling = Column(String(255))
+    personal_estate = Column(Integer)
+    real_estate = Column(Integer)
+    vote = Column(Boolean)
+    sane = Column(String(255))
+    soundex_code = Column(String(255))
+    alt_soundex_code = Column(String(255))
+    notes = Column(String(255))
 
     def to_dict(self, include_id=True):
         data = {
             "id": self.id if include_id else None,
-            "company": self.company,
-            "account_number": self.account_number,
-            "tax_number": self.tax_number,
-            "contacts": [self.contact1, self.contact2, self.contact3],
-            "phone_numbers": [self.phone1, self.phone2, self.phone3],
-            "emails": [self.email1, self.email2, self.email3],
-            "billing_address": self._address_to_dict(self.billing_address),
-            "delivery_addresses": [da.to_dict() for da in self.delivery_addresses],
-            "private": self.private,
+            "first_name": self.first_name,
+            "alt_first_name": self.alt_first_name,
+            "last_name": self.last_name,
+            "alt_last_name": self.alt_last_name,
+            "age": self.age,
+            "month_born": self.month_born,
+            "male": self.male,
+            "month_married": self.month_married,
+            "color": self.color,
+            "occupation": self.occupation,
+            "level_of_skill": self.level_of_skill,
+            "ward_number": self.ward_number,
+            "place_of_birth": self.place_of_birth,
+            "ffb": self.ffb,
+            "mfb": self.mfb,
+            "a_school": self.a_school,
+            "read": self.read,
+            "write": self.write,
+            "dwelling": self.dwelling,
+            "personal_estate": self.personal_estate,
+            "real_estate": self.real_estate,
+            "vote": self.vote,
+            "sane": self.sane,
+            "soundex_code": self.soundex_code,
+            "alt_soundex_code": self.alt_soundex_code,
             "notes": self.notes
         }
         return data
-
-    def _address_to_dict(self, address):
-        if address:
-            return address.to_dict()
-        return {}
-
-    def __repr__(self):
-        return f"<Customer(id={self.id}, firma={self.company})>"
     
-class Good(db.Model):
-    __tablename__ = "good"
+    def __repr__(self):
+        return f"<seventy(id={self.id}, first_name={self.first_name}, last_name={self.last_name})>"
+
+class eighty(db.Model):
+    __tablename__ = "eighty"
     id = Column(Integer, primary_key=True)
-    description = Column(String(255))
-    price = Column(DECIMAL(10,2))
-    unit = Column(String(50))
-    waste_code = Column(String(250))
-    collection_group = Column(String(250))
-    category = Column(String(250))
-    tax_class = Column(String(250))
+    first_name = Column(String(255))
+    last_name = Column(String(255))
+    rthoh = Column(String(255))
+    age = Column(Integer)
+    male = Column(Boolean)
+    marital_status = Column(String(255))
+    color = Column(String(255))
+    occupation = Column(String(255))
+    level_of_skill = Column(String(255))
+    ward_number = Column(Integer)
+    months_unemployed = Column(Integer)
+    place_of_birth = Column(String(255))
+    pob_farther = Column(String(255))
+    pob_mother = Column(String(255))
+    street = Column(String(255))
+    house_address = Column(String(255))
 
     def to_dict(self, include_id=True):
         data = {
-            "description": self.description,
-            "price": float(self.price) if self.price else None,
-            "unit": self.unit,
-            "waste_code": self.waste_code,
-            "collection_group": self.collection_group,
-            "category": self.category
+            "id": self.id if include_id else None,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "rthoh": self.rthoh,
+            "age": self.age,
+            "male": self.male,
+            "marital_status": self.marital_status,
+            "color": self.color,
+            "occupation": self.occupation,
+            "level_of_skill": self.level_of_skill,
+            "ward_number": self.ward_number,
+            "months_unemployed": self.months_unemployed,
+            "place_of_birth": self.place_of_birth,
+            "pob_farther": self.pob_farther,
+            "pob_mother": self.pob_mother,
+            "street": self.street,
+            "house_address": self.house_address
         }
-        if include_id:
-            data["wid"] = self.id
         return data
     
     def __repr__(self):
-        return f"<Good(id={self.id}, discription={self.description}, price={self.price})>"
-    
+        return f"<eighty(id={self.id}, first_name={self.first_name}, last_name={self.last_name})>"
 
-class Contract(db.Model):
-    __tablename__ = "contract"
+
+class sixty(db.Model):
+    __tablename__ = "sixty"
     id = Column(Integer, primary_key=True)
-    customer_id = Column(Integer, ForeignKey("customer.id"), nullable=False)
-    date = Column(TIMESTAMP)
-    input = Column(Boolean)
+    first_name = Column(String(255))
+    alt_first_name = Column(String(255))
+    last_name = Column(String(255))
+    alt_last_name = Column(String(255))
+    age = Column(Integer)
+    male = Column(Boolean)
+    married_last_year = Column(Boolean)
+    color = Column(String(255))
+    occupation = Column(String(255))
+    level_of_skill = Column(String(255))
+    ward_number = Column(Integer)
+    place_of_birth = Column(String(255))
+    a_school = Column(Boolean)
+    literate = Column(Boolean)
+    dwelling = Column(String(255))
+    personal_estate = Column(Integer)
+    real_estate = Column(Integer)
+    sane = Column(String(255))
+    soundex_code = Column(String(255))
+    alt_soundex_code = Column(String(255))
+    notes = Column(String(255))
 
-    customer = relationship("Customer")
-    contract_goods = relationship("ContractGoods", back_populates="contract", lazy="joined")
-    
     def to_dict(self, include_id=True):
-        goods_list = [
-        {
-            "good": contract_good.good.to_dict(),
-            "quantity": contract_good.quantity,
-            "subtotal": float(contract_good.good.price) * contract_good.quantity
-        } for contract_good in self.contract_goods
-        ]
-        print(goods_list)
-
-        total_price = sum(item["subtotal"] for item in goods_list)
-
         data = {
-            "customer": self.customer.to_dict(),
-            "date": self.date.strftime("%d-%m-%Y") if self.date else None,
-            "input": self.input,
-            "goods": goods_list,
-            "total_price": round(total_price, 2)
+            "id": self.id if include_id else None,
+            "first_name": self.first_name,
+            "alt_first_name": self.alt_first_name,
+            "last_name": self.last_name,
+            "alt_last_name": self.alt_last_name,
+            "age": self.age,
+            "male": self.male,
+            "married_last_year": self.married_last_year,
+            "color": self.color,
+            "occupation": self.occupation,
+            "level_of_skill": self.level_of_skill,
+            "ward_number": self.ward_number,
+            "place_of_birth": self.place_of_birth,
+            "a_school": self.a_school,
+            "literate": self.literate,
+            "dwelling": self.dwelling,
+            "personal_estate": self.personal_estate,
+            "real_estate": self.real_estate,
+            "sane": self.sane,
+            "soundex_code": self.soundex_code,
+            "alt_soundex_code": self.alt_soundex_code,
+            "notes": self.notes
         }
-        if include_id:
-            data["vid"] = self.id
         return data
     
     def __repr__(self):
-        return f"<Contract(id={self.id}, kunde_id={self.customer_id}, datum={self.date})>"
+        return f"<sixty(id={self.id}, first_name={self.first_name}, last_name={self.last_name})>"
+    
 
+class fifty(db.Model):
+    __tablename__ = "fifty"
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String(255))
+    alt_first_name = Column(String(255))
+    last_name = Column(String(255))
+    alt_last_name = Column(String(255))
+    age = Column(Integer)
+    male = Column(Boolean)
+    married_last_year = Column(Boolean)
+    color = Column(String(255))
+    occupation = Column(String(255))
+    level_of_skill = Column(String(255))
+    ward_number = Column(Integer)
+    place_of_birth = Column(String(255))
+    a_school = Column(Boolean)
+    literate = Column(Boolean)
+    dwelling = Column(String(255))
+    estate_value = Column(Integer)
+    sane = Column(String(255))
+    soundex_code = Column(String(255))
+    alt_soundex_code = Column(String(255))
+    notes = Column(String(255))
 
-class ContractGoods(db.Model):
-    __tablename__ = "contract_goods"
-    contract_id = Column(Integer, ForeignKey("contract.id"), primary_key=True)
-    good_id = Column(Integer, ForeignKey("good.id"), primary_key=True)
-    quantity = Column(Integer, nullable=False)
-
-    contract = relationship("Contract", back_populates="contract_goods")
-    good = relationship("Good")
-
-    def to_dict(self):
-        return {
-            "contract": self.contract.to_dict(),
-            "good": self.good.to_dict(),
-            "quantity": self.quantity
+    def to_dict(self, include_id=True):
+        data = {
+            "id": self.id if include_id else None,
+            "first_name": self.first_name,
+            "alt_first_name": self.alt_first_name,
+            "last_name": self.last_name,
+            "alt_last_name": self.alt_last_name,
+            "age": self.age,
+            "male": self.male,
+            "married_last_year": self.married_last_year,
+            "color": self.color,
+            "occupation": self.occupation,
+            "level_of_skill": self.level_of_skill,
+            "ward_number": self.ward_number,
+            "place_of_birth": self.place_of_birth,
+            "a_school": self.a_school,
+            "literate": self.literate,
+            "dwelling": self.dwelling,
+            "estate_value": self.estate_value,
+            "sane": self.sane,
+            "soundex_code": self.soundex_code,
+            "alt_soundex_code": self.alt_soundex_code,
+            "notes": self.notes
         }
+        return data
     
     def __repr__(self):
-        return f"<ContractGoods(contract_id={self.contract_id}, good_id={self.good_id}, quantity={self.quantity})>"
+        return f"<fifty(id={self.id}, first_name={self.first_name}, last_name={self.last_name})>"
