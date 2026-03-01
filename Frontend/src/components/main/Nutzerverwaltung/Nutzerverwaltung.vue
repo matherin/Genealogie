@@ -10,20 +10,22 @@
       ]">
       <template #header>
         <div class="user-table-header">
-          <p class="user-table-header-title">Nutzertabelle</p>
+          <p class="user-table-header-title">Census Tabelle</p>
           <div class="user-table-header-button-container">
-            <IconField class="user-table-header-button">
-              <AddUserButton @addUserData="fetchUserData" />
-            </IconField>
-            <IconField class="user-table-header-button">
+            <div class="user-table-header-search">
+              <IconField class="user-table-header-button">
               <InputIcon class="pi pi-search" />
               <InputText v-model="filters['global'].value" placeholder="Suchen" icon="pi pi-search" />
             </IconField>
-          </div>
+            </div>
+            <div class="user-table-header-columnselect"><MultiSelect :modelValue="selectedColumns" :options="columns" optionLabel="header"
+              @update:modelValue="onToggle" display="chip" placeholder="Select Columns" />
+</div>
+                      </div>
         </div>
       </template>
       <template #empty> Keine Nutzer gefunden.</template>
-      <Column field="id" header="ID" sortable style="width: 10%">
+      <Column field="id" header="ID" sortable style="width: 5%">
         <template #body="{ data }">
           <div class="custom-row-div" v-if="this.currentlyLoading">
             <Skeleton width="50%" />
@@ -31,31 +33,7 @@
           <span v-else v-html="highlightText(data.id)" />
         </template>
       </Column>
-      <Column field="username" header="Nutzername" sortable style="width: 20%">
-        <template #body="{ data }">
-          <Skeleton v-if="this.currentlyLoading" width="50%" />
-          <span v-else v-html="highlightText(data.username)" />
-        </template>
-      </Column>
-      <Column field="role" header="Rolle" sortable style="width: 10%">
-        <template #body="{ data }">
-          <Skeleton v-if="this.currentlyLoading" width="70%" />
-          <span v-else v-html="highlightText(data.role)" />
-        </template>
-      </Column>
-      <Column header="Aktionen" style="width: 10%">
-        <template #body="slotProps">
-          <Skeleton v-if="this.currentlyLoading" width="100%" />
-          <div v-else class="row">
-            <div class="space">
-              <EditUserButton :editableUser="slotProps.data" @editUserData="fetchUserData" />
-            </div>
-            <div class="space">
-              <DeleteUserButton :deleteUser="slotProps.data.id" @deleteUserData="fetchUserData" />
-            </div>
-          </div>
-        </template>
-      </Column>
+      <Column v-for="(col, index) of selectedColumns" :field="col.field" :header="col.header" :key="col.field + '_' + index"></Column>
     </DataTable>
   </div>
 </template>
@@ -66,11 +44,9 @@ import Column from "primevue/column";
 import IconField from "primevue/iconfield";
 import InputText from "primevue/inputtext";
 import InputIcon from "primevue/inputicon";
-import DeleteUserButton from "./DeleteUserButton.vue";
 import Skeleton from "primevue/skeleton";
+import MultiSelect from "primevue/multiselect";
 import Toast from "@/components/custom/toast/Toast.vue";
-import AddUserButton from "./AddUserButton.vue";
-import EditUserButton from "./EditUserButton.vue";
 
 const FilterMatchMode = { CONTAINS: "contains" };
 
@@ -79,15 +55,13 @@ var baseUrl = window.location.origin;
 export default {
   name: "NutzerverwaltungTable",
   components: {
-    DeleteUserButton,
-    AddUserButton,
-    EditUserButton,
     Column,
     DataTable,
     IconField,
     InputText,
     InputIcon,
     Skeleton,
+    MultiSelect,
     Toast,
   },
   data() {
@@ -97,12 +71,23 @@ export default {
       },
       userData: [],
       currentlyLoading: true,
+      selectedColumns: null,
+      columns: null,
     };
+  },
+  created(){
+    this.columns = [
+      {field: 'firstName', header: 'First Name'},
+      {field: 'lastName', header: 'Last Name'}
+    ]
   },
   mounted() {
     this.fetchUserData();
   },
   methods: {
+    onToggle(value){
+      this.selectedColumns = this.columns.filter(col => value.includes(col));
+    },
     async fetchUserData() {
       this.currentlyLoading = true;
       try {
@@ -114,7 +99,7 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        const roleMap={
+        const roleMap = {
           user: "Nutzer",
           admin: "Administrator",
         };
@@ -214,7 +199,9 @@ export default {
 .user-table-header-title {
   font-size: var(--font-size-medium);
   font-weight: 700;
-  }
-  
+}
+
+.user-table-header-columnselect{
+  margin-left: 10px;
+}
 </style>
-  

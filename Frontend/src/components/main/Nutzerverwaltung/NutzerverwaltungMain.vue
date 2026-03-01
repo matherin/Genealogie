@@ -25,9 +25,9 @@ export default {
     Menu,
     Toast,
   },
-  beforeRouteEnter(to, form, next) {
+  /*beforeRouteEnter(to, form, next) {
     const session = getSessionCookies();
-    let permission = "user";
+    let permission = "admin";
     if (session?.aud) permission = session.aud;
     else next("/");
 
@@ -49,7 +49,7 @@ export default {
     )
       next("/");
     else next();
-  },
+  },*/
   data() {
     return {
       route: useRoute(),
