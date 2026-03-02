@@ -15,7 +15,7 @@
             <div class="user-table-header-search">
               <IconField class="user-table-header-button">
                 <InputIcon class="pi pi-search" />
-                <InputText v-model="filters['global'].value" placeholder="Suchen" icon="pi pi-search" />
+                <InputText v-model="filters['global'].value" placeholder="Search" icon="pi pi-search" />
               </IconField>
             </div>
             <div class="user-table-header-columnselect">
@@ -27,7 +27,7 @@
           </div>
         </div>
       </template>
-      <template #empty> Keine Nutzer gefunden.</template>
+      <template #empty> Nothing found</template>
       <Column v-for="(col, index) of selectedColumns" :field="col.field" :header="col.header"
         :key="col.field + '_' + index">
         <template #body="{ data }">
@@ -56,7 +56,7 @@ const FilterMatchMode = { CONTAINS: "contains" };
 var baseUrl = window.location.origin;
 
 export default {
-  name: "NutzerverwaltungTable",
+  name: "censusData",
   components: {
     Column,
     DataTable,

@@ -1,39 +1,26 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Login from "./../components/login/Login.vue";
-
-import ChangePassword from "./../components/main/settings/changePassword.vue";
-import Profile from "./../components/main/settings/Profile.vue";
-import NutzerverwaltungMain from "@/components/main/Nutzerverwaltung/NutzerverwaltungMain.vue";
-import Nutzerverwaltung from "@/components/main/Nutzerverwaltung/Nutzerverwaltung.vue";
+import CensusData from "@/components/main/Nutzerverwaltung/CensusData.vue";
+import CensusDataMain from "@/components/main/Nutzerverwaltung/CensusDataMain.vue";
 import SettingsMain from "./../components/main/settings/SettingsMain.vue";
 
 const routes = [
   {
     path: "/",
-    redirect: "/nutzerverwaltung/nutzertabelle",
+    redirect: "/censusData/table",
   },
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
-  },
-  {
-    path: "/nutzerverwaltung",
-    name: "Nutzer",
-    component: NutzerverwaltungMain,
+    path: "/censusData",
+    name: "Census",
+    component: CensusDataMain,
     children: [
-      { path: "nutzertabelle", component: Nutzerverwaltung },
+      { path: "table", component: CensusData },
     ],
   },
   {
-    path: "/einstellungen",
-    name: "Einstellungen",
-    component: SettingsMain,
-    children: [
-      { path: "passwort", component: ChangePassword },
-      { path: "profil", component: Profile },
-    ],
+    path: "/settings",
+    name: "Settings",
+    component: SettingsMain
   },
 ];
 

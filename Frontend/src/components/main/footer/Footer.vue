@@ -1,39 +1,12 @@
 <template>
     <div class="footer-container">
       <div class="footer-container-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Metcera-Recycling</th>
-              <th>Kontaktinformationen</th>
-              <th>Öffnungszeiten</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <a href="https://www.metcera-recycling.de">Metcera GmbH</a>
-              </td>
-              <td>E-Mail: info@metcera-recycling.de</td>
-              <td style="font-weight: bold;">Montag bis Freitag:</td>
-            </tr>
-            <tr>
-              <td>Sestewitzer Str. 7</td>
-              <td>Tel.: 034297 - 778066</td>
-              <td>8:00 - 12:00 Uhr, 12:30- 16:30 Uhr</td>
-            </tr>
-            <tr>
-              <td>04463 Großpösna</td>
-              <td></td>
-              <td style="font-weight: bold;">Samstag und Sonntag:</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td>geschlossen</td>
-            </tr>
-          </tbody>
-        </table>
+        <p>This is a project for the module "Computergenealogie und digitale Sozialgeschichte" at the Leipzig University. </p>
+        <p>We use the US census Data from Pittsburgh and Allegheny from the following site: 
+          <a href="https://exhibit.library.pitt.edu/census/" target="_blank">
+          https://exhibit.library.pitt.edu/census/
+        </a> </p>
+        <p>There is no direct affiliation between this site and the data origin.</p>
       </div>
     </div>
   </template>
@@ -52,7 +25,6 @@
     width: 100vw;
     min-width: 1250px;
     display: flex;
-    flex-direction: column;
     align-items: left;
   }
   
@@ -63,27 +35,14 @@
     min-width: 700px;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
   }
   
-  table {
-    margin-top: 0px;
-    width: 70%;
-    border-collapse: separate;
-    border-spacing: 100px 0px;
-  }
-  
-  th,
-  td {
-    width: 30%;
+  p {
+    width: 50%;
     padding: 8px;
     padding-bottom: 15px;
-    text-align: left;
-  }
-  
-  td {
-    padding-bottom: 0px;
-    padding-top: 5px;
-    color: var(--color-font-basic-two);
+    text-align: center;
   }
   
   a {

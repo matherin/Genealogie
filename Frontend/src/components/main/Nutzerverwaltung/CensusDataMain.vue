@@ -18,49 +18,23 @@
 import Menu from "primevue/menu";
 import { useRoute } from "vue-router";
 import Toast from "@/components/custom/toast/Toast.vue";
-import { getSessionCookies } from "@/components/custom/cookies/CookieService";
 
 export default {
   components: {
     Menu,
     Toast,
   },
-  /*beforeRouteEnter(to, form, next) {
-    const session = getSessionCookies();
-    let permission = "admin";
-    if (session?.aud) permission = session.aud;
-    else next("/");
-
-    if (to.path.split("/")[1] === "nutzerverwaltung" && permission !== "admin")
-      next("/");
-    else if (
-      to.path.split("/")[1] === "kundenverwaltung" &&
-      !["admin", "user"].includes(permission)
-    )
-      next("/");
-    else if (
-      to.path.split("/")[1] === "warenverwaltung" &&
-      !["admin", "user"].includes(permission)
-    ) {
-      next("/");
-    } else if (
-      to.path.split("/")[1] === "vertragsverwaltung" &&
-      !["admin", "user"].includes(permission)
-    )
-      next("/");
-    else next();
-  },*/
   data() {
     return {
       route: useRoute(),
       verwaltungsItems: [
         {
-          label: "Ansichten",
+          label: "Data Tables",
           items: [
             {
-              label: "Nutzertabelle",
+              label: "Census",
               icon: "pi pi-users",
-              command: () => this.$router.push("/nutzerverwaltung/nutzertabelle"),
+              command: () => this.$router.push("/censusData/table"),
             },
           ],
         },
