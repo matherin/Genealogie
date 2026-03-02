@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import CensusData from "@/components/main/Nutzerverwaltung/CensusData.vue";
 import CensusDataMain from "@/components/main/Nutzerverwaltung/CensusDataMain.vue";
-import SettingsMain from "./../components/main/settings/SettingsMain.vue";
+import Map from "@/components/main/settings/Map.vue";
 
 const routes = [
   {
@@ -18,9 +18,9 @@ const routes = [
     ],
   },
   {
-    path: "/settings",
-    name: "Settings",
-    component: SettingsMain
+    path: "/map",
+    name: "Map",
+    component: Map
   },
 ];
 

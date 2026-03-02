@@ -5,7 +5,7 @@
         <div class="header-container-profile">
           <router-link :class="{ routeractive: isActive('/settings') }" class="header-container-profile-button"
             to="/settings">
-            <i class="pi pi-cog"/></router-link>
+            <i class="pi pi-map"/></router-link>
         </div>
         <div class="header-container-bar">
           <router-link :class="{ routeractive: isActive('/censusData') }" class="header-container-bar-item"

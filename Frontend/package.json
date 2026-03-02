@@ -11,9 +11,11 @@
     },
     "dependencies": {
         "@primevue/themes": "^4.2.5",
+        "@vue-leaflet/vue-leaflet": "^0.10.1",
         "core-js": "^3.8.3",
         "http-server": "^14.1.1",
         "js-cookie": "^3.0.5",
+        "leaflet": "^1.9.4",
         "motion": "^12.6.2",
         "primeicons": "^7.0.0",
         "primevue": "^4.2.5",
