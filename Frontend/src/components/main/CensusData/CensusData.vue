@@ -144,7 +144,7 @@ export default {
         this.currentlyLoading = false;
       } catch (error) {
         console.error("Error fetching data:", error);
-        this.$refs.toast.toastAddError("Daten konnten nicht geladen werden");
+        this.$refs.toast.toastAddError("Data could not load");
       }
     },
 
