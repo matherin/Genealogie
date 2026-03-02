@@ -4,7 +4,6 @@ from flasgger import swag_from
 from .database import db
 from .datamodels import *
 from .request_handling import get_service
-from .auth.validate_request import validate_admin_request
 
 # Blueprints
 get_bp = Blueprint('get', __name__, url_prefix='/api')
