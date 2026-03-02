@@ -3,8 +3,8 @@
     <div class="header-container-view">
       <div class="header-container-right">
         <div class="header-container-profile">
-          <router-link :class="{ routeractive: isActive('/settings') }" class="header-container-profile-button"
-            to="/settings">
+          <router-link :class="{ routeractive: isActive('/map') }" class="header-container-profile-button"
+            to="/map">
             <i class="pi pi-map"/></router-link>
         </div>
         <div class="header-container-bar">
