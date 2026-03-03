@@ -374,13 +374,13 @@ def parse_line(line: str):
     los_code = line[72:74].strip()
     pob_code = line[96:99].strip()
     newocc_code = line[75:78].strip()
-    ffb_code=line[100:101].strip(),
-    mfb_code=line[102:103].strip(),
+    ffb_code=line[100:101].strip()
+    mfb_code=line[102:103].strip()
     can_vote_code=line[116:117].strip()
 
 
     first_name = line[31:44].strip()
-    last_name = line[43:60].strip()
+    last_name = line[43:59].strip()
     ward_number = to_int(line[9:11])
 
     month_born=line[103:105].strip()

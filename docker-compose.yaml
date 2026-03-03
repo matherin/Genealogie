@@ -1,10 +1,9 @@
-version: "3.9"
 # Run with docker compose -f docker-compose.yaml up --build
 
 services:
 
   database:
-    image: postgres
+    image: postgres:16
     restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
