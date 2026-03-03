@@ -67,7 +67,7 @@ class Seventy(db.Model):
     def __repr__(self):
         return f"<seventy(id={self.id}, first_name={self.first_name}, last_name={self.last_name})>"
 
-class eighty(db.Model):
+class Eighty(db.Model):
     __tablename__ = "eighty"
     id = Column(Integer, primary_key=True)
     first_name = Column(String(255))
@@ -113,7 +113,7 @@ class eighty(db.Model):
         return f"<eighty(id={self.id}, first_name={self.first_name}, last_name={self.last_name})>"
 
 
-class sixty(db.Model):
+class Sixty(db.Model):
     __tablename__ = "sixty"
     id = Column(Integer, primary_key=True)
     first_name = Column(String(255))
@@ -169,7 +169,7 @@ class sixty(db.Model):
         return f"<sixty(id={self.id}, first_name={self.first_name}, last_name={self.last_name})>"
     
 
-class fifty(db.Model):
+class Fifty(db.Model):
     __tablename__ = "fifty"
     id = Column(Integer, primary_key=True)
     first_name = Column(String(255))
