@@ -9,7 +9,7 @@
         </div>
         <div class="header-container-bar">
           <router-link :class="{ routeractive: isActive('/censusData') }" class="header-container-bar-item"
-            to="/censusData/table">
+            to="/censusData">
             Census Data</router-link>
         </div>
       </div>
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { ref } from "vue";
 import { useRoute } from "vue-router";
 import Menu from "primevue/menu";
 import Button from "primevue/button";
@@ -35,22 +34,7 @@ export default {
   },
   data() {
     return {
-      profileItems: [
-        {
-          label: "Einstellungen",
-          items: [
-            {
-              label: "Profil",
-              icon: "pi pi-user",
-              command: () => {
-                this.$router.push("/einstellungen/Profil");
-              },
-            },
-          ],
-        },
-      ],
       route: useRoute(),
-      state,
     };
   },
   methods: {
@@ -65,8 +49,6 @@ export default {
     },
   },
 };
-
-const state = ref("Gruppenleitung");
 </script>
 
 <style>
@@ -108,7 +90,7 @@ const state = ref("Gruppenleitung");
   margin-left: 0px;
   display: flex;
   position: relative;
-  width: 20%;
+  width: 40%;
   height: 100%;
 }
 
