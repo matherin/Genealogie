@@ -10,7 +10,7 @@ get_bp = Blueprint('get', __name__, url_prefix='/api')
 
 @get_bp.route('/1870', methods=['GET'])
 @swag_from({
-    'tags': ['seventy'],
+    'tags': ['1870'],
     'summary': 'Get People from seventy',
     'description': 'Retrieves all people from seventy from the system.',
     'responses': {
@@ -19,6 +19,18 @@ get_bp = Blueprint('get', __name__, url_prefix='/api')
 })
 def get_seventy():
     return get_service.get_seventy(request)
+
+@get_bp.route('/1880', methods=['GET'])
+@swag_from({
+    'tags': ['1880'],
+    'summary': 'Get People from eighty',
+    'description': 'Retrieves all people from eighty from the system.',
+    'responses': {
+        200: {'description': 'A list of people'}
+    }
+})
+def get_eighty():
+    return get_service.get_eighty(request)
 
 # @get_bp.route('/users/<int:user_id>', methods=['GET'])
 # @swag_from({

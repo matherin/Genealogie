@@ -82,7 +82,7 @@ class Eighty(db.Model):
     ward_number = Column(Integer)
     months_unemployed = Column(Integer)
     place_of_birth = Column(String(255))
-    pob_farther = Column(String(255))
+    pob_father = Column(String(255))
     pob_mother = Column(String(255))
     street = Column(String(255))
     house_address = Column(String(255))
@@ -102,10 +102,9 @@ class Eighty(db.Model):
             "ward_number": self.ward_number,
             "months_unemployed": self.months_unemployed,
             "place_of_birth": self.place_of_birth,
-            "pob_farther": self.pob_farther,
+            "pob_father": self.pob_father,
             "pob_mother": self.pob_mother,
-            "street": self.street,
-            "house_address": self.house_address
+            "street": self.street
         }
         return data
     

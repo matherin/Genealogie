@@ -377,7 +377,7 @@ def parse_line(line):
 
     male = line[54:55].strip()
     color = line[55:56].strip()
-    occupation = line[56:62].strip()
+    occupation = line[105:117].strip()
     level_of_skill = line[62:64].strip()
 
     rthoh = line[73:75].strip()
@@ -385,18 +385,16 @@ def parse_line(line):
     marital_status = line[75:76].strip()
     months_unemployed = to_int(line[76:78])
 
-    place_of_birth = line[90:97].strip()
-    pob_father = line[100:107].strip()
-    pob_mother = line[108:115].strip()
+    place_of_birth = line[117:127].strip()
+    pob_father = line[127:135].strip()
+    pob_mother = line[135:142].strip()
 
-    street = line[115:127].strip()
+    street = line[142:153].strip()
     house_address = line[68:73].strip()
 
     return Eighty(
         first_name=first_name,
-        alt_first_name=None,
         last_name=last_name,
-        alt_last_name=None,
         age=age,
         rthoh=decode(rthoh, HHREL_MAP),
         male=decode(male, SEX),
@@ -405,10 +403,10 @@ def parse_line(line):
         level_of_skill=decode(level_of_skill, LOS),
         ward_number=ward_number,
         place_of_birth=decode(place_of_birth, POB) or place_of_birth,
-        pob_father=decode(pob_father, POB),
-        pob_mother=decode(pob_mother, POB),
+        pob_father=pob_father,
+        pob_mother=pob_mother,
         street=street,
-        house_address=house_address,
+        house_address=None,
         months_unemployed=months_unemployed,
         marital_status=decode(marital_status, MARSTAT)
     )
