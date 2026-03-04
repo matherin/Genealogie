@@ -75,17 +75,17 @@ class Eighty(db.Model):
     rthoh = Column(String(255))
     age = Column(Integer)
     sex = Column(Boolean)
-    marital_status = Column(String(255))
+    maritalStatus = Column(String(255))
     color = Column(String(255))
     occupation = Column(String(255))
     skillLevel = Column(String(255))
     wardNumber = Column(Integer)
-    months_unemployed = Column(Integer)
+    monthsUnemployed = Column(Integer)
     placeOfBirth = Column(String(255))
-    pob_father = Column(String(255))
-    pob_mother = Column(String(255))
+    pobFather = Column(String(255))
+    pobMother = Column(String(255))
     street = Column(String(255))
-    house_address = Column(String(255))
+    houseAddress = Column(String(255))
 
     def to_dict(self, include_id=True):
         data = {
@@ -95,15 +95,15 @@ class Eighty(db.Model):
             "rthoh": self.rthoh,
             "age": self.age,
             "sex": self.sex,
-            "marital_status": self.marital_status,
+            "maritalStatus": self.maritalStatus,
             "color": self.color,
             "occupation": self.occupation,
             "skillLevel": self.skillLevel,
             "wardNumber": self.wardNumber,
-            "months_unemployed": self.months_unemployed,
+            "monthsUnemployed": self.monthsUnemployed,
             "placeOfBirth": self.placeOfBirth,
-            "pob_father": self.pob_father,
-            "pob_mother": self.pob_mother,
+            "pobFather": self.pobFather,
+            "pobMother": self.pobMother,
             "street": self.street
         }
         return data
@@ -121,7 +121,7 @@ class Sixty(db.Model):
     alternateLastName = Column(String(255))
     age = Column(Integer)
     sex = Column(Boolean)
-    married_last_year = Column(Boolean)
+    marriedLastYear = Column(Boolean)
     color = Column(String(255))
     occupation = Column(String(255))
     skillLevel = Column(String(255))
@@ -146,7 +146,7 @@ class Sixty(db.Model):
             "alternateLastName": self.alternateLastName,
             "age": self.age,
             "sex": self.sex,
-            "married_last_year": self.married_last_year,
+            "marriedLastYear": self.marriedLastYear,
             "color": self.color,
             "occupation": self.occupation,
             "skillLevel": self.skillLevel,
@@ -177,7 +177,7 @@ class Fifty(db.Model):
     alternateLastName = Column(String(255))
     age = Column(Integer)
     sex = Column(Boolean)
-    married_last_year = Column(Boolean)
+    marriedLastYear = Column(Boolean)
     color = Column(String(255))
     occupation = Column(String(255))
     skillLevel = Column(String(255))
@@ -186,7 +186,7 @@ class Fifty(db.Model):
     attendSchool = Column(Boolean)
     literate = Column(Boolean)
     dwelling = Column(String(255))
-    estate_value = Column(Integer)
+    estateValue = Column(Integer)
     sane = Column(String(255))
     soundexCode = Column(String(255))
     alternateSoundexCode = Column(String(255))
@@ -201,7 +201,7 @@ class Fifty(db.Model):
             "alternateLastName": self.alternateLastName,
             "age": self.age,
             "sex": self.sex,
-            "married_last_year": self.married_last_year,
+            "marriedLastYear": self.marriedLastYear,
             "color": self.color,
             "occupation": self.occupation,
             "skillLevel": self.skillLevel,
@@ -210,7 +210,7 @@ class Fifty(db.Model):
             "attendSchool": self.attendSchool,
             "literate": self.literate,
             "dwelling": self.dwelling,
-            "estate_value": self.estate_value,
+            "estateValue": self.estateValue,
             "sane": self.sane,
             "soundexCode": self.soundexCode,
             "alternateSoundexCode": self.alternateSoundexCode,
