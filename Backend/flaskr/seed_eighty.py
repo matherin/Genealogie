@@ -382,15 +382,15 @@ def parse_line(line):
 
     rthoh = line[73:75].strip()
 
-    marital_status = line[75:76].strip()
-    months_unemployed = to_int(line[76:78])
+    maritalStatus = line[75:76].strip()
+    monthsUnemployed = to_int(line[76:78])
 
     placeOfBirth = line[117:127].strip()
-    pob_father = line[127:135].strip()
-    pob_mother = line[135:142].strip()
+    pobFather = line[127:135].strip()
+    pobMother = line[135:142].strip()
 
     street = line[142:153].strip()
-    house_address = line[68:73].strip()
+    houseAddress = line[68:73].strip()
 
     return Eighty(
         firstName=firstName,
@@ -403,12 +403,12 @@ def parse_line(line):
         skillLevel=decode(skillLevel, LOS),
         wardNumber=wardNumber,
         placeOfBirth=decode(placeOfBirth, POB) or placeOfBirth,
-        pob_father=pob_father,
-        pob_mother=pob_mother,
+        pobFather=pobFather,
+        pobMother=pobMother,
         street=street,
-        house_address=None,
-        months_unemployed=months_unemployed,
-        marital_status=decode(marital_status, MARSTAT)
+        houseAddress=None,
+        monthsUnemployed=monthsUnemployed,
+        maritalStatus=decode(maritalStatus, MARSTAT)
     )
 
 # SEED DATABASE
