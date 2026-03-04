@@ -32,9 +32,24 @@ export default {
           label: "Data Tables",
           items: [
             {
-              label: "Census",
+              label: "1850 Census",
               icon: "pi pi-users",
-              command: () => this.$router.push("/censusData/table"),
+              command: () => this.$router.push({ name: "CensusTable", params: { year: 1850 } }),
+            },
+            {
+              label: "1860 Census",
+              icon: "pi pi-users",
+              command: () => this.$router.push({ name: "CensusTable", params: { year: 1860 } }),
+            },
+            {
+              label: "1870 Census",
+              icon: "pi pi-users",
+              command: () => this.$router.push({ name: "CensusTable", params: { year: 1870 } }),
+            },
+            {
+              label: "1880 Census",
+              icon: "pi pi-users",
+              command: () => this.$router.push({ name: "CensusTable", params: { year: 1880 } }),
             },
           ],
         },

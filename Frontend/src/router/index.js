@@ -7,14 +7,14 @@ import Map from "@/components/main/map/Map.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/censusData/table",
+    redirect: "/censusData",
   },
   {
     path: "/censusData",
     name: "Census",
     component: CensusDataMain,
     children: [
-      { path: "table", component: CensusData },
+      { path: ":year", name: "CensusTable", component: CensusData, props: true },
     ],
   },
   {
