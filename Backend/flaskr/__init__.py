@@ -39,7 +39,7 @@ def create_app(test_config=None):
     with app.app_context():
         db.create_all()
         seed_seventy_database()
-        seed_eighty_database()
+        #seed_eighty_database()
 
     return app
 
