@@ -1,8 +1,8 @@
 <template>
   <div class="user-table">
     <Toast ref="toast" />
-    <DataTable dataKey="id" :value="this.currentlyLoading ? this.placeholderRows : this.censusData" size="small"
-      removableSort tableStyle="width: 80vw" responsiveLayout="scroll" paginator :rows="12" :filters="filters"
+    <DataTable dataKey="id" :value="censusData" size="small"
+      removableSort sortMode="multiple" tableStyle="width: 80vw" responsiveLayout="scroll" paginator :rows="20" :filters="filters"
       :globalFilterFields="[
         'firstName',
         'lastName',
@@ -29,10 +29,10 @@
       </template>
       <template #empty> Nothing found</template>
       <Column v-for="(col, index) of selectedColumns" :field="col.field" :header="col.header"
-        :key="col.field + '_' + index">
+        :key="col.field + '_' + index" sortable>
         <template #body="{ data }">
           <div class="custom-row-div" v-if="this.currentlyLoading">
-            <Skeleton width="50%" />
+            <Skeleton width="100%" height="1rem"/>
           </div>
           <span v-else v-html="highlightText(data[col.field])" />
         </template>
@@ -248,7 +248,7 @@ export default {
     },
     async fetchData() {
       this.currentlyLoading = true;
-      console.log(this.year);
+      this.censusData = Array.from({length:20},()=>({}));
       try {
         const response = await fetch(`${baseUrl}/api/${this.year}`, {
           method: "GET",
