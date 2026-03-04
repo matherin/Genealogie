@@ -32,6 +32,30 @@ def get_seventy():
 def get_eighty():
     return get_service.get_eighty(request)
 
+@get_bp.route('/1860', methods=['GET'])
+@swag_from({
+    'tags': ['1860'],
+    'summary': 'Get People from sixty',
+    'description': 'Retrieves all people from sixty from the system.',
+    'responses': {
+        200: {'description': 'A list of people'}
+    }
+})
+def get_sixty():
+    return get_service.get_sixty(request)
+
+@get_bp.route('/1850', methods=['GET'])
+@swag_from({
+    'tags': ['1850'],
+    'summary': 'Get People from fifty',
+    'description': 'Retrieves all people from fifty from the system.',
+    'responses': {
+        200: {'description': 'A list of people'}
+    }
+})
+def get_fifty():
+    return get_service.get_fifty(request)
+
 # @get_bp.route('/users/<int:user_id>', methods=['GET'])
 # @swag_from({
 #     'tags': ['User'],

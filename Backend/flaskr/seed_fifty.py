@@ -1,5 +1,5 @@
 from .database import db
-from .datamodels import Sixty
+from .datamodels import Fifty
 import os
 
 # VALUE LABEL DICTIONARIES
@@ -357,13 +357,13 @@ def parse_line(line: str):
 
     sex_code = line[64:65].strip()
     color_code = line[65:66].strip()
-    attsch_code = line[102:103].strip()
-    lit_code = line[104:105].strip()
-    san_code = line[106:107].strip()
-    dwtype_code = line[108:109].strip()
+    attsch_code = line[93:94].strip()
+    lit_code = line[95:96].strip()
+    san_code = line[97:99].strip()
+    dwtype_code = line[99:100].strip()
     los_code = line[72:74].strip()
-    pob_code = line[96:99].strip()
-    occ_code = line[75:78].strip()
+    pob_code = line[87:90].strip()
+    occ_code = line[66:72].strip()
 
 
     firstName = line[31:44].strip()
@@ -374,13 +374,12 @@ def parse_line(line: str):
 
     age = to_int(line[59:61])
 
-    realEstate = to_int(line[78:87])
-    personalEstate = to_int(line[87:96])
+    estateValue = to_int(line[80:87])
 
     occ_text = line[132:148].strip()
     pob_text = line[148:160].strip()
 
-    return Sixty(
+    return Fifty(
         firstName=firstName,
         alternateFirstName=None,
         lastName=lastName,
@@ -396,8 +395,7 @@ def parse_line(line: str):
         attendSchool=decode(attsch_code, ATTSCH),
         literate=decode(lit_code, ATTSCH),
         dwelling=decode(dwtype_code, DWTYPE),
-        personalEstate=personalEstate,
-        realEstate=realEstate,
+        estateValue=estateValue,
         sane=decode(san_code, SAN),
         soundexCode=None,
         alternateSoundexCode=None,
@@ -406,18 +404,18 @@ def parse_line(line: str):
 
 # SEED DATABASE
 
-def seed_sixty_database():
+def seed_fifty_database():
 
-    if Sixty.query.first():
+    if Fifty.query.first():
         print("Database already seeded.")
         return
 
-    print("Seeding database with the data of sixty...")
+    print("Seeding database with the data of fifty...")
 
     records = []
 
     BASE_DIR = os.path.dirname(__file__)
-    file_path = os.path.join(BASE_DIR, "..", "data", "sixty.txt")
+    file_path = os.path.join(BASE_DIR, "..", "data", "fifty.txt")
     file_path = os.path.normpath(file_path)
 
     with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
