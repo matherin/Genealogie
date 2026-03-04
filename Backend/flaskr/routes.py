@@ -91,7 +91,7 @@ def get_eighty():
 #                         'example': ['john.doe@example.com', 'jane.smith@example.com', 'alice.johnson@example.com']
 #                     },
 #                     'private': {'type': 'boolean', 'description': 'Indicates if the customer is private'},
-#                     'notes': {'type': 'string', 'description': 'Additional notes about the customer'},
+#                     'addNotes': {'type': 'string', 'description': 'Additional addNotes about the customer'},
 #                     'delivery_addresses': {
 #                         'type': 'array',
 #                         'description': 'List of delivery addresses for the customer',
@@ -206,7 +206,7 @@ def get_eighty():
 #                         'example': ['john.doe@example.com', 'jane.smith@example.com', 'alice.johnson@example.com']
 #                     },
 #                     'private': {'type': 'boolean', 'description': 'Indicates whether the customer is a private customer'},
-#                     'notes': {'type': 'string', 'description': 'Additional notes about the customer (optional)'},
+#                     'addNotes': {'type': 'string', 'description': 'Additional addNotes about the customer (optional)'},
 #                     'delivery_addresses': {
 #                         'type': 'array',
 #                         'description': 'List of delivery addresses for the customer',

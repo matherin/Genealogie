@@ -5,8 +5,8 @@ import pandas as pd
 # (gekürzt – leicht erweiterbar)
 # -----------------------------
 SEX = {
-    "1": "MALE",
-    "2": "FEMALE"
+    "1": "sex",
+    "2": "FEsex"
 }
 
 COLOR = {
@@ -370,8 +370,8 @@ def parse_line(line: str) -> dict:
 
     return {
         # 🔹 Name
-        "FIRST_NAME": line[31:44].strip(),
-        "LAST_NAME": line[43:60].strip(),
+        "firstName": line[31:44].strip(),
+        "lastName": line[43:60].strip(),
 
         # 🔹 Codes + Labels
         "SEX_CODE": sex_code,
@@ -410,8 +410,8 @@ def parse_line(line: str) -> dict:
 
         # 🔹 IDs / Zahlen
         "AGE": line[59:61].strip(),
-        "REAL_ESTATE": line[78:87].strip(),
-        "PERSONAL_ESTATE": line[87:96].strip(),
+        "realEstate": line[78:87].strip(),
+        "personalEstate": line[87:96].strip(),
         "ID": line[126:132].strip()
     }
 
@@ -430,8 +430,8 @@ def convert_txt_to_excel(input_file, output_file):
     
     column_order = [
         'ID',
-        'FIRST_NAME',
-        'LAST_NAME',
+        'firstName',
+        'lastName',
         'AGE',
     
         'SEX_CODE', 'SEX',
@@ -448,8 +448,8 @@ def convert_txt_to_excel(input_file, output_file):
     
         'POB_CODE', 'POB',
     
-        'REAL_ESTATE',
-        'PERSONAL_ESTATE',
+        'realEstate',
+        'personalEstate',
     
         'OCC_TEXT',
         'POB_TEXT'

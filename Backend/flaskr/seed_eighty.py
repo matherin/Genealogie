@@ -368,24 +368,24 @@ def to_int(value):
 
 def parse_line(line):
 
-    ward_number = to_int(line[6:8])
+    wardNumber = to_int(line[6:8])
 
-    last_name = line[34:49].strip()
-    first_name = line[25:33].strip()
+    lastName = line[34:49].strip()
+    firstName = line[25:33].strip()
 
     age = to_int(line[49:51])
 
-    male = line[54:55].strip()
+    sex = line[54:55].strip()
     color = line[55:56].strip()
     occupation = line[105:117].strip()
-    level_of_skill = line[62:64].strip()
+    skillLevel = line[62:64].strip()
 
     rthoh = line[73:75].strip()
 
     marital_status = line[75:76].strip()
     months_unemployed = to_int(line[76:78])
 
-    place_of_birth = line[117:127].strip()
+    placeOfBirth = line[117:127].strip()
     pob_father = line[127:135].strip()
     pob_mother = line[135:142].strip()
 
@@ -393,16 +393,16 @@ def parse_line(line):
     house_address = line[68:73].strip()
 
     return Eighty(
-        first_name=first_name,
-        last_name=last_name,
+        firstName=firstName,
+        lastName=lastName,
         age=age,
         rthoh=decode(rthoh, HHREL_MAP),
-        male=decode(male, SEX),
+        sex=decode(sex, SEX),
         color=decode(color, COLOR),
         occupation=decode(occupation, NEWOCC) or occupation,
-        level_of_skill=decode(level_of_skill, LOS),
-        ward_number=ward_number,
-        place_of_birth=decode(place_of_birth, POB) or place_of_birth,
+        skillLevel=decode(skillLevel, LOS),
+        wardNumber=wardNumber,
+        placeOfBirth=decode(placeOfBirth, POB) or placeOfBirth,
         pob_father=pob_father,
         pob_mother=pob_mother,
         street=street,
