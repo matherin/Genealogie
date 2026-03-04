@@ -1,9 +1,8 @@
 <template>
   <div class="user-table">
     <Toast ref="toast" />
-    <DataTable dataKey="id" :value="censusData" size="small"
-      removableSort sortMode="multiple" tableStyle="width: 80vw" responsiveLayout="scroll" paginator :rows="20" :filters="filters"
-      :globalFilterFields="[
+    <DataTable :value="selectedColumns.length === 0 ? [] : censusData" dataKey="id" size="small" removableSort sortMode="multiple" stripedRows
+      tableStyle="width: 80vw" responsiveLayout="scroll" paginator :rows="20" :filters="filters" :globalFilterFields="[
         'firstName',
         'lastName',
       ]">
@@ -27,12 +26,19 @@
           </div>
         </div>
       </template>
-      <template #empty> Nothing found</template>
+      <template #empty>
+        <span v-if="selectedColumns.length === 0" style="text-align:center;">
+          Please select columns
+        </span>
+        <span v-else style="text-align:center;">
+          Nothing found
+        </span>
+      </template>
       <Column v-for="(col, index) of selectedColumns" :field="col.field" :header="col.header"
         :key="col.field + '_' + index" sortable>
         <template #body="{ data }">
           <div class="custom-row-div" v-if="this.currentlyLoading">
-            <Skeleton width="100%" height="1rem"/>
+            <Skeleton width="100%" height="1rem" />
           </div>
           <span v-else v-html="highlightText(data[col.field])" />
         </template>
@@ -244,11 +250,11 @@ export default {
       );
     },
     onToggle(value) {
-      this.selectedColumns = value;
+      this.selectedColumns = value ?? [];
     },
     async fetchData() {
       this.currentlyLoading = true;
-      this.censusData = Array.from({length:20},()=>({}));
+      this.censusData = Array.from({ length: 20 }, () => ({}));
       try {
         const response = await fetch(`${baseUrl}/api/${this.year}`, {
           method: "GET",
