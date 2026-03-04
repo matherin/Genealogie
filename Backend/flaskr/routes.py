@@ -8,7 +8,7 @@ from .request_handling import get_service
 # Blueprints
 get_bp = Blueprint('get', __name__, url_prefix='/api')
 
-@get_bp.route('/seventy', methods=['GET'])
+@get_bp.route('/1870', methods=['GET'])
 @swag_from({
     'tags': ['seventy'],
     'summary': 'Get People from seventy',
