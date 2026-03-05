@@ -32,7 +32,7 @@
         </span>
       </template>
       <Column v-for="(col, index) of selectedColumns" :field="col.field" :header="col.header"
-        :key="col.field + '_' + index" sortable>
+        :key="col.field + '_' + index" :sortable="!currentlyLoading">
         <template #body="{ data }">
           <div class="custom-row-div" v-if="this.currentlyLoading">
             <Skeleton width="100%" height="1rem" />
@@ -67,6 +67,13 @@ export default {
       handler(newYear) {
         this.fetchData(newYear);
       }
+    },
+    'filters.global.value'(value) {
+      clearTimeout(this.debounceTimer)
+
+      this.debounceTimer = setTimeout(() => {
+        this.debouncedSearch = value
+      }, 250)
     }
   },
   components: {
@@ -89,6 +96,9 @@ export default {
       selectedColumns: [],
       columns: [],
       maxColumns: 10,
+      searchInput: "",
+      debouncedSearch: "",
+      debounceTimer: null,
     };
   },
   created() {
@@ -96,24 +106,17 @@ export default {
   },
   computed: {
     filteredCensusData() {
-      const search = this.filters.global.value
 
-      if (!search) return this.censusData
+      if (!this.debouncedSearch) return this.censusData
 
-      const tokens = search
+      const tokens = this.debouncedSearch
         .toLowerCase()
         .split(/\s+/)
         .filter(Boolean)
 
-      return this.censusData.filter(row => {
-
-        const rowText = this.selectedColumns
-          .map(col => row[col.field])   
-          .join(" ")
-          .toLowerCase()
-
-        return tokens.every(token => rowText.includes(token))
-      })
+      return this.censusData.filter(row =>
+        tokens.every(token => row._searchIndex.includes(token))
+      )
     }
   },
   methods: {
@@ -282,8 +285,12 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        this.censusData = data;
-        console.log(this.censusData);
+        this.censusData = data.map(row => ({
+          ...row,
+          _searchIndex: Object.values(row)
+            .join(" ")
+            .toLowerCase()
+        }));
         this.updateFilters();
         this.currentlyLoading = false;
       } catch (error) {
@@ -293,17 +300,18 @@ export default {
     },
 
     highlightText(text) {
-      const search = this.filters.global.value
-      if (!search || !text) return text
+      if (!this.debouncedSearch || !text) return text
 
-      const tokens = search.split(/\s+/).filter(Boolean)
+      const tokens = this.debouncedSearch.split(/\s+/)
 
       let result = text.toString()
 
-      tokens.forEach(token => {
-        const regex = new RegExp(`(${token})`, "gi")
-        result = result.replace(regex, '<span class="highlight">$1</span>')
-      })
+      for (const token of tokens) {
+        result = result.replace(
+          new RegExp(`(${token})`, "gi"),
+          '<span class="highlight">$1</span>'
+        )
+      }
 
       return result
     }
