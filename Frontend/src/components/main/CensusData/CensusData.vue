@@ -168,9 +168,6 @@ export default {
             { field: 'personalEstate', header: 'Value of Personal Estate' },
             { field: 'realEstate', header: 'Value of Real Estate' },
             { field: 'sane', header: 'Sane' },
-            { field: 'soundexCode', header: 'Soundex Code' },
-            { field: 'alternateSoundexCode', header: 'Alternate Soundex Code' },
-            { field: 'addNotes', header: 'Additional Notes' }
           ]
           break;
         case 1870:
@@ -198,9 +195,6 @@ export default {
             { field: 'realEstate', header: 'Real Estate' },
             { field: 'vote', header: 'Vote' },
             { field: 'sane', header: 'Sane' },
-            { field: 'soundexCode', header: 'Soundex Code' },
-            { field: 'alternateSoundexCode', header: 'Alternate Soundex Code' },
-            { field: 'addNotes', header: 'Additional Notes' }
           ]
           break;
         case 1880:
@@ -220,7 +214,6 @@ export default {
             { field: 'pobFather', header: 'Place of Birth Father' },
             { field: 'pobMother', header: 'Place of Birth Mother' },
             { field: 'street', header: 'Street' },
-            { field: 'houseAddress', header: 'House Address' },
           ]
           break;
         default:
@@ -258,9 +251,6 @@ export default {
             { field: 'realEstate', header: 'Real Estate' },
             { field: 'vote', header: 'Vote' },
             { field: 'sane', header: 'Sane' },
-            { field: 'soundexCode', header: 'Soundex Code' },
-            { field: 'alternateSoundexCode', header: 'Alternate Soundex Code' },
-            { field: 'addNotes', header: 'Additional Notes' }
           ]
       }
       this.selectedColumns = this.columns.slice(0, 2);
