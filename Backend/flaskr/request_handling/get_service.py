@@ -12,6 +12,14 @@ def get_eighty(request):
     data = Eighty.query.all()
     return jsonify([line.to_dict() for line in data]), 200
 
+def get_sixty(request):
+    data = Sixty.query.all()
+    return jsonify([line.to_dict() for line in data]), 200
+
+def get_fifty(request):
+    data = Fifty.query.all()
+    return jsonify([line.to_dict() for line in data]), 200
+
 # def get_good(id, request):
 #     good = Good.query.filter_by(id=id).first()
 

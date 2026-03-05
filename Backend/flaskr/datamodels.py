@@ -36,9 +36,9 @@ class Seventy(db.Model):
         data = {
             "id": self.id if include_id else None,
             "firstName": self.firstName,
-            "alternateFirstName": self.alternateFirstName,
+            # "alternateFirstName": self.alternateFirstName,
             "lastName": self.lastName,
-            "alternateLastName": self.alternateLastName,
+            # "alternateLastName": self.alternateLastName,
             "age": self.age,
             "monthBorn": self.monthBorn,
             "sex": self.sex,
@@ -58,9 +58,9 @@ class Seventy(db.Model):
             "realEstate": self.realEstate,
             "vote": self.vote,
             "sane": self.sane,
-            "soundexCode": self.soundexCode,
-            "alternateSoundexCode": self.alternateSoundexCode,
-            "addNotes": self.addNotes
+            # "soundexCode": self.soundexCode,
+            # "alternateSoundexCode": self.alternateSoundexCode,
+            # "addNotes": self.addNotes
         }
         return data
     
@@ -141,9 +141,9 @@ class Sixty(db.Model):
         data = {
             "id": self.id if include_id else None,
             "firstName": self.firstName,
-            "alternateFirstName": self.alternateFirstName,
+            # "alternateFirstName": self.alternateFirstName,
             "lastName": self.lastName,
-            "alternateLastName": self.alternateLastName,
+            # "alternateLastName": self.alternateLastName,
             "age": self.age,
             "sex": self.sex,
             "marriedLastYear": self.marriedLastYear,
@@ -158,9 +158,9 @@ class Sixty(db.Model):
             "personalEstate": self.personalEstate,
             "realEstate": self.realEstate,
             "sane": self.sane,
-            "soundexCode": self.soundexCode,
-            "alternateSoundexCode": self.alternateSoundexCode,
-            "addNotes": self.addNotes
+            # "soundexCode": self.soundexCode,
+            # "alternateSoundexCode": self.alternateSoundexCode,
+            # "addNotes": self.addNotes
         }
         return data
     
@@ -196,9 +196,9 @@ class Fifty(db.Model):
         data = {
             "id": self.id if include_id else None,
             "firstName": self.firstName,
-            "alternateFirstName": self.alternateFirstName,
+            # "alternateFirstName": self.alternateFirstName,
             "lastName": self.lastName,
-            "alternateLastName": self.alternateLastName,
+            # "alternateLastName": self.alternateLastName,
             "age": self.age,
             "sex": self.sex,
             "marriedLastYear": self.marriedLastYear,
@@ -212,9 +212,9 @@ class Fifty(db.Model):
             "dwelling": self.dwelling,
             "estateValue": self.estateValue,
             "sane": self.sane,
-            "soundexCode": self.soundexCode,
-            "alternateSoundexCode": self.alternateSoundexCode,
-            "addNotes": self.addNotes
+            # "soundexCode": self.soundexCode,
+            # "alternateSoundexCode": self.alternateSoundexCode,
+            # "addNotes": self.addNotes
         }
         return data
     

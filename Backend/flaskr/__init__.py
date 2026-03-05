@@ -5,6 +5,8 @@ from .database import db
 from .routes import get_bp
 from .seed_seventy import *
 from .seed_eighty import *
+from .seed_sixty import *
+from .seed_fifty import *
 from dotenv import load_dotenv
 from flasgger import Swagger
 from flask_cors import CORS
@@ -41,6 +43,8 @@ def create_app(test_config=None):
         db.create_all()
         seed_seventy_database()
         seed_eighty_database()
+        seed_sixty_database()
+        seed_fifty_database()
 
     return app
 
