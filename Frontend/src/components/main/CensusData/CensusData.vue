@@ -1,11 +1,8 @@
 <template>
   <div class="user-table">
     <Toast ref="toast" />
-    <DataTable :value="selectedColumns.length === 0 ? [] : censusData" dataKey="id" size="small" removableSort sortMode="multiple" stripedRows
-      tableStyle="width: 80vw" responsiveLayout="scroll" paginator :rows="20" :filters="filters" :globalFilterFields="[
-        'firstName',
-        'lastName',
-      ]">
+    <DataTable :value="selectedColumns.length === 0 ? [] : filteredCensusData" dataKey="id" size="small" removableSort
+      sortMode="multiple" stripedRows tableStyle="width: 80vw" responsiveLayout="scroll" paginator :rows="20">
       <template #header>
         <div class="user-table-header">
           <p class="user-table-header-title">Census Tabelle</p>
@@ -96,6 +93,28 @@ export default {
   },
   created() {
     this.updateFilters();
+  },
+  computed: {
+    filteredCensusData() {
+      const search = this.filters.global.value
+
+      if (!search) return this.censusData
+
+      const tokens = search
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean)
+
+      return this.censusData.filter(row => {
+
+        const rowText = this.selectedColumns
+          .map(col => row[col.field])   
+          .join(" ")
+          .toLowerCase()
+
+        return tokens.every(token => rowText.includes(token))
+      })
+    }
   },
   methods: {
     updateFilters() {
@@ -274,13 +293,20 @@ export default {
     },
 
     highlightText(text) {
-      const searchValue = this.filters.global.value;
-      if (!searchValue || !text) return text;
-      const regex = new RegExp(`(${searchValue})`, "gi");
-      return text
-        .toString()
-        .replace(regex, '<span class="highlight">$1</span>');
-    },
+      const search = this.filters.global.value
+      if (!search || !text) return text
+
+      const tokens = search.split(/\s+/).filter(Boolean)
+
+      let result = text.toString()
+
+      tokens.forEach(token => {
+        const regex = new RegExp(`(${token})`, "gi")
+        result = result.replace(regex, '<span class="highlight">$1</span>')
+      })
+
+      return result
+    }
   },
 };
 </script>
