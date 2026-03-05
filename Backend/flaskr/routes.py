@@ -32,6 +32,26 @@ def get_seventy():
 def get_eighty():
     return get_service.get_eighty(request)
 
+@get_bp.route('/1870/pob-count', methods=['GET'])
+@swag_from({
+    'tags': ['1870'],
+    'summary': 'Get place of birth statistics (1870)',
+    'description': 'Returns the number of people grouped by place of birth for 1870.',
+    'responses': {
+        200: {
+            'description': 'Dictionary of place of birth and counts',
+            'examples': {
+                'application/json': {
+                    "PENN": 1705,
+                    "GERMANY": 910
+                }
+            }
+        }
+    }
+})
+def get_seventy_pob_count():
+    return get_service.get_seventy_pob_count(request)
+
 @get_bp.route('/1860', methods=['GET'])
 @swag_from({
     'tags': ['1860'],
@@ -44,6 +64,56 @@ def get_eighty():
 def get_sixty():
     return get_service.get_sixty(request)
 
+@get_bp.route('/1880/pob-count', methods=['GET'])
+@swag_from({
+    'tags': ['1880'],
+    'summary': 'Get place of birth statistics including parents (1880)',
+    'description': 'Returns grouped counts for place of birth of the person, father, and mother for 1880.',
+    'responses': {
+        200: {
+            'description': 'Grouped birthplace statistics',
+            'examples': {
+                'application/json': {
+                    "person": {
+                        "PENN": 1800,
+                        "GERMANY": 950
+                    },
+                    "father": {
+                        "PENN": 1500,
+                        "GERMANY": 1000
+                    },
+                    "mother": {
+                        "PENN": 1600,
+                        "GERMANY": 980
+                    }
+                }
+            }
+        }
+    }
+})
+def get_eighty_pob_count():
+    return get_service.get_eighty_pob_count(request)
+
+@get_bp.route('/1860/pob-count', methods=['GET'])
+@swag_from({
+    'tags': ['1860'],
+    'summary': 'Get place of birth statistics (1860)',
+    'description': 'Returns the number of people grouped by place of birth for 1860.',
+    'responses': {
+        200: {
+            'description': 'Dictionary of place of birth and counts',
+            'examples': {
+                'application/json': {
+                    "PENN": 1620,
+                    "GERMANY": 845
+                }
+            }
+        }
+    }
+})
+def get_sixty_pob_count():
+    return get_service.get_sixty_pob_count(request)
+
 @get_bp.route('/1850', methods=['GET'])
 @swag_from({
     'tags': ['1850'],
@@ -55,6 +125,27 @@ def get_sixty():
 })
 def get_fifty():
     return get_service.get_fifty(request)
+
+@get_bp.route('/1850/pob-count', methods=['GET'])
+@swag_from({
+    'tags': ['1850'],
+    'summary': 'Get place of birth statistics (1850)',
+    'description': 'Returns the number of people grouped by place of birth for 1850.',
+    'responses': {
+        200: {
+            'description': 'Dictionary of place of birth and counts',
+            'examples': {
+                'application/json': {
+                    "PENN": 1452,
+                    "GERMANY": 732,
+                    "IRELAND": 421
+                }
+            }
+        }
+    }
+})
+def get_fifty_pob_count():
+    return get_service.get_fifty_pob_count(request)
 
 # @get_bp.route('/users/<int:user_id>', methods=['GET'])
 # @swag_from({
