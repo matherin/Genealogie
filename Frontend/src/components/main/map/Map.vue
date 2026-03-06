@@ -1,16 +1,18 @@
 <template>
   <div class="se-main-container">
+    <Toast ref="toast" />
     <div class="map-container">
       <l-map :useGlobalLeaflet="false" ref="map" v-model:zoom="zoom" :max-bounds="bounds" :max-bounds-viscosity="1.0"
         :center="center">
         <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap" />
-          <l-marker v-if="coords.person" :lat-lng="(coords.person)">
-            <l-popup>Birthplace</l-popup>
-          </l-marker>
-          <l-marker v-if="father" :lat-lng="coords.father" />
-          <l-marker v-if="mother" :lat-lng="coords.mother" />
-          <l-polyline v-if="coords.mother && coords.person" :lat-lngs="[coords.mother, coords.person]" :options="lineStyle()"/>
-          <l-polyline v-if="coords.father && coords.person" :lat-lngs="[coords.father, coords.person]" :options="lineStyle()"/>
+        <l-marker v-for="m in markers" :key="m.name" :lat-lng="m.coords">
+          <l-popup>
+            <b>{{ m.name }}</b><br>
+            Person birthplace: {{ m.person }}<br>
+            Mother birthplace: {{ m.mother }}<br>
+            Father birthplace: {{ m.father }}
+          </l-popup>
+        </l-marker>
       </l-map>
     </div>
   </div>
@@ -18,7 +20,10 @@
 
 <script>
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker, LPolyline, LPopup } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
+import Toast from "@/components/custom/toast/Toast.vue";
+
+var baseUrl = window.location.origin;
 
 export default {
   name: "Settings",
@@ -26,7 +31,6 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LPolyline,
     LPopup
   },
   data() {
@@ -37,32 +41,87 @@ export default {
         [-90, -1000000],
         [90, 10000000]
       ],
-      testData: {
-        person: "Pittsburgh",
-        father: "Germany",
-        mother: "Ireland"
-      },
-      coords: {
-        person: null,
-        father: null,
-        mother: null
-      }
+      places: {}
     }
   },
-  async mounted(){
-    this.coords.person = await this.geocode(this.testData.person);
-    this.coords.mother = await this.geocode(this.testData.mother);
-    this.coords.father = await this.geocode(this.testData.father);
+  computed: {
+    markers() {
+      if (!this.places) return [];
+      return Object.entries(this.places)
+        .filter(([_, p]) => p.coords)
+        .map(([name, p]) => ({
+          name,
+          coords: p.coords,
+          person: p.person,
+          mother: p.mother,
+          father: p.father
+        }));
+    }
+  },
+  async mounted() {
+    this.fetchData();
   },
   methods: {
-    async geocode(place) {
-      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`);
-      const data = await res.json();
-      if (!data.length) return null;
-      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    async fetchData() {
+      try {
+        const response = await fetch(`${baseUrl}/api/1880/pob-count`, {
+          method: "GET",
+        });
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        console.log(data);
+        const mergedPlaces = this.mergedPlaces(data);
+        this.places = await this.geocodePlaces(mergedPlaces);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        this.$refs.toast.toastAddError("Data could not load");
+      }
     },
-    lineStyle(){
-      return{
+    mergePlaces(data) {
+
+      const places = {};
+
+      const allPlaces = new Set([
+        ...Object.keys(data.person || {}),
+        ...Object.keys(data.mother || {}),
+        ...Object.keys(data.father || {})
+      ]);
+
+      allPlaces.forEach(place => {
+        places[place] = {
+          person: data.person?.[place] || 0,
+          mother: data.mother?.[place] || 0,
+          father: data.father?.[place] || 0,
+          coords: null
+        };
+      });
+
+      return places;
+    },
+    async geocodePlaces(places) {
+
+      for (const place in places) {
+
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${place}`
+        );
+
+        const data = await res.json();
+
+        if (data.length) {
+          places[place].coords = [
+            parseFloat(data[0].lat),
+            parseFloat(data[0].lon)
+          ];
+        }
+      }
+
+      return places;
+    },
+    lineStyle() {
+      return {
         color: "#e63946",
         weight: 2,
         opacity: 0.8
