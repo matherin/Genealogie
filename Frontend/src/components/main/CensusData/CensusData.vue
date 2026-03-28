@@ -128,9 +128,7 @@ export default {
           this.columns = [
             { field: 'firstName', header: 'First Name' },
             { field: 'lastName', header: 'Last Name' },
-            { field: 'alternateLastName', header: 'Alternate Last Name' },
-            { field: 'alternateFirstName', header: 'Alternate Last Name' },
-            { field: 'age', header: 'Age' },
+            { field: 'age', header: 'Age' }, 
             { field: 'sex', header: 'Sex' },
             { field: 'marriedLastYear', header: 'Married in Last Year?' },
             { field: 'color', header: 'Color' },
@@ -152,8 +150,6 @@ export default {
           this.columns = [
             { field: 'firstName', header: 'First Name' },
             { field: 'lastName', header: 'Last Name' },
-            { field: 'alternateLastName', header: 'Alternate Last Name' },
-            { field: 'alternateFirstName', header: 'Alternate Last Name' },
             { field: 'age', header: 'Age' },
             { field: 'sex', header: 'Sex' },
             { field: 'marriedLastYear', header: 'Married in Last Year?' },
@@ -174,8 +170,6 @@ export default {
           this.columns = [
             { field: 'firstName', header: 'First Name' },
             { field: 'lastName', header: 'Last Name' },
-            { field: 'alternateLastName', header: 'Alternate Last Name' },
-            { field: 'alternateFirstName', header: 'Alternate Last Name' },
             { field: 'age', header: 'Age' },
             { field: 'monthBorn', header: 'Month Born' },
             { field: 'sex', header: 'Sex' },
@@ -220,8 +214,6 @@ export default {
           this.columns = [
             { field: 'firstName', header: 'First Name' },
             { field: 'lastName', header: 'Last Name' },
-            { field: 'alternateLastName', header: 'Alternate Last Name' },
-            { field: 'alternateFirstName', header: 'Alternate Last Name' },
             { field: 'rthoh', header: 'Relation to Head of Household' },
             { field: 'age', header: 'Age' },
             { field: 'monthBorn', header: 'Month Born' },
