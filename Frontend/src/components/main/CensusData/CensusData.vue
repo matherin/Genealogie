@@ -141,9 +141,6 @@ export default {
             { field: 'dwelling', header: 'Dwelling' },
             { field: 'estateValue', header: 'Value of Estate' },
             { field: 'sane', header: 'Sane' },
-            { field: 'soundexCode', header: 'Soundex Code' },
-            { field: 'alternateSoundexCode', header: 'Alternate Soundex Code' },
-            { field: 'addNotes', header: 'Additional Notes' }
           ]
           break;
         case 1860:
